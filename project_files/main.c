@@ -112,8 +112,8 @@ TextureData ttex; // terrain
 void mouse(int x, int y)
 {
 	//printf("%d %d\n", x, y);
-	viewX = (float)x/glutGet(GLUT_WINDOW_WIDTH)*2*M_PI;
-	viewY = (float)y/glutGet(GLUT_WINDOW_HEIGHT)*M_PI;
+	viewX = (float)x/600*2*M_PI;
+	viewY = (float)y/600*M_PI;
 
 	lookAtPoint.x = -10 *sin(viewY)*sin(viewX) + cam.x;
 	lookAtPoint.y = 10*cos(viewY) + cam.y;
@@ -302,6 +302,9 @@ int main(int argc, char **argv)
 	glutInitWindowSize (600, 600);
 	glutCreateWindow ("TSBK07 Lab 4");
 	glutDisplayFunc(display);
+#ifdef WIN32
+	glewInit();
+#endif
 	init ();
 	glutTimerFunc(20, &timer, 0);
 	glutPassiveMotionFunc(mouse);
