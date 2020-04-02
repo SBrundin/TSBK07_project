@@ -103,7 +103,7 @@ Model* GenerateTerrain(TextureData *tex)
 }
 
 // vertex array object
-Model *m, *m2, *tm, *sphere, *skybox;
+Model *m, *m2, *tm, *sphere, *skybox, *boktop, *bokrygg;
 // Reference to shader program
 GLuint program, proPhong, skyboxProg, skytex;
 GLuint tex1, tex2, sphereTex;
@@ -213,6 +213,8 @@ void init(void)
 	LoadTGATextureData("../textures/fft-terrain.tga", &ttex);
 	tm = GenerateTerrain(&ttex);
 	sphere = LoadModelPlus("../textures/octagon.obj");
+	boktop = LoadModelPlus("../Modeller/Boktop.obj");
+	bokrygg = LoadModelPlus("../Modeller/bokrygg.obj");
 	LoadTGATextureSimple("../textures/maskros512.tga", &sphereTex);
 
 	printError("init terrain");
@@ -282,6 +284,9 @@ void display(void)
 	glUniform1i(glGetUniformLocation(program, "tex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalSphere.m);
 	DrawModel(sphere, program, "inPosition", "inNormal", "inTexCoord");
+	DrawModel(boktop, program, "inPosition", "inNormal", "inTexCoord");
+	DrawModel(boktop, program, "inPosition", "inNormal", "inTexCoord");
+	DrawModel(bokrygg, program, "inPosition", "inNormal", "inTexCoord");
 
 	printError("display 2");
 
