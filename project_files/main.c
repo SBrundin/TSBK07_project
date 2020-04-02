@@ -103,10 +103,10 @@ Model* GenerateTerrain(TextureData *tex)
 }
 
 // vertex array object
-Model *m, *m2, *tm, *sphere, *skybox, *boktop, *bokrygg;
+Model *m, *m2, *tm, *sphere, *skybox, *boktop, *bokrygg, *stolpe;
 // Reference to shader program
 GLuint program, proPhong, skyboxProg, skytex;
-GLuint tex1, tex2, sphereTex;
+GLuint tex1, tex2, sphereTex, stolpeTex;
 TextureData ttex; // terrain
 
 void mouse(int x, int y)
@@ -198,23 +198,28 @@ void init(void)
 	glUniform1i(glGetUniformLocation(program, "tex"), 0); // Texture unit 0
 	glUniform1i(glGetUniformLocation(program, "snowTex"), 1);
 	glUniform1i(glGetUniformLocation(program, "waterTex"), 2);
+	glUniform1i(glGetUniformLocation(program, "bookTex"), 3);
 	LoadTGATextureSimple("../textures/grass.tga", &tex1);
 	LoadTGATextureSimple("../textures/snow.tga", &snowTex);
 	LoadTGATextureSimple("../textures/water.tga", &waterTex);
 	LoadTGATextureSimple("../textures/SkyBox512.tga", &skytex);
-	skybox = LoadModelPlus("../textures/skybox.obj");
+	LoadTGATextureSimple("../textures/bilskissred.tga", &stolpeTex);
+	skybox = LoadModelPlus("../Modeller/skybox.obj");
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, tex1);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, snowTex);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, waterTex);
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, stolpeTex);
 // Load terrain data
 	LoadTGATextureData("../textures/fft-terrain.tga", &ttex);
 	tm = GenerateTerrain(&ttex);
-	sphere = LoadModelPlus("../textures/octagon.obj");
+	sphere = LoadModelPlus("../Modeller/octagon.obj");
 	boktop = LoadModelPlus("../Modeller/Boktop.obj");
 	bokrygg = LoadModelPlus("../Modeller/bokrygg.obj");
+	stolpe = LoadModelPlus("../Modeller/stolpe.obj");
 	LoadTGATextureSimple("../textures/maskros512.tga", &sphereTex);
 
 	printError("init terrain");
@@ -264,6 +269,8 @@ void display(void)
 	glBindTexture(GL_TEXTURE_2D, snowTex);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, waterTex);
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, stolpeTex);
 	DrawModel(tm, program, "inPosition", "inNormal", "inTexCoord");
 	glUniform1f(glGetUniformLocation(program, "t"), t);
 
@@ -280,13 +287,19 @@ void display(void)
 	totalSphere = Mult(camMatrix, modelView);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tex1);
+	glBindTexture(GL_TEXTURE_2D, stolpeTex);
 	glUniform1i(glGetUniformLocation(program, "tex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalSphere.m);
-	DrawModel(sphere, program, "inPosition", "inNormal", "inTexCoord");
-	DrawModel(boktop, program, "inPosition", "inNormal", "inTexCoord");
+	//DrawModel(sphere, program, "inPosition", "inNormal", "inTexCoord");
 	DrawModel(boktop, program, "inPosition", "inNormal", "inTexCoord");
 	DrawModel(bokrygg, program, "inPosition", "inNormal", "inTexCoord");
+
+	// glActiveTexture(GL_TEXTURE3);
+	// glBindTexture(GL_TEXTURE_2D, stolpeTex);
+	// glUniform1i(glGetUniformLocation(program, "tex"), 0); // Texture unit 0
+	// glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalSphere.m);
+	// DrawModel(stolpe, program, "inPosition", "inNormal", "inTexCoord");
+
 
 	printError("display 2");
 
