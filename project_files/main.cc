@@ -9,8 +9,8 @@
 #include "loadobj.h"
 #include "VectorUtils3.h"
 
-#define WINDOW_WIDTH 1080
-#define WINDOW_HEIGHT 720
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 
 
 int main(int argc, char* argv[])
