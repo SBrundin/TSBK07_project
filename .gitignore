@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+# Windows VS files
+*.sln
+*vcxproj.user
+*vcxproj.filters
+psychteapot.vcxproj
+Debug/
+.vs/
