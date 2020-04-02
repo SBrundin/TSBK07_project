@@ -4,7 +4,7 @@ in vec3 ex_Normal;
 in vec2 ex_TexCoord;
 in float height;
 out vec4 out_Color;
-uniform sampler2D snowTex, waterTex, stolpeTex;
+uniform sampler2D snowTex, waterTex, bookTex;
 uniform sampler2D tex;
 uniform float t;
 float water;

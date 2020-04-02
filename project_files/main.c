@@ -11,24 +11,27 @@
 #include "loadobj.h"
 #include "LoadTGA.h"
 
-mat4 projectionMatrix, totalSphere, transSphere, rotSphere, camMat2;
-
-vec3 c, v, cam, lookAtPoint, c2;
-
-GLfloat viewX, viewY, viewZ, a;
-
+mat4 projectionMatrix, totalSphere, totalBook, totalBook2, transSphere, rotSphere, camMat2;
+vec3 c, cam, lookAtPoint, c2;
+//shaders
+GLuint program, proPhong, skyboxProg;
+//textures
+GLuint sphereTex, waterTex, snowTex, skytex,grassTex, tex2, sphereTex, bookTex;
+//models
+Model *m, *m2, *tm, *sphere, *skybox, *boktop, *bokrygg, *stolpe;
+//terrain
+TextureData ttex;
+//init variables
+GLfloat viewX, viewY, viewZ, a, BallT;
 GLfloat Ballx = 0.0f;
 GLfloat Ballz = 0.0f;
-
-
+GLfloat Bookx = 0.0f;
+GLfloat Bookz = 0.0f;
 GLfloat viewX = 0.5;
 GLfloat viewY = 0.5;
 vec3 v = {0.0, 1.0, 0.0};
 
-GLuint sphereTex, waterTex, snowTex;
-//vec3 cam = {0, 5, 8};
-GLfloat	BallT;
-
+//--------------Functions-----------------------------------------
 Model* GenerateTerrain(TextureData *tex)
 {
 	int vertexCount = tex->width * tex->height;
@@ -50,7 +53,6 @@ Model* GenerateTerrain(TextureData *tex)
 			vertexArray[(x + z * tex->width)*3 + 0] = x / 1.0;
 			vertexArray[(x + z * tex->width)*3 + 1] = tex->imageData[(x + z * tex->width) * (tex->bpp/8)] / 5.0;
 			vertexArray[(x + z * tex->width)*3 + 2] = z / 1.0;
-// Normal vectors. You need to calculate these.
 
 			normalArray[(x + z * tex->width)*3 + 0] = 0;
 			normalArray[(x + z * tex->width)*3 + 1] = 1;
@@ -102,16 +104,8 @@ Model* GenerateTerrain(TextureData *tex)
 	return model;
 }
 
-// vertex array object
-Model *m, *m2, *tm, *sphere, *skybox, *boktop, *bokrygg, *stolpe;
-// Reference to shader program
-GLuint program, proPhong, skyboxProg, skytex;
-GLuint tex1, tex2, sphereTex, stolpeTex;
-TextureData ttex; // terrain
-
 void mouse(int x, int y)
 {
-	//printf("%d %d\n", x, y);
 	viewX = (float)x/600*2*M_PI;
 	viewY = (float)y/600*M_PI;
 
@@ -172,11 +166,15 @@ GLfloat getRealHeight(GLfloat x, GLfloat z, GLfloat *vertexArray, TextureData *t
 		return height;
 	}
 
+
+//--------------------Init------------------
 void init(void)
 {
+	//Cam init
 	cam = SetVector(0, 5, 8);
 	lookAtPoint = SetVector(0,0,0);
 	v = SetVector(0,1,0);
+	projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 300.0);
 
 	// GL inits
 	glClearColor(0.9,0.9,1,0);
@@ -184,58 +182,55 @@ void init(void)
 	glDisable(GL_CULL_FACE);
 	printError("GL inits");
 
-	projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 300.0);
-
 	// Load and compile shader
 	program = loadShaders("terrain.vert", "terrain.frag");
-	//proPhong = loadShaders("terrain.vert", "terrain.frag");
 	skyboxProg = loadShaders("sky.vert", "sky.frag");
 	glUseProgram(program);
 	printError("init shader");
-
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
-//	glUniformMatrix4fv(glGetUniformLocation(proPhong, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+	//Load textures
 	glUniform1i(glGetUniformLocation(program, "tex"), 0); // Texture unit 0
 	glUniform1i(glGetUniformLocation(program, "snowTex"), 1);
 	glUniform1i(glGetUniformLocation(program, "waterTex"), 2);
 	glUniform1i(glGetUniformLocation(program, "bookTex"), 3);
-	LoadTGATextureSimple("../textures/grass.tga", &tex1);
+	LoadTGATextureSimple("../textures/grass.tga", &grassTex);
 	LoadTGATextureSimple("../textures/snow.tga", &snowTex);
 	LoadTGATextureSimple("../textures/water.tga", &waterTex);
 	LoadTGATextureSimple("../textures/SkyBox512.tga", &skytex);
-	LoadTGATextureSimple("../textures/bilskissred.tga", &stolpeTex);
-	skybox = LoadModelPlus("../Modeller/skybox.obj");
+	LoadTGATextureSimple("../textures/bilskissred.tga", &bookTex);
+	LoadTGATextureSimple("../textures/stolpe.tga", &sphereTex);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tex1);
+	glBindTexture(GL_TEXTURE_2D, grassTex);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, snowTex);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, waterTex);
 	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, stolpeTex);
-// Load terrain data
+	glBindTexture(GL_TEXTURE_2D, bookTex);
+	printError("init textures");
+	// Load terrain data
 	LoadTGATextureData("../textures/fft-terrain.tga", &ttex);
 	tm = GenerateTerrain(&ttex);
+	printError("init terrain");
+	//Load Models
+	skybox = LoadModelPlus("../Modeller/skybox.obj");
 	sphere = LoadModelPlus("../Modeller/octagon.obj");
 	boktop = LoadModelPlus("../Modeller/Boktop.obj");
 	bokrygg = LoadModelPlus("../Modeller/bokrygg.obj");
 	stolpe = LoadModelPlus("../Modeller/stolpe.obj");
-	LoadTGATextureSimple("../textures/maskros512.tga", &sphereTex);
-
-	printError("init terrain");
+	printError("init models");
 }
 
+//-------------Display--------------------------
 void display(void)
 {
-
 	GLfloat t = (GLfloat)glutGet(GLUT_ELAPSED_TIME);
 	t = t/1000;
 	// clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glDisable(GL_CULL_FACE);
-	mat4 total, modelView, camMatrix;
+	mat4 total, modelView, camMatrix, modelViewBook, modelViewBook2;
 	printError("pre display");
-	//camMat2 = mat3tomat4(mat4tomat3(camMat)); //worldToView
 	camMatrix = lookAt(cam.x, cam.y, cam.z,
 										lookAtPoint.x, lookAtPoint.y, lookAtPoint.z,
 										v.x, v.y, v.z);
@@ -256,7 +251,6 @@ void display(void)
 	glUniformMatrix4fv(glGetUniformLocation(skyboxProg, "mdlMatrix"), 1, GL_TRUE, camMat2.m);
 	DrawModel(skybox, skyboxProg, "in_Position", NULL, "inTexCoord");
 
-
 	// Build matrix
 	keyboardInput();
 	glEnable(GL_DEPTH_TEST);
@@ -264,42 +258,52 @@ void display(void)
 
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tex1);
+	glBindTexture(GL_TEXTURE_2D, grassTex);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, snowTex);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, waterTex);
 	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, stolpeTex);
+	glBindTexture(GL_TEXTURE_2D, bookTex);
 	DrawModel(tm, program, "inPosition", "inNormal", "inTexCoord");
 	glUniform1f(glGetUniformLocation(program, "t"), t);
 
-// Draw sphere
-	//transSphere =
+	//Sphere
  	a += M_PI/90;
-	Ballx = 25+cos(a);
-	Ballz = 15+sin(a);
+	Ballx = 100+cos(a);
+	Ballz = 90+sin(a);
 
 	GLfloat rull = getRealHeight(Ballx, Ballz, tm->vertexArray, &ttex);
-
 	modelView = T(Ballx,rull, Ballz);
-
 	totalSphere = Mult(camMatrix, modelView);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, stolpeTex);
+	glBindTexture(GL_TEXTURE_2D, sphereTex);
 	glUniform1i(glGetUniformLocation(program, "tex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalSphere.m);
-	//DrawModel(sphere, program, "inPosition", "inNormal", "inTexCoord");
+	DrawModel(sphere, program, "inPosition", "inNormal", "inTexCoord");
+
+	//Book
+	GLfloat Bookx = 60+cos(a);
+	GLfloat Bookz = 100+sin(a);
+
+	GLfloat bookNorm = getRealHeight(Bookx, Bookz, tm->vertexArray, &ttex);
+	modelViewBook = T(Bookx, bookNorm, Bookz);
+	totalBook = Mult(camMatrix, modelViewBook);
+
+	glBindTexture(GL_TEXTURE_2D, bookTex);
+	glUniform1i(glGetUniformLocation(program, "tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBook.m);
 	DrawModel(boktop, program, "inPosition", "inNormal", "inTexCoord");
 	DrawModel(bokrygg, program, "inPosition", "inNormal", "inTexCoord");
 
-	// glActiveTexture(GL_TEXTURE3);
-	// glBindTexture(GL_TEXTURE_2D, stolpeTex);
-	// glUniform1i(glGetUniformLocation(program, "tex"), 0); // Texture unit 0
-	// glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalSphere.m);
-	// DrawModel(stolpe, program, "inPosition", "inNormal", "inTexCoord");
 
+	GLfloat upperPage = bookNorm+2.5;
+	modelViewBook2 = T(Bookx, upperPage, Bookz);
+	totalBook2 = Mult(camMatrix, modelViewBook2);
+	glUniform1i(glGetUniformLocation(program, "tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBook2.m);
+	DrawModel(boktop, program, "inPosition", "inNormal", "inTexCoord");
 
 	printError("display 2");
 
