@@ -11,14 +11,15 @@
 #include "VectorUtils3.h"
 #include "LoadTGA.h"
 #include "LoadFiles.h"
+#include "Camera.h"
 
 
 
 LoadFiles* loader;
+Camera* camera;
 void mouseControl(int x, int y)
 {
-
-	loader->getMouse(x,y);
+	camera->getMouse(x,y);
 	glutPostRedisplay();
 }
 
@@ -30,15 +31,16 @@ void timer(int i)
 
 void init(void)
 {
+	camera = new Camera();
+	camera->initate();
 	loader = new LoadFiles();
-	loader->initiate();
+	loader->initiate(camera->getProj_matrix());
 }
 
 void display(void)
 {
-
-	loader->update();
-	loader->keyboardInput();
+	camera->keyboardInput();
+	loader->update(camera->getProj_matrix(), camera->getCamMatrix());
 
  	printError("display");
  	glutSwapBuffers();
@@ -53,9 +55,6 @@ int main(int argc, char **argv)
 	glutInitWindowSize (600, 600);
 	glutCreateWindow ("GLUTen project");
 	glutDisplayFunc(display);
-#ifdef WIN32
-	glewInit();
-#endif
 	init ();
 	glutTimerFunc(20, &timer, 0);
 	glutPassiveMotionFunc(mouseControl);
