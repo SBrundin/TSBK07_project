@@ -13,8 +13,8 @@
 #include "LoadFiles.h"
 
 
-
 LoadFiles* loader;
+
 void mouseControl(int x, int y)
 {
 

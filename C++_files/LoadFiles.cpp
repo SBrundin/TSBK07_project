@@ -10,6 +10,7 @@
 #include "VectorUtils3.h"
 #include "LoadTGA.h"
 #include "LoadFiles.h"
+#include "Objects.h"
 
 
 void LoadFiles::initiate(){
@@ -138,4 +139,10 @@ void LoadFiles::getMouse(int x, int y){
   lookAtPoint.y = 10*cos(viewY) + cam.y;
   lookAtPoint.z = 10 *sin(viewY)*cos(viewX) + cam.z;
 
+}
+
+
+Objects* LoadFiles::getObject()
+{
+    return _object;
 }

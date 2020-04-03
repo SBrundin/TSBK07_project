@@ -1,6 +1,8 @@
 #ifndef LOADFILES_H
 #define LOADFILES_H
 
+#include "Objects.h"
+
 
 class LoadFiles
 {
@@ -9,6 +11,7 @@ public:
     void update();
     void keyboardInput();
     void getMouse(int x, int y);
+    Objects* getObject();
 
 private:
 
@@ -23,6 +26,7 @@ private:
   GLfloat Bookx = 0.0f;
   GLfloat Bookz = 0.0f;
   GLfloat Booky = 0.0f;
+  Objects* _object;
 };
 
 #endif
