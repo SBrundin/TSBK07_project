@@ -48,7 +48,7 @@ Model *boktop;
 Model *bokrygg;
 Model *skybox;
 
-mat4 rot, trans, total, rot2, trans2, total2, totalBook, totalBook2;
+mat4 rot, trans, total, rot2, trans2, total2;
 mat4 projectionMatrix2;
 
 mat4 camMat, camMat2;
@@ -163,14 +163,14 @@ void display(void)
 	// clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glDisable(GL_CULL_FACE);
-
+	mat4 total, modelView, camMatrix, modelViewBook, modelViewBook2;
 	printError("pre display");
-	mat4 camMatrix = lookAt(cam.x, cam.y, cam.z,
+	camMatrix = lookAt(cam.x, cam.y, cam.z,
 										lookAtPoint.x, lookAtPoint.y, lookAtPoint.z,
 										v.x, v.y, v.z);
-	mat4 modelView = IdentityMatrix();
-	mat4 total = Mult(camMatrix, modelView);
-	mat4 camMat2 = camMatrix;
+	modelView = IdentityMatrix();
+	total = Mult(camMatrix, modelView);
+	camMat2 = camMatrix;
 	camMat2.m[3] = 0;
 	camMat2.m[7] = 0;
 	camMat2.m[11] = 0;
@@ -207,9 +207,23 @@ void display(void)
 //Camera vectors
 	glEnable(GL_DEPTH_TEST);
 
-	mat4 scale = S(5,5,5);
-  mat4 modelViewBook = T(Bookx, Booky, Bookz);
-  mat4 totalBook = Mult(camMatrix, Mult(modelViewBook, scale));
+//p = SetVector(4, 3, 3);
+// p = SetVector(5*cos(t), 3, 5*sin(t));
+// l = SetVector(0, 5, 0);
+// v = SetVector(0, 1, 0);
+//
+// camMat = lookAtv(p, l, v); //worldToView
+//
+// trans = T(1.4, 0, 1.2);
+// rot = Ry(40);
+// total = Mult(rot, trans); //modelToWorld
+//
+// trans2 = T(-1.0, 0, -1.9);
+// rot2 = Ry(40);
+// total2 = Mult(rot2, trans2); //modelToWorld2
+
+  modelViewBook = T(Bookx, Booky, Bookz);
+  totalBook = Mult(camMatrix, modelViewBook);
 
   glUseProgram(program);
 	//Draw the bunny
@@ -220,15 +234,21 @@ void display(void)
 	DrawModel(boktop, program, "inPosition", "inNormal", "inTexCoord");
   DrawModel(bokrygg, program, "inPosition", "inNormal", "inTexCoord");
 
-	GLfloat upperPage = Booky+2.5*5;
+	GLfloat upperPage = Booky+2.5;
 	mat4 modelViewBook2 = T(Bookx, upperPage, Bookz);
-	mat4 totalBook2 = Mult(camMatrix, modelViewBook2);
-
-	totalBook2 = Mult(camMatrix, Mult(modelViewBook2,scale));
+	mat4 scale = S(100,100,100);
+	totalBook2 = Mult(camMatrix, modelViewBook2);
+	totalBook2 = Mult(totalBook2, scale)
   glBindTexture(GL_TEXTURE_2D, waterTex);
 	glUniform1i(glGetUniformLocation(program, "tex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBook2.m);
 	DrawModel(boktop, program, "inPosition", "inNormal", "inTexCoord");
+
+	// //Draw the teddy
+	// glBindTexture(GL_TEXTURE_2D, teddyTex);
+	// glUniform1i(glGetUniformLocation(program, "texUnit"), 0); // Texture unit 0
+	// glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
+	// DrawModel(n, program, "inPosition", "inNormal", "inTexCoord");
 
 	printError("display");
 	glutSwapBuffers();
