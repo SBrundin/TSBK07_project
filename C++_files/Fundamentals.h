@@ -1,14 +1,15 @@
-#ifndef LOADFILES_H
-#define LOADFILES_H
+#ifndef FUNDAMENTALS_H
+#define FUNDAMENTALS_H
 
 #include "Object.h"
 #include "Camera.h"
 #include "VectorUtils3.h"
 
-class LoadFiles
+class Fundamentals
 {
 public:
-    LoadFiles(Camera* camera);
+    Fundamentals();
+    void loadfiles(Camera* camera);
     void initiate(mat4 projectionMatrix);
     void update(Camera* camera);
     void keyboardInput();

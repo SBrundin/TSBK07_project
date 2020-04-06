@@ -9,12 +9,15 @@
 #include "loadobj.h"
 #include "VectorUtils3.h"
 #include "LoadTGA.h"
-#include "LoadFiles.h"
+#include "Fundamentals.h"
 #include "Object.h"
 #include "Camera.h"
 
+Fundamentals::Fundamentals(){
 
-LoadFiles::LoadFiles(Camera* camera){
+}
+
+void Fundamentals::loadfiles(Camera* camera){
 	void LoadTGATextureSimple(char const *filename, GLuint *tex);
 	glEnable(GL_DEPTH_TEST);
 
@@ -49,14 +52,13 @@ LoadFiles::LoadFiles(Camera* camera){
 	printError("init shader");
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
+}
+
+void Fundamentals::initiate(mat4 projectionMatrix){
 
 }
 
-void LoadFiles::initiate(mat4 projectionMatrix){
-
-}
-
-void LoadFiles::update(Camera* camera){
+void Fundamentals::update(Camera* camera){
 	camMatrix = camera->getCamMatrix();
 
   GLfloat t = (GLfloat)glutGet(GLUT_ELAPSED_TIME);
@@ -117,7 +119,7 @@ void LoadFiles::update(Camera* camera){
 
 }
 
-void LoadFiles::keyboardInput(){
+void Fundamentals::keyboardInput(){
   vec3 forward = VectorSub(cam, lookAtPoint);
 
   if (glutKeyIsDown('w')) {
@@ -148,7 +150,7 @@ void LoadFiles::keyboardInput(){
   }
 }
 
-void LoadFiles::getMouse(int x, int y){
+void Fundamentals::getMouse(int x, int y){
   viewX = (float)x/600*2*M_PI;
   viewY = (float)y/600*M_PI;
 
@@ -159,7 +161,7 @@ void LoadFiles::getMouse(int x, int y){
 }
 
 
-// Objects* LoadFiles::getObject()
+// Objects* Fundamentals::getObject()
 // {
 //     return _object;
 // }

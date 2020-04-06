@@ -10,17 +10,17 @@
 #include "loadobj.h"
 #include "VectorUtils3.h"
 #include "LoadTGA.h"
-#include "LoadFiles.h"
+#include "Fundamentals.h"
 #include "Camera.h"
+#include "AndreasClass.h"
 
 
-LoadFiles* loader;
+Fundamentals* loader;
 Camera* camera;
 
 void mouseControl(int x, int y)
 {
 	camera->getMouse(x,y);
-	glutPostRedisplay();
 }
 
 void timer(int i)
@@ -33,15 +33,16 @@ void init(void)
 {
 	camera = new Camera();
 	camera->initate();
-	loader = new LoadFiles(camera);
+	loader = new Fundamentals();
+	loader->loadfiles(camera);
 	//loader->initiate();
 }
 
 void display(void)
 {
+	glutPassiveMotionFunc(mouseControl);
 	camera->keyboardInput();
 	loader->update(camera);
-
  	printError("display");
  	glutSwapBuffers();
 }
@@ -58,7 +59,6 @@ int main(int argc, char **argv)
 	glutDisplayFunc(display);
 
 	glutTimerFunc(20, &timer, 0);
-	glutPassiveMotionFunc(mouseControl);
 	glutMainLoop();
 	exit(0);
 }
