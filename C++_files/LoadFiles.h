@@ -1,7 +1,7 @@
 #ifndef LOADFILES_H
 #define LOADFILES_H
 
-#include "Objects.h"
+#include "Object.h"
 #include "Camera.h"
 #include "VectorUtils3.h"
 
@@ -10,16 +10,14 @@ class LoadFiles
 public:
     LoadFiles(Camera* camera);
     void initiate(mat4 projectionMatrix);
-    //void update(Camera* camera);
     void update(Camera* camera);
     void keyboardInput();
     void getMouse(int x, int y);
-    //Objects* getObject();
 
 private:
 
   Model *bookModel, *bookbackModel, *skybox, *carModel;
-  mat4 rot, trans, rot2, trans2, total2, totalBook, totalBook2, projectionMatrix, camMatrix;
+  mat4 projectionMatrix, camMatrix;
   vec3 p,l, c, cam, lookAtPoint, c2;
   GLuint program, skyboxProg, pageShader;
   GLuint sphereTex, waterTex, snowTex, skytex,grassTex, tex2, bookTex;
@@ -28,11 +26,11 @@ private:
   vec3 v = {0.0, 1.0, 0.0};
   vec3 init = {0.0f, 0.0f, 0.0f};
   vec3 upperCoord = {0.0f, 2.5f, 0.0f};
-  GLfloat Bookx = 0.0f;
-  GLfloat Bookz = 0.0f;
-  GLfloat Booky = 0.0f;
   Camera* camera;
-  Objects* car, toppage, bottompage, bookback;
+  Object* car;
+  Object* bookback;
+  Object* toppage;
+  Object* bottompage;
 
 };
 
