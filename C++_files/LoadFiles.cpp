@@ -21,7 +21,7 @@ void LoadFiles::initiate(mat4 projectionMatrix){
 	// v = SetVector(0,1,0);
 	// projectionMatrix2 = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 200.0);
 	// GL inits
-	glClearColor(0.9,0.9,1,0);
+	glClearColor(0.5,0.5,1,0);
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	printError("GL inits");
