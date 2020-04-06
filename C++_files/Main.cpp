@@ -20,7 +20,6 @@ Camera* camera;
 void mouseControl(int x, int y)
 {
 	camera->getMouse(x,y);
-	glutPostRedisplay();
 }
 
 void timer(int i)
@@ -39,10 +38,9 @@ void init(void)
 
 void display(void)
 {
+	glutPassiveMotionFunc(mouseControl);
 	camera->keyboardInput();
 	loader->update(camera->getProj_matrix(), camera->getCamMatrix());
-
-
  	printError("display");
  	glutSwapBuffers();
 }
@@ -58,7 +56,6 @@ int main(int argc, char **argv)
 	glutDisplayFunc(display);
 	init ();
 	glutTimerFunc(20, &timer, 0);
-	glutPassiveMotionFunc(mouseControl);
 	glutMainLoop();
 	exit(0);
 }

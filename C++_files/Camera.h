@@ -2,6 +2,8 @@
 #define CAMERA_H
 
 #include "VectorUtils3.h"
+#include "MicroGlut.h"
+#include "GL_utilities.h"
 
 class Camera
 {
@@ -28,6 +30,11 @@ private:
   GLfloat viewY = 0.5;
   vec3 position, up, lookAtPoint, c;
   mat4 proj_matrix, camMatrix;
+  GLfloat totX = 0;
+  GLfloat totY = 500;
+  GLfloat mspeed = 0.1;
+  GLfloat midX = glutGet(GLUT_WINDOW_WIDTH)/2;
+  GLfloat	midY = glutGet(GLUT_WINDOW_HEIGHT)/2;
 
 };
 
