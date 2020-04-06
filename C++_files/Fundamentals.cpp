@@ -13,11 +13,11 @@
 #include "Object.h"
 #include "Camera.h"
 
-Fundamentals::Fundamentals(){
-
+Fundamentals::Fundamentals(Camera* cam){
+	camera = cam;
 }
 
-void Fundamentals::loadfiles(Camera* camera){
+void Fundamentals::loadfiles(){
 	void LoadTGATextureSimple(char const *filename, GLuint *tex);
 	glEnable(GL_DEPTH_TEST);
 
@@ -58,7 +58,7 @@ void Fundamentals::initiate(mat4 projectionMatrix){
 
 }
 
-void Fundamentals::update(Camera* camera){
+void Fundamentals::update(){
 	camMatrix = camera->getCamMatrix();
 
   GLfloat t = (GLfloat)glutGet(GLUT_ELAPSED_TIME);

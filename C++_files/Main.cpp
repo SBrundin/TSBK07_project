@@ -33,8 +33,8 @@ void init(void)
 {
 	camera = new Camera();
 	camera->initate();
-	loader = new Fundamentals();
-	loader->loadfiles(camera);
+	loader = new Fundamentals(camera);
+	loader->loadfiles();
 	//loader->initiate();
 }
 
@@ -42,7 +42,7 @@ void display(void)
 {
 	glutPassiveMotionFunc(mouseControl);
 	camera->keyboardInput();
-	loader->update(camera);
+	loader->update();
  	printError("display");
  	glutSwapBuffers();
 }

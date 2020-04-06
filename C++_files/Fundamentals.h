@@ -8,10 +8,10 @@
 class Fundamentals
 {
 public:
-    Fundamentals();
-    void loadfiles(Camera* camera);
+    Fundamentals(Camera* cam);
+    void loadfiles();
     void initiate(mat4 projectionMatrix);
-    void update(Camera* camera);
+    void update();
     void keyboardInput();
     void getMouse(int x, int y);
 
