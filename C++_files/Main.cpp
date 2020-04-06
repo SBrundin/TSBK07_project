@@ -11,9 +11,10 @@
 #include "VectorUtils3.h"
 #include "LoadTGA.h"
 #include "LoadFiles.h"
+#include "AndreasClass.h"
 
 
-
+//AndreasClass a;
 LoadFiles* loader;
 void mouseControl(int x, int y)
 {
@@ -39,6 +40,7 @@ void display(void)
 
 	loader->update();
 	loader->keyboardInput();
+
 
  	printError("display");
  	glutSwapBuffers();

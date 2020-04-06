@@ -131,11 +131,31 @@ void LoadFiles::keyboardInput(){
 }
 
 void LoadFiles::getMouse(int x, int y){
-  viewX = (float)x/600*2*M_PI;
-  viewY = (float)y/600*M_PI;
+	float midX = glutGet(GLUT_WINDOW_WIDTH)/2;
+	float midY = glutGet(GLUT_WINDOW_HEIGHT)/2;
+	float totX = 0;
+	float totY = 500;
+	float deltaX;
+	float deltaY;
+	float angX;
+	float angY;
+	float mspeed = 0.1;
+		if(x!=midX || y!=midY)
+		{
+		 	deltaX = x - midX;
+			deltaY = y - midY;
+			totX = deltaX + totX;
+			totY = deltaY + totY;
+			angX = mspeed*(float)totX/glutGet(GLUT_WINDOW_WIDTH)*2*3.14; //angle
+			angY = mspeed*(float)totY/glutGet(GLUT_WINDOW_HEIGHT)*2*3.14; // angle
+			lookAtPoint.x = -10*sin(angY)*sin(angX)+cam.x;
+			lookAtPoint.y = 10*cos(angY)+cam.y;
+			lookAtPoint.z = 10*sin(angY)*cos(angX)+cam.z;
+			glutWarpPointer(midX,midY);
+			glutPostRedisplay();
+		}
+	//oldX = x;
+	//oldY = y;
 
-  lookAtPoint.x = -10 *sin(viewY)*sin(viewX) + cam.x;
-  lookAtPoint.y = 10*cos(viewY) + cam.y;
-  lookAtPoint.z = 10 *sin(viewY)*cos(viewX) + cam.z;
 
 }
