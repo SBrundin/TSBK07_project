@@ -315,21 +315,3 @@ void timer(int i)
 	glutTimerFunc(20, &timer, i);
 	glutPostRedisplay();
 }
-
-int main(int argc, char **argv)
-{
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
-	glutInitContextVersion(3, 2);
-	glutInitWindowSize (600, 600);
-	glutCreateWindow ("GLUTen project");
-	glutDisplayFunc(display);
-#ifdef WIN32
-	glewInit();
-#endif
-	init ();
-	glutTimerFunc(20, &timer, 0);
-	glutPassiveMotionFunc(mouse);
-	glutMainLoop();
-	exit(0);
-}
