@@ -12,8 +12,7 @@ public:
     void loadfiles();
     void initiate(mat4 projectionMatrix);
     void update();
-    void keyboardInput();
-    void getMouse(int x, int y);
+
 
 private:
 

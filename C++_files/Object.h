@@ -19,9 +19,13 @@ public:
     Model* getModel();
     void setModel(Model* model);
 
+    void setBoundingBox();
+    vec3 getSize();
+
 private:
     vec3 _position;
     vec3 _direction;
+    vec3 _size;
     vec3 _speed;
     Model* _model;
 };
