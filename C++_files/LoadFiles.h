@@ -1,12 +1,13 @@
 #ifndef LOADFILES_H
 #define LOADFILES_H
 
+#include "VectorUtils3.h"
 
 class LoadFiles
 {
 public:
-    void initiate();
-    void update();
+    void initiate(mat4 projectionMatrix);
+    void update(mat4 projectionMatrix, mat4 camMatrix);
     void keyboardInput();
     void getMouse(int x, int y);
 
