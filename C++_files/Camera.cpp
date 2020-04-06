@@ -19,7 +19,6 @@ void Camera::getMouse(int x, int y){
   lookAtPoint.x = -10 *sin(viewY)*sin(viewX) + position.x;
   lookAtPoint.y = 10*cos(viewY) + position.y;
   lookAtPoint.z = 10 *sin(viewY)*cos(viewX) + position.z;
-
 }
 
 void Camera::keyboardInput(){

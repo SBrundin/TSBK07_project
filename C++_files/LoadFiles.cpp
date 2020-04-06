@@ -40,7 +40,7 @@ void LoadFiles::initiate(mat4 projectionMatrix){
   LoadTGATextureSimple("../textures/water.tga", &waterTex);
   LoadTGATextureSimple("../textures/SkyBox512.tga", &skytex);
 
-  skybox = LoadModelPlus("../Modeller/skybox.obj");
+  skybox = LoadModelPlus("../Modeller/SkyboxHH.obj");
   boktop = LoadModelPlus("../Modeller/Boktop.obj");
   bokrygg = LoadModelPlus("../Modeller/bokrygg.obj");
 }
