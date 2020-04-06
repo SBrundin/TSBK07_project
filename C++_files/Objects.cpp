@@ -1,6 +1,7 @@
 #include "Objects.h"
 #include <stdio.h>
 #include "VectorUtils3.h"
+#include "loadobj.h"
 
 Objects::Objects()
 {
@@ -32,4 +33,14 @@ vec3 Objects::getDirection()
 void Objects::setDirection(vec3 direction)
 {
     _direction = direction;
+}
+
+Model* Objects::getModel()
+{
+    return _model;
+}
+
+void Objects::setModel(Model* model)
+{
+    _model = model;
 }

@@ -34,13 +34,23 @@ LoadFiles::LoadFiles(Camera* camera){
 
 	//Load Objects
 	skybox = LoadModelPlus("../Modeller/skybox.obj");
-	boktop = LoadModelPlus("../Modeller/Boktop.obj");
-	bokrygg = LoadModelPlus("../Modeller/bokrygg.obj");
-	car = LoadModelPlus("../Modeller/bilskiss.obj");
+	// bookModel = LoadModelPlus("../Modeller/Boktop.obj");
+	// bookbackModel = LoadModelPlus("../Modeller/bokrygg.obj");
+	//carModel = LoadModelPlus("../Modeller/bilskiss.obj");
 
 	glUseProgram(program);
 	printError("init shader");
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+
+	car = new Objects();
+	car->setModel(LoadModelPlus("../Modeller/bilskiss.obj"));
+	//bookback = new Objects();
+	//bookback->setModel(LoadModelPlus("../Modeller/bokrygg.obj"))
+	// bottompage = new Objects();
+	// bottompage->setModel(LoadModelPlus("../Modeller/Boktop.obj"))
+	// toppage = new Objects();
+	// toppage->setModel(LoadModelPlus("../Modeller/Boktop.obj"))
+
 
 }
 
@@ -105,29 +115,39 @@ void LoadFiles::update(Camera* camera){
 
 //Camera vectors
   glEnable(GL_DEPTH_TEST);
-  mat4 scale = S(5,5,5);
-  mat4 modelViewBook = T(Bookx, Booky, Bookz);
-  mat4 totalBook = Mult(camMatrix, Mult(modelViewBook, scale));
+  //  mat4 scale = S(5,5,5);
+  //  mat4 modelViewBook = T(bottompage->getPosition().x, bottompage->getPosition().y ,bottompage->getPosition().z);
+  //  mat4 totalBook = Mult(camMatrix, Mult(modelViewBook, scale));
+	//
+  // glUseProgram(program);
+  // //Draw the bunny
+  // glActiveTexture(GL_TEXTURE0);
+  // glBindTexture(GL_TEXTURE_2D, grassTex);
+  // glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
+  // glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBook.m);
+  // DrawModel(bookback->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+  // DrawModel(bottompage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+  // glUniform1f(glGetUniformLocation(program, "t"), t);
+	//
+  // GLfloat upperPage = Booky+2.5*5;
+	// toppage->setPosition(upperPage)
+  // mat4 modelViewBook2 = T(toppage->getPosition().x, toppage->getPosition().y ,toppage->getPosition().z);
+  // mat4 totalBook2 = Mult(camMatrix, modelViewBook2);
+  // totalBook2 = Mult(camMatrix, Mult(modelViewBook2,scale));
+	//
+  // glBindTexture(GL_TEXTURE_2D, waterTex);
+  // glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
+  // glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBook2.m);
+  // DrawModel(toppage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
 
-  glUseProgram(program);
-  //Draw the bunny
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, grassTex);
-  glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
-  glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBook.m);
-  DrawModel(boktop, program, "inPosition", "inNormal", "inTexCoord");
-  DrawModel(bokrygg, program, "inPosition", "inNormal", "inTexCoord");
-  glUniform1f(glGetUniformLocation(program, "t"), t);
+	mat4 carTot = T(car->getPosition().x, car->getPosition().y, car->getPosition().z );
+	carTot = Mult(camMatrix, carTot);
+	glBindTexture(GL_TEXTURE_2D, waterTex);
+	glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, carTot.m);
+	DrawModel(car->getModel(), program, "inPosition", "inNormal", "inTexCoord");
 
-  GLfloat upperPage = Booky+2.5*5;
-  mat4 modelViewBook2 = T(Bookx, upperPage, Bookz);
-  mat4 totalBook2 = Mult(camMatrix, modelViewBook2);
-  totalBook2 = Mult(camMatrix, Mult(modelViewBook2,scale));
 
-  glBindTexture(GL_TEXTURE_2D, waterTex);
-  glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
-  glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBook2.m);
-  DrawModel(boktop, program, "inPosition", "inNormal", "inTexCoord");
 
 }
 

@@ -18,7 +18,7 @@ public:
 
 private:
 
-  Model *boktop, *bokrygg, *skybox, *car;
+  Model *bookModel, *bookbackModel, *skybox, *carModel;
   mat4 rot, trans, rot2, trans2, total2, totalBook, totalBook2, projectionMatrix, camMatrix;
   vec3 p,l, c, cam, lookAtPoint, c2;
   GLuint program, skyboxProg, pageShader;
@@ -26,11 +26,13 @@ private:
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   vec3 v = {0.0, 1.0, 0.0};
+  vec3 init = {0.0f, 0.0f, 0.0f};
+  vec3 upperCoord = {0.0f, 2.5f, 0.0f};
   GLfloat Bookx = 0.0f;
   GLfloat Bookz = 0.0f;
   GLfloat Booky = 0.0f;
   Camera* camera;
-  //Objects* _objects;
+  Objects* car, toppage, bottompage, bookback;
 
 };
 
