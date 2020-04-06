@@ -12,9 +12,9 @@
 #include "LoadTGA.h"
 #include "LoadFiles.h"
 #include "Camera.h"
+#include "AndreasClass.h"
 
-
-
+//AndreasClass a;
 LoadFiles* loader;
 Camera* camera;
 void mouseControl(int x, int y)
@@ -41,6 +41,7 @@ void display(void)
 {
 	camera->keyboardInput();
 	loader->update(camera->getProj_matrix(), camera->getCamMatrix());
+
 
  	printError("display");
  	glutSwapBuffers();
