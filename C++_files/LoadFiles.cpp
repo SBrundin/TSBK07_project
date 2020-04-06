@@ -13,6 +13,8 @@
 #include "Object.h"
 #include "Camera.h"
 
+#include <iostream>
+
 
 LoadFiles::LoadFiles(Camera* camera){
 	void LoadTGATextureSimple(char const *filename, GLuint *tex);
@@ -36,28 +38,35 @@ LoadFiles::LoadFiles(Camera* camera){
 	//Create Objects
 	car = new Object();
 	car->setModel(LoadModelPlus("../Modeller/bilskiss.obj"));
+	car->setBoundingBox();
 	bookback = new Object();
 	bookback->setModel(LoadModelPlus("../Modeller/bokrygg.obj"));
+	bookback->setBoundingBox();
 	bottompage = new Object();
 	bottompage->setModel(LoadModelPlus("../Modeller/Boktop.obj"));
+	bottompage->setBoundingBox();
 	toppage = new Object();
 	toppage->setModel(LoadModelPlus("../Modeller/Boktop.obj"));
+	toppage->setBoundingBox();
 
 	skybox = LoadModelPlus("../Modeller/skybox.obj");
 
 	glUseProgram(program);
 	printError("init shader");
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
-
-
-}
-
-void LoadFiles::initiate(mat4 projectionMatrix){
-
 }
 
 void LoadFiles::update(Camera* camera){
+	bool flag1 = camera->CheckCollision(car);
+	//bool flag2 = camera->CheckCollision(bookback);
+	//bool flag3 = camera->CheckCollision(bottompage);
+	//bool flag4 = camera->CheckCollision(toppage);
+	camera->checkFlag(flag1);
+	//camera->checkFlag(flag2);
+	//camera->checkFlag(flag3);
+	//camera->checkFlag(flag4);
 	camMatrix = camera->getCamMatrix();
+
 
   GLfloat t = (GLfloat)glutGet(GLUT_ELAPSED_TIME);
   t = t/1000;
@@ -114,47 +123,6 @@ void LoadFiles::update(Camera* camera){
 	glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, carTot.m);
 	DrawModel(car->getModel(), program, "inPosition", "inNormal", "inTexCoord");
-
-}
-
-void LoadFiles::keyboardInput(){
-  vec3 forward = VectorSub(cam, lookAtPoint);
-
-  if (glutKeyIsDown('w')) {
-  c = Normalize(forward);
-  c = ScalarMult(c,0.5);
-  cam = VectorSub(cam, c);
-  lookAtPoint = VectorSub(lookAtPoint, c);
-  }
-  if (glutKeyIsDown('s')) {
-   c = Normalize(forward);
-   c = ScalarMult(c,0.5);
-  cam = VectorAdd(cam, c);
-  lookAtPoint = VectorAdd(lookAtPoint, c);
-  }
-  if (glutKeyIsDown('a')) {
-    c = CrossProduct(v, forward);
-    c = Normalize(c);
-    c = ScalarMult(c,0.5);
-    cam = VectorSub(cam, c);
-    lookAtPoint = VectorSub(lookAtPoint, c);
-  }
-  if (glutKeyIsDown('d')) {
-     c = CrossProduct(v, forward);
-     c = Normalize(c);
-     c = ScalarMult(c,0.5);
-     cam = VectorAdd(cam, c);
-     lookAtPoint = VectorAdd(lookAtPoint, c);
-  }
-}
-
-void LoadFiles::getMouse(int x, int y){
-  viewX = (float)x/600*2*M_PI;
-  viewY = (float)y/600*M_PI;
-
-  lookAtPoint.x = -10 *sin(viewY)*sin(viewX) + cam.x;
-  lookAtPoint.y = 10*cos(viewY) + cam.y;
-  lookAtPoint.z = 10 *sin(viewY)*cos(viewX) + cam.z;
 
 }
 

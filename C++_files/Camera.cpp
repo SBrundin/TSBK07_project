@@ -2,7 +2,7 @@
 #include "VectorUtils3.h"
 #include "MicroGlut.h"
 #include "GL_utilities.h"
-
+#include "Object.h"
 
 
 void Camera::initate(){
@@ -24,6 +24,7 @@ void Camera::getMouse(int x, int y){
 
 void Camera::keyboardInput(){
   	vec3 forward = VectorSub(position, lookAtPoint);
+    oldPosition = position;
 
     if (glutKeyIsDown('w')) {
       c = Normalize(forward);
@@ -51,4 +52,23 @@ void Camera::keyboardInput(){
       position = VectorAdd(position, c);
       lookAtPoint = VectorAdd(lookAtPoint, c);
     }
+}
+
+bool Camera::CheckCollision(Object* two) // AABB - AABB collision
+{
+	// Collision x-axis?
+	bool collisionX = position.x + size.x >= two->getPosition().x && two->getPosition().x + two->getSize().x >= position.x;
+	// Collision y-axis?
+	bool collisionY = position.y + size.y >= two->getPosition().y && two->getPosition().y + two->getSize().y >= position.y;
+	// Collision z-axis?
+	bool collisionZ = position.z + size.z >= two->getPosition().z && two->getPosition().z + two->getSize().z >= position.z;
+	// Collision only if on both axes
+	return collisionX && collisionY && collisionZ;
+}
+
+void Camera::checkFlag(bool flag)
+{
+  if (flag){
+    position = oldPosition;
+  }
 }

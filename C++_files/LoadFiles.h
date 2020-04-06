@@ -9,10 +9,7 @@ class LoadFiles
 {
 public:
     LoadFiles(Camera* camera);
-    void initiate(mat4 projectionMatrix);
     void update(Camera* camera);
-    void keyboardInput();
-    void getMouse(int x, int y);
 
 private:
 
