@@ -12,7 +12,7 @@ public:
   void initate();
   void keyboardInput();
   void getMouse(int x, int y);
-  bool CheckCollision(Object* two);
+  bool CheckCollision(Object* two, bool flag);
   void checkFlag(bool flag);
 
   vec3 getPosition() const

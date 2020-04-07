@@ -47,7 +47,6 @@ void display(void)
  	glutSwapBuffers();
 }
 
-
 int main(int argc, char **argv)
 {
 	glutInit(&argc, argv);

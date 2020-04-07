@@ -66,5 +66,5 @@ void Object::setBoundingBox()
 		if (_model->vertexArray[3 * i+2] < minz) minz = _model->vertexArray[3 * i+2];
 		if (_model->vertexArray[3 * i+2] > maxz) maxz = _model->vertexArray[3 * i+2];
 	}
-	_size = SetVector(maxx-minx, maxx-minx, maxx-minx);
+	_size = SetVector(maxx-minx, maxy-miny, maxz-minz);
 }

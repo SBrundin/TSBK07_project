@@ -10,7 +10,7 @@ class Fundamentals
 public:
     Fundamentals(Camera* cam);
     void loadfiles();
-    void initiate(mat4 projectionMatrix);
+    void cameraCollision();
     void update();
 
 
@@ -26,6 +26,7 @@ private:
   vec3 v = {0.0, 1.0, 0.0};
   vec3 init = {0.0f, 0.0f, 0.0f};
   vec3 upperCoord = {0.0f, 2.5f, 0.0f};
+  bool cameraCollisionFlag = false;
   Camera* camera;
   Object* car;
   Object* bookback;

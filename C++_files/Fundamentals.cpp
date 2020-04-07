@@ -58,19 +58,19 @@ void Fundamentals::loadfiles(){
 
 }
 
-void Fundamentals::initiate(mat4 projectionMatrix){
+void Fundamentals::cameraCollision(){
+	cameraCollisionFlag = camera->CheckCollision(car, cameraCollisionFlag);
+	//cameraCollisionFlag = camera->CheckCollision(bookback, cameraCollisionFlag);
+	//cameraCollisionFlag = camera->CheckCollision(bottompage, cameraCollisionFlag);
+	//cameraCollisionFlag = camera->CheckCollision(toppage, cameraCollisionFlag);
+
+	camera->checkFlag(cameraCollisionFlag);
+	cameraCollisionFlag = false;
 
 }
 
 void Fundamentals::update(){
-	bool flag1 = camera->CheckCollision(car);
-	//bool flag2 = camera->CheckCollision(bookback);
-	//bool flag3 = camera->CheckCollision(bottompage);
-	//bool flag4 = camera->CheckCollision(toppage);
-	camera->checkFlag(flag1);
-	//camera->checkFlag(flag2);
-	//camera->checkFlag(flag3);
-	//camera->checkFlag(flag4);
+	cameraCollision();
 
 	camMatrix = camera->getCamMatrix();
 
