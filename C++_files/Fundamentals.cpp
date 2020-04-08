@@ -28,6 +28,7 @@ void Fundamentals::loadfiles(){
 	//init shaders
 	program = loadShaders("terrain.vert", "terrain.frag");
 	skyboxProg = loadShaders("sky.vert", "sky.frag");
+	lightProg = loadShaders("lamp.vert", "lamp.frag");
 	printError("load shader");
 
 	//Load textures
@@ -50,11 +51,19 @@ void Fundamentals::loadfiles(){
 	toppage->setModel(LoadModelPlus("../Modeller/Boktop.obj"));
 	toppage->setBoundingBox();
 
+	//light
+	box = new Object();
+	box->setModel(LoadModelPlus("../Modeller/box.obj"));
+
 	skybox = LoadModelPlus("../Modeller/skybox.obj");
 
 	glUseProgram(program);
 	printError("init shader");
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+
+	glUseProgram(lightProg);
+	printError("init shader");
+	glUniformMatrix4fv(glGetUniformLocation(lightProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
 }
 
@@ -129,6 +138,17 @@ void Fundamentals::update(){
 	glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, carTot.m);
 	DrawModel(car->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+
+	//LampModel
+	glUseProgram(lightProg);
+	box->setPosition(upperCoord*5);
+	mat4 boxTot = T(box->getPosition().x, box->getPosition().y, box->getPosition().z );
+	boxTot = Mult(camMatrix, boxTot);
+	//boxTot = Mult(camMatrix, Mult(modelViewBook, scale));
+	//glBindTexture(GL_TEXTURE_2D, waterTex);
+	//glUniform1i(glGetUniformLocation(lightProg, "bookTex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(lightProg, "mdlMatrix"), 1, GL_TRUE, boxTot.m);
+	DrawModel(box->getModel(), lightProg, "inPosition", NULL, NULL);
 
 }
 

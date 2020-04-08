@@ -16,10 +16,10 @@ public:
 
 private:
 
-  Model *bookModel, *bookbackModel, *skybox, *carModel;
+  Model *bookModel, *bookbackModel, *skybox, *carModel, *boxModel;
   mat4 projectionMatrix, camMatrix;
   vec3 p,l, c, cam, lookAtPoint, c2;
-  GLuint program, skyboxProg, pageShader;
+  GLuint program, skyboxProg, pageShader, lightProg;
   GLuint sphereTex, waterTex, snowTex, skytex,grassTex, tex2, bookTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
@@ -32,6 +32,7 @@ private:
   Object* bookback;
   Object* toppage;
   Object* bottompage;
+  Object* box;
 
 };
 
