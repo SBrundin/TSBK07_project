@@ -13,6 +13,7 @@
 #include "Fundamentals.h"
 #include "Camera.h"
 #include "AndreasClass.h"
+#include "Lamp.h"
 
 
 Fundamentals* loader;

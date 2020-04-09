@@ -1,7 +1,10 @@
 #version 150
-out vec4 color;
+out vec4 out_color;
+
+in vec3 fragLampColour;
 
 void main()
 {
-    color = vec4(1.0f); // Set alle 4 vector values to 1.0f
+  out_color = vec4(fragLampColour, 1.0);
+
 }

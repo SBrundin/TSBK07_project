@@ -12,6 +12,8 @@
 #include "Fundamentals.h"
 #include "Object.h"
 #include "Camera.h"
+#include "Lamp.h"
+#include <iostream>
 
 Fundamentals::Fundamentals(Camera* cam){
 	camera = cam;
@@ -52,18 +54,28 @@ void Fundamentals::loadfiles(){
 	toppage->setBoundingBox();
 
 	//light
+
 	box = new Object();
 	box->setModel(LoadModelPlus("../Modeller/box.obj"));
-
+	lampLight = new Lamp(box);
+	lampColour = lampLight -> getColour();
+	//std::cout << std::to_string(lampColour.x) << '\n';
 	skybox = LoadModelPlus("../Modeller/skybox.obj");
 
 	glUseProgram(program);
 	printError("init shader");
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
+	//vec3 lampColour = {1.0f, 0.0f, 0.0f};
+
 	glUseProgram(lightProg);
 	printError("init shader");
 	glUniformMatrix4fv(glGetUniformLocation(lightProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+	//lampColour = vec3(1.0f, 1.0f, 1.0f);
+	//vec3 lampColour[] = { {10.0f, 5.0f, 5.0f} };
+	  glUniform3fv(glGetUniformLocation(lightProg, "lampColour"), 1, &lampColour.x);
+	//glUniform3fv(glGetUniformLocation(lightProg, "lampColour"), 1, &lampColour);
+	//glUniform1f(glGetUniformLocation(lightProg, "lampColour"), lampColour);
 
 }
 
@@ -117,8 +129,8 @@ void Fundamentals::update(){
   glBindTexture(GL_TEXTURE_2D, grassTex);
   glUniform1i(glGetUniformLocation(program, "bookTex"), 0);
   glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBook.m);
-  DrawModel(bookback->getModel(), program, "inPosition", "inNormal", "inTexCoord");
-  DrawModel(bottompage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+  //DrawModel(bookback->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+  //DrawModel(bottompage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
   glUniform1f(glGetUniformLocation(program, "t"), t);
 
 	//Top page
@@ -129,7 +141,7 @@ void Fundamentals::update(){
   glBindTexture(GL_TEXTURE_2D, waterTex);
   glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
   glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBook2.m);
-  DrawModel(toppage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+  //DrawModel(toppage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
 
 	//Car
 	mat4 carTot = T(car->getPosition().x, car->getPosition().y, car->getPosition().z );
@@ -137,7 +149,7 @@ void Fundamentals::update(){
 	glBindTexture(GL_TEXTURE_2D, waterTex);
 	glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, carTot.m);
-	DrawModel(car->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+	//DrawModel(car->getModel(), program, "inPosition", "inNormal", "inTexCoord");
 
 	//LampModel
 	glUseProgram(lightProg);
