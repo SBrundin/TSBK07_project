@@ -66,6 +66,11 @@ void Camera::keyboardInput(){
       position = VectorAdd(position, c);
       lookAtPoint = VectorAdd(lookAtPoint, c);
     }
+
+    if (glutKeyIsDown('q')) {
+      glutExit();
+    }
+
 }
 
 bool Camera::CheckCollision(Object* two) // AABB - AABB collision

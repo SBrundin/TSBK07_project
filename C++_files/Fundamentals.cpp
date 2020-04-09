@@ -28,6 +28,7 @@ void Fundamentals::loadfiles(){
 	//init shaders
 	program = loadShaders("terrain.vert", "terrain.frag");
 	skyboxProg = loadShaders("sky.vert", "sky.frag");
+	pageShader = loadShaders("pageShader.vert", "pageShader.frag");
 	printError("load shader");
 
 	//Load textures
@@ -97,6 +98,24 @@ void Fundamentals::update(){
   DrawModel(skybox, skyboxProg, "in_Position", NULL, "inTexCoord");
 
 
+	GLfloat myRotX[]=
+							{ 1.0f, 0.0f, 0.0f, 0.0f,
+								0.0f, cos(t), -sin(t), 0.0f,
+								0.0f, sin(t), cos(t), 0.0f,
+								0.0f, 0.0f, 0.0f, 1.0f };
+
+	GLfloat myRotY[]=
+							{ cos(t), 0, -sin(t), 0.0f,
+								0.0f, 1.0f, 0.0f, 0.0f,
+								-sin(t), 0, cos(t), 0.0f,
+								0.0f, 0.0f, 0.0f, 1.0f };
+
+	GLfloat myRotZ[]=
+								{ cos(t), -sin(t), 0.0f, 0.0f,
+									sin(t), cos(t), 0.0f, 0.0f,
+									0.0f, 0.0f, 1.0f, 0.0f,
+									0.0f, 0.0f, 0.0f, 1.0f };
+
 	//Draw Objects
   glEnable(GL_DEPTH_TEST);
   glUseProgram(program);
@@ -113,16 +132,22 @@ void Fundamentals::update(){
   glUniform1f(glGetUniformLocation(program, "t"), t);
 
 	//Top page
+	glUseProgram(program);
 	toppage->setPosition(upperCoord*5);
   mat4 modelViewBook2 = T(toppage->getPosition().x, toppage->getPosition().y ,toppage->getPosition().z);
-  mat4 totalBook2 = Mult(camMatrix, modelViewBook2);
-  totalBook2 = Mult(camMatrix, Mult(modelViewBook2,scale));
+  //mat4 totalBook2 = Mult(camMatrix, modelViewBook2);
+  mat4 totalBook2 = Mult(camMatrix, Mult(modelViewBook2,scale));
+	//totalBook2 = Mult(totalBook2, Rx(t));
   glBindTexture(GL_TEXTURE_2D, waterTex);
-  glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
+  glUniform1i(glGetUniformLocation(program, "bookTex"), 0);
+	// glUniformMatrix4fv(glGetUniformLocation(pageShader, "myRotX"), 1, GL_TRUE, myRotX);
+	// glUniformMatrix4fv(glGetUniformLocation(pageShader, "myRotY"), 1, GL_TRUE, myRotY);
+	// glUniformMatrix4fv(glGetUniformLocation(pageShader, "myRotZ"), 1, GL_TRUE, myRotZ);
   glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBook2.m);
   DrawModel(toppage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
 
 	//Car
+
 	mat4 carTot = T(car->getPosition().x, car->getPosition().y, car->getPosition().z );
 	carTot = Mult(camMatrix, carTot);
 	glBindTexture(GL_TEXTURE_2D, waterTex);
