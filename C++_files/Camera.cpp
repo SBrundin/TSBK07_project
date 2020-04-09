@@ -8,7 +8,7 @@ using namespace std;
 
 
 void Camera::initate(){
-    position = SetVector(0, 5, 8);
+    position = SetVector(0, 55, 8);
     lookAtPoint = SetVector(2,0,2);
     up = SetVector(0,1,0);
     proj_matrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 5000.0);
@@ -33,56 +33,57 @@ void Camera::getMouse(int x, int y){
     glutWarpPointer(midX,midY);
     glutPostRedisplay();
   }
-
-
 }
 
 void Camera::keyboardInput(){
   	vec3 forward = VectorSub(position, lookAtPoint);
-
+    oldPosition = position;
     if (glutKeyIsDown('w')) {
       c = Normalize(forward);
-      c = ScalarMult(c,0.2);
+      c = ScalarMult(c,0.5);
       position = VectorSub(position, c);
       lookAtPoint = VectorSub(lookAtPoint, c);
     }
     if (glutKeyIsDown('s')) {
       c = Normalize(forward);
-      c = ScalarMult(c,0.2);
+      c = ScalarMult(c,0.5);
       position = VectorAdd(position, c);
       lookAtPoint = VectorAdd(lookAtPoint, c);
     }
     if (glutKeyIsDown('a')) {
       c = CrossProduct(up, forward);
       c = Normalize(c);
-      c = ScalarMult(c,0.2);
+      c = ScalarMult(c,0.5);
       position = VectorSub(position, c);
       lookAtPoint = VectorSub(lookAtPoint, c);
     }
     if (glutKeyIsDown('d')) {
       c = CrossProduct(up, forward);
       c = Normalize(c);
-      c = ScalarMult(c,0.2);
+      c = ScalarMult(c,0.5);
       position = VectorAdd(position, c);
       lookAtPoint = VectorAdd(lookAtPoint, c);
     }
 
-    if (glutKeyIsDown('q')) {
-      glutExit();
+    if (glutKeyIsDown('q')){
+        glutExit();
     }
 
 }
 
-bool Camera::CheckCollision(Object* two) // AABB - AABB collision
+bool Camera::CheckCollision(Object* two, bool flag) // AABB - AABB collision
 {
-	// Collision x-axis?
+  if (!flag){
+  // Collision x-axis?
 	bool collisionX = position.x + size.x >= two->getPosition().x && two->getPosition().x + two->getSize().x >= position.x;
 	// Collision y-axis?
 	bool collisionY = position.y + size.y >= two->getPosition().y && two->getPosition().y + two->getSize().y >= position.y;
 	// Collision z-axis?
 	bool collisionZ = position.z + size.z >= two->getPosition().z && two->getPosition().z + two->getSize().z >= position.z;
 	// Collision only if on both axes
-	return collisionX && collisionY && collisionZ;
+  flag =  collisionX && collisionY && collisionZ;
+  }
+  return flag;
 }
 
 void Camera::checkFlag(bool flag)
