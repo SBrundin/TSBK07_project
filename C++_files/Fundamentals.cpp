@@ -103,63 +103,48 @@ void Fundamentals::update(){
   DrawModel(skybox, skyboxProg, "in_Position", NULL, "inTexCoord");
 
 
-	// GLfloat myRotX[]=
-	// 						{ 1.0f, 0.0f, 0.0f, 0.0f,
-	// 							0.0f, cos(t), -sin(t), 0.0f,
-	// 							0.0f, sin(t), cos(t), 0.0f,
-	// 							0.0f, 0.0f, 0.0f, 1.0f };
-	//
-	// GLfloat myRotY[]=
-	// 						{ cos(t), 0, -sin(t), 0.0f,
-	// 							0.0f, 1.0f, 0.0f, 0.0f,
-	// 							-sin(t), 0, cos(t), 0.0f,
-	// 							0.0f, 0.0f, 0.0f, 1.0f };
-	//
-	// GLfloat myRotZ[]=
-	// 							{ cos(t), -sin(t), 0.0f, 0.0f,
-	// 								sin(t), cos(t), 0.0f, 0.0f,
-	// 								0.0f, 0.0f, 1.0f, 0.0f,
-	// 								0.0f, 0.0f, 0.0f, 1.0f };
 
-	//Draw Objects
   glEnable(GL_DEPTH_TEST);
   glUseProgram(program);
+
+	//Bottompage
 	mat4 scale = S(1,1,1);
-	mat4 modelViewBook = T(bottompage->getPosition().x, bottompage->getPosition().y ,bottompage->getPosition().z);
-	mat4 totalBook = Mult(camMatrix, Mult(modelViewBook, scale));
-	//totalBook = Mult(totalBook, Rz(t));
-	//Bottom page and the back of the book
+	mat4 modelViewBottom = T(bottompage->getPosition().x, bottompage->getPosition().y ,bottompage->getPosition().z);
+	mat4 totalBottom = Mult(camMatrix, Mult(modelViewBottom, scale));
+
+	//Back of the book
+	bookback->setPosition(backPos);
+	mat4 modelViewBack = T(bookback->getPosition().x, bookback->getPosition().y ,bookback->getPosition().z);
+	mat4 totalBack = Mult(camMatrix, Mult(modelViewBack, scale));
+
+	//Toppage
+	toppage->setPosition(topPos);
+	mat4 modelViewTop = T(toppage->getPosition().x, toppage->getPosition().y ,toppage->getPosition().z);
+	mat4 totalTop = Mult(camMatrix, Mult(modelViewTop, scale));
+
+	//Drawing of the book
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, grassTex);
   glUniform1i(glGetUniformLocation(program, "bookTex"), 0);
-  glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBook.m);
-  DrawModel(bookback->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+  glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBottom.m);
   DrawModel(bottompage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
-  glUniform1f(glGetUniformLocation(program, "t"), t);
-
-	//Top page
-	glUseProgram(program);
-	//toppage->setPosition(upperCoord*5);
-  mat4 modelViewBook2 = T(toppage->getPosition().x, toppage->getPosition().y ,toppage->getPosition().z);
-  //mat4 totalBook2 = Mult(camMatrix, modelViewBook2);
-  mat4 totalBook2 = Mult(camMatrix, Mult(modelViewBook2,scale));
-	//totalBook2 = Mult(totalBook2, Rz(t));
-  glBindTexture(GL_TEXTURE_2D, waterTex);
-  glUniform1i(glGetUniformLocation(program, "bookTex"), 0);
-	// glUniformMatrix4fv(glGetUniformLocation(pageShader, "myRotX"), 1, GL_TRUE, myRotX);
-	// glUniformMatrix4fv(glGetUniformLocation(pageShader, "myRotY"), 1, GL_TRUE, myRotY);
-	// glUniformMatrix4fv(glGetUniformLocation(pageShader, "myRotZ"), 1, GL_TRUE, myRotZ);
-  glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBook2.m);
-  DrawModel(toppage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+  glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBack.m);
+	DrawModel(bookback->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+	//New texture for toppage
+	glBindTexture(GL_TEXTURE_2D, waterTex);
+	glUniform1i(glGetUniformLocation(program, "bookTex"), 0);
+	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
+	DrawModel(toppage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+	//Time variable
+	glUniform1f(glGetUniformLocation(program, "t"), t);
 
 	//Car
-
 	mat4 carTot = T(car->getPosition().x, car->getPosition().y, car->getPosition().z );
 	carTot = Mult(camMatrix, carTot);
 	glBindTexture(GL_TEXTURE_2D, waterTex);
 	glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, carTot.m);
-	DrawModel(pageBent->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+	DrawModel(car->getModel(), program, "inPosition", "inNormal", "inTexCoord");
 
 	// glUseProgram(pageShader);
 	// pageStraight->setPosition(upperCoord);
@@ -179,9 +164,3 @@ void Fundamentals::update(){
 	// DrawModel(car->getModel(), program, "inPosition", "inNormal", "inTexCoord");
 
 }
-
-
-// Objects* Fundamentals::getObject()
-// {
-//     return _object;
-// }
