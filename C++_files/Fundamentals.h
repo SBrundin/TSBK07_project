@@ -32,6 +32,8 @@ private:
   Object* bookback;
   Object* toppage;
   Object* bottompage;
+  Object* pageStraight;
+  Object* pageBent;
 
 };
 
