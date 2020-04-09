@@ -51,7 +51,7 @@ void Fundamentals::loadfiles(){
 	toppage->setModel(LoadModelPlus("../Modeller/BookTop.obj"));
 	toppage->setBoundingBox();
 	pageStraight = new Object();
-	pageStraight->setModel(LoadModelPlus("../Modeller/octagon.obj"));
+	pageStraight->setModel(LoadModelPlus("../Modeller/PageStraight.obj"));
 	pageStraight->setBoundingBox();
 	pageBent = new Object();
 	pageBent->setModel(LoadModelPlus("../Modeller/PageBent.obj"));
@@ -162,7 +162,7 @@ void Fundamentals::update(){
 
 	glUseProgram(pageShader);
 	mat4 pageSTot = T(pageStraight->getPosition().x, pageStraight->getPosition().y, pageStraight->getPosition().z );
-	carTot = Mult(camMatrix, modelViewBook2);
+	carTot = Mult(camMatrix, pageSTot);
 	glBindTexture(GL_TEXTURE_2D, grassTex);
 	glUniform1i(glGetUniformLocation(pageShader, "bookTex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(pageShader, "mdlMatrix"), 1, GL_TRUE, pageSTot.m);
