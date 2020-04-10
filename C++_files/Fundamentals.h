@@ -24,8 +24,9 @@ private:
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   vec3 v = {0.0, 1.0, 0.0};
-  vec3 init = {0.0f, 0.0f, 0.0f};
+  vec3 nullVec = {0.0f, 0.0f, 0.0f};
   vec3 backPos = {-15.17f, 2.5f, 0.0f};
+  vec3 bentPos = {0.0f, 4.0f, 0.0f};
   vec3 topPos = {0.0f, 5.3f, 0.0f};
   bool cameraCollisionFlag = false;
   Camera* camera;

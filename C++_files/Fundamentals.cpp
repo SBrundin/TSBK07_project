@@ -42,19 +42,19 @@ void Fundamentals::loadfiles(){
 	car = new Object();
 	car->setModel(LoadModelPlus("../Modeller/bilskiss.obj"));
 	car->setBoundingBox();
-	bookback = new Object();
+	bookback = new Object(backPos, nullVec);
 	bookback->setModel(LoadModelPlus("../Modeller/BookBack.obj"));
 	bookback->setBoundingBox();
 	bottompage = new Object();
 	bottompage->setModel(LoadModelPlus("../Modeller/BookBot.obj"));
 	bottompage->setBoundingBox();
-	toppage = new Object();
+	toppage = new Object(topPos, nullVec);
 	toppage->setModel(LoadModelPlus("../Modeller/BookTop.obj"));
 	toppage->setBoundingBox();
 	pageStraight = new Object();
 	pageStraight->setModel(LoadModelPlus("../Modeller/PageStraight.obj"));
 	pageStraight->setBoundingBox();
-	pageBent = new Object();
+	pageBent = new Object(bentPos, nullVec);
 	pageBent->setModel(LoadModelPlus("../Modeller/PageBent.obj"));
 	pageBent->setBoundingBox();
 	skybox = LoadModelPlus("../Modeller/skybox.obj");
@@ -114,54 +114,49 @@ void Fundamentals::update(){
 	mat4 totalBottom = Mult(camMatrix, Mult(modelViewBottom, scale));
 
 	//Back of the book
-	bookback->setPosition(backPos);
 	mat4 modelViewBack = T(bookback->getPosition().x, bookback->getPosition().y ,bookback->getPosition().z);
 	mat4 totalBack = Mult(camMatrix, Mult(modelViewBack, scale));
 
 	//Toppage
-	toppage->setPosition(topPos);
 	mat4 modelViewTop = T(toppage->getPosition().x, toppage->getPosition().y ,toppage->getPosition().z);
 	mat4 totalTop = Mult(camMatrix, Mult(modelViewTop, scale));
 
 	//Drawing of the book
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, grassTex);
+  glBindTexture(GL_TEXTURE_2D, leatherTex);
   glUniform1i(glGetUniformLocation(program, "bookTex"), 0);
   glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBottom.m);
   DrawModel(bottompage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
   glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBack.m);
 	DrawModel(bookback->getModel(), program, "inPosition", "inNormal", "inTexCoord");
-	//New texture for toppage
-	glBindTexture(GL_TEXTURE_2D, waterTex);
-	glUniform1i(glGetUniformLocation(program, "bookTex"), 0);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
 	DrawModel(toppage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+
 	//Time variable
 	glUniform1f(glGetUniformLocation(program, "t"), t);
 
 	//Car
-	mat4 carTot = T(car->getPosition().x, car->getPosition().y, car->getPosition().z );
-	carTot = Mult(camMatrix, carTot);
+	mat4 modelViewCar = T(car->getPosition().x, car->getPosition().y, car->getPosition().z );
+	mat4 carTot = Mult(camMatrix, modelViewCar);
 	glBindTexture(GL_TEXTURE_2D, waterTex);
 	glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, carTot.m);
 	DrawModel(car->getModel(), program, "inPosition", "inNormal", "inTexCoord");
 
-	//glUseProgram(pageShader);
-	//pageStraight->setPosition(upperCoord);
+	//Straight page
 	mat4 pageSTot = T(pageStraight->getPosition().x, pageStraight->getPosition().y, pageStraight->getPosition().z );
  	pageSTot= Mult(camMatrix, pageSTot);
-	glBindTexture(GL_TEXTURE_2D, leatherTex);
+	glBindTexture(GL_TEXTURE_2D, snowTex);
 	glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, pageSTot.m);
 	DrawModel(pageStraight->getModel(), program, "inPosition", "inNormal", "inTexCoord");
 
-
-	// mat4 carTot = T(car->getPosition().x, car->getPosition().y, car->getPosition().z );
-	// carTot = Mult(camMatrix, carTot);
-	// glBindTexture(GL_TEXTURE_2D, waterTex);
-	// glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
-	// glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, carTot.m);
-	// DrawModel(car->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+	//Bent page
+	mat4 pageBTot = T(pageBent->getPosition().x, pageBent->getPosition().y, pageBent->getPosition().z );
+	pageBTot = Mult(camMatrix, pageBTot);
+	glBindTexture(GL_TEXTURE_2D, grassTex);
+	glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, pageBTot.m);
+	DrawModel(pageBent->getModel(), program, "inPosition", "inNormal", "inTexCoord");
 
 }
