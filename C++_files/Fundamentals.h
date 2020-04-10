@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "VectorUtils3.h"
 #include "Lamp.h"
+#include "LightSource.h"
 
 class Fundamentals
 {
@@ -19,9 +20,10 @@ private:
 
   Model *bookModel, *bookbackModel, *skybox, *carModel, *boxModel;
   Lamp* lampLight;
+  LightSource* lightSource;
   mat4 projectionMatrix, camMatrix;
-  vec3 p,l, c, cam, lookAtPoint, c2, lampColour;
-  GLuint program, skyboxProg, pageShader, lightProg;
+  vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
+  GLuint program, skyboxProg, pageShader, lampProg;
   GLuint sphereTex, waterTex, snowTex, skytex,grassTex, tex2, bookTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
@@ -34,7 +36,7 @@ private:
   Object* bookback;
   Object* toppage;
   Object* bottompage;
-  Object* box;
+  Object* lamp;
 };
 
 #endif

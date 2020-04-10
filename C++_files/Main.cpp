@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include "AndreasClass.h"
 #include "Lamp.h"
+#include "LightSource.h"
 
 
 Fundamentals* loader;

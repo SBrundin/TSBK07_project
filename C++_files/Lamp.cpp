@@ -8,7 +8,7 @@ Lamp::Lamp(Object* obj)
 {
     object = obj;
     position = object->getPosition();
-    colour = {1.0f, 0.4f, 0.1f};
+    colour = {0.0f, 0.4f, 0.0f};
 }
 
 

@@ -13,6 +13,7 @@
 #include "Object.h"
 #include "Camera.h"
 #include "Lamp.h"
+#include "LightSource.h"
 #include <iostream>
 
 Fundamentals::Fundamentals(Camera* cam){
@@ -30,7 +31,7 @@ void Fundamentals::loadfiles(){
 	//init shaders
 	program = loadShaders("terrain.vert", "terrain.frag");
 	skyboxProg = loadShaders("sky.vert", "sky.frag");
-	lightProg = loadShaders("lamp.vert", "lamp.frag");
+	lampProg = loadShaders("lamp.vert", "lamp.frag");
 	printError("load shader");
 
 	//Load textures
@@ -53,29 +54,31 @@ void Fundamentals::loadfiles(){
 	toppage->setModel(LoadModelPlus("../Modeller/Boktop.obj"));
 	toppage->setBoundingBox();
 
-	//light
-
-	box = new Object();
-	box->setModel(LoadModelPlus("../Modeller/box.obj"));
-	lampLight = new Lamp(box);
+	//lamp
+	lamp = new Object();
+	lamp->setModel(LoadModelPlus("../Modeller/box.obj"));
+	lampLight = new Lamp(lamp);
+	lampLight -> setColour(vec3 {0.2f, 0.4f, 0.8f});
 	lampColour = lampLight -> getColour();
-	//std::cout << std::to_string(lampColour.x) << '\n';
+	glUseProgram(lampProg);
+	printError("init shader");
+	glUniformMatrix4fv(glGetUniformLocation(lampProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+	glUniform3fv(glGetUniformLocation(lampProg, "lampColour"), 1, &lampColour.x);
+
+	//LightSource
+	lightPos = {1.0f, 3.0f, 0.0f};
+	lightPos = lamp->getPosition();
+	lightSource = new LightSource(lightPos, lampColour);
+
+	//SkyBox
 	skybox = LoadModelPlus("../Modeller/skybox.obj");
 
 	glUseProgram(program);
 	printError("init shader");
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
-	//vec3 lampColour = {1.0f, 0.0f, 0.0f};
 
-	glUseProgram(lightProg);
-	printError("init shader");
-	glUniformMatrix4fv(glGetUniformLocation(lightProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
-	//lampColour = vec3(1.0f, 1.0f, 1.0f);
-	//vec3 lampColour[] = { {10.0f, 5.0f, 5.0f} };
-	  glUniform3fv(glGetUniformLocation(lightProg, "lampColour"), 1, &lampColour.x);
-	//glUniform3fv(glGetUniformLocation(lightProg, "lampColour"), 1, &lampColour);
-	//glUniform1f(glGetUniformLocation(lightProg, "lampColour"), lampColour);
+
 
 }
 
@@ -152,15 +155,13 @@ void Fundamentals::update(){
 	//DrawModel(car->getModel(), program, "inPosition", "inNormal", "inTexCoord");
 
 	//LampModel
-	glUseProgram(lightProg);
-	box->setPosition(upperCoord*5);
-	mat4 boxTot = T(box->getPosition().x, box->getPosition().y, box->getPosition().z );
-	boxTot = Mult(camMatrix, boxTot);
-	//boxTot = Mult(camMatrix, Mult(modelViewBook, scale));
-	//glBindTexture(GL_TEXTURE_2D, waterTex);
-	//glUniform1i(glGetUniformLocation(lightProg, "bookTex"), 0); // Texture unit 0
-	glUniformMatrix4fv(glGetUniformLocation(lightProg, "mdlMatrix"), 1, GL_TRUE, boxTot.m);
-	DrawModel(box->getModel(), lightProg, "inPosition", NULL, NULL);
+	glUseProgram(lampProg);
+	lamp->setPosition(upperCoord*5);
+	scale = S(5,5,5);
+	mat4 lampTot = T(lamp->getPosition().x, lamp->getPosition().y, lamp->getPosition().z );
+	lampTot = Mult(camMatrix, Mult(scale, lampTot));
+	glUniformMatrix4fv(glGetUniformLocation(lampProg, "mdlMatrix"), 1, GL_TRUE, lampTot.m);
+	DrawModel(lamp->getModel(), lampProg, "inPosition", NULL, NULL);
 
 }
 
