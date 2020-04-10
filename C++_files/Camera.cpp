@@ -3,13 +3,14 @@
 #include "MicroGlut.h"
 #include "GL_utilities.h"
 #include <iostream>
+#include <string>
 using namespace std;
 
 
 
 void Camera::initate(){
-    position = SetVector(0, 55, 8);
-    lookAtPoint = SetVector(2,0,2);
+    position = SetVector(15, 5, 30);
+    lookAtPoint = SetVector(1,0,1);
     up = SetVector(0,1,0);
     proj_matrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 5000.0);
 }
@@ -75,13 +76,13 @@ bool Camera::CheckCollision(Object* two, bool flag) // AABB - AABB collision
 {
   if (!flag){
   // Collision x-axis?
-	bool collisionX = position.x + size.x >= two->getPosition().x && two->getPosition().x + two->getSize().x >= position.x;
+	bool collisionX = position.x >= two->getPosition().x - 0.5*two->getSize().x && two->getPosition().x + 0.5*two->getSize().x >= position.x;
 	// Collision y-axis?
-	bool collisionY = position.y + size.y >= two->getPosition().y && two->getPosition().y + two->getSize().y >= position.y;
+	bool collisionY = position.y >= two->getPosition().y - 0.5*two->getSize().y && two->getPosition().y + 0.5*two->getSize().y >= position.y;
 	// Collision z-axis?
-	bool collisionZ = position.z + size.z >= two->getPosition().z && two->getPosition().z + two->getSize().z >= position.z;
+	bool collisionZ = position.z >= two->getPosition().z - 0.5*two->getSize().z && two->getPosition().z + 0.5*two->getSize().z >= position.za;
 	// Collision only if on both axes
-  flag =  collisionX && collisionY && collisionZ;
+  flag = collisionX && collisionY && collisionZ;
   }
   return flag;
 }

@@ -11,8 +11,9 @@ Object::Object()
 }
 Object::Object(vec3 pos, vec3 direction)
 {
-    _position = pos + direction * 0.5;
+    _position = pos;
     _direction = direction * 2;
+    _size = vec3(0.0f, 0.0f, 0.0f);
     //_model = model;
     //setBoundingBox();
 }

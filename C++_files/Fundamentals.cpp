@@ -39,7 +39,7 @@ void Fundamentals::loadfiles(){
 	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
 
 	//Create Objects
-	car = new Object();
+	car = new Object(vec3(25.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f));
 	car->setModel(LoadModelPlus("../Modeller/bilskiss.obj"));
 	car->setBoundingBox();
 	bookback = new Object(backPos, nullVec);
@@ -67,9 +67,9 @@ void Fundamentals::loadfiles(){
 
 void Fundamentals::cameraCollision(){
 	cameraCollisionFlag = camera->CheckCollision(car, cameraCollisionFlag);
-	//cameraCollisionFlag = camera->CheckCollision(bookback, cameraCollisionFlag);
-	//cameraCollisionFlag = camera->CheckCollision(bottompage, cameraCollisionFlag);
-	//cameraCollisionFlag = camera->CheckCollision(toppage, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(bookback, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(bottompage, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(toppage, cameraCollisionFlag);
 
 	camera->checkFlag(cameraCollisionFlag);
 	cameraCollisionFlag = false;
