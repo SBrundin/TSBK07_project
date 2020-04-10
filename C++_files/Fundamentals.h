@@ -28,6 +28,9 @@ private:
   vec3 backPos = {-15.17f, 2.5f, 0.0f};
   vec3 bentPos = {0.0f, 4.0f, 0.0f};
   vec3 topPos = {0.0f, 5.3f, 0.0f};
+  vec3 rotationAxis = {-15.0f, 0.0f, 0.0f};
+  vec3 p1 = {-15.0f, 5.3f, -10.0f};
+  vec3 p2 = {-15.0f, 5.3f, 10.0f};
   bool cameraCollisionFlag = false;
   Camera* camera;
   Object* car;

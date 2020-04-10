@@ -118,8 +118,13 @@ void Fundamentals::update(){
 	mat4 totalBack = Mult(camMatrix, Mult(modelViewBack, scale));
 
 	//Toppage
+	mat4 invRot = T(-rotationAxis.x, -rotationAxis.y, -rotationAxis.z);
+	mat4 totRot = Mult(Rz(t), invRot);
+	mat4 transRot = T(rotationAxis.x, rotationAxis.y, rotationAxis.z);
+	totRot = Mult(transRot, totRot);
 	mat4 modelViewTop = T(toppage->getPosition().x, toppage->getPosition().y ,toppage->getPosition().z);
-	mat4 totalTop = Mult(camMatrix, Mult(modelViewTop, scale));
+	totRot = Mult(modelViewTop, totRot);
+	mat4 totalTop = Mult(camMatrix, totRot);
 
 	//Drawing of the book
   glActiveTexture(GL_TEXTURE0);
@@ -136,6 +141,9 @@ void Fundamentals::update(){
 	glUniform1f(glGetUniformLocation(program, "t"), t);
 
 	//Car
+	car->setPosition(rotationAxis);
+	//mat4 rotTrans = T(0.0f, 0.0f, 0.0f);
+	//mat4 rotCar = Mult(Rz(t), rotTrans);
 	mat4 modelViewCar = T(car->getPosition().x, car->getPosition().y, car->getPosition().z );
 	mat4 carTot = Mult(camMatrix, modelViewCar);
 	glBindTexture(GL_TEXTURE_2D, waterTex);
@@ -158,5 +166,6 @@ void Fundamentals::update(){
 	glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, pageBTot.m);
 	DrawModel(pageBent->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+
 
 }
