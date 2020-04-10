@@ -36,6 +36,7 @@ void Fundamentals::loadfiles(){
 	LoadTGATextureSimple("../textures/snow.tga", &snowTex);
 	LoadTGATextureSimple("../textures/water.tga", &waterTex);
 	LoadTGATextureSimple("../textures/SkyBox512.tga", &skytex);
+	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
 
 	//Create Objects
 	car = new Object();
@@ -146,14 +147,14 @@ void Fundamentals::update(){
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, carTot.m);
 	DrawModel(car->getModel(), program, "inPosition", "inNormal", "inTexCoord");
 
-	// glUseProgram(pageShader);
-	// pageStraight->setPosition(upperCoord);
-	// mat4 pageSTot = T(pageStraight->getPosition().x, pageStraight->getPosition().y, pageStraight->getPosition().z );
-	// carTot = Mult(camMatrix, pageSTot);
-	// glBindTexture(GL_TEXTURE_2D, grassTex);
-	// glUniform1i(glGetUniformLocation(pageShader, "bookTex"), 0); // Texture unit 0
-	// glUniformMatrix4fv(glGetUniformLocation(pageShader, "mdlMatrix"), 1, GL_TRUE, pageSTot.m);
-	// DrawModel(pageStraight->getModel(), pageShader, "inPosition", "inNormal", "inTexCoord");
+	//glUseProgram(pageShader);
+	//pageStraight->setPosition(upperCoord);
+	mat4 pageSTot = T(pageStraight->getPosition().x, pageStraight->getPosition().y, pageStraight->getPosition().z );
+ 	pageSTot= Mult(camMatrix, pageSTot);
+	glBindTexture(GL_TEXTURE_2D, leatherTex);
+	glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, pageSTot.m);
+	DrawModel(pageStraight->getModel(), program, "inPosition", "inNormal", "inTexCoord");
 
 
 	// mat4 carTot = T(car->getPosition().x, car->getPosition().y, car->getPosition().z );

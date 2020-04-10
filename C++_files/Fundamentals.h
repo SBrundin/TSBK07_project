@@ -20,7 +20,7 @@ private:
   mat4 projectionMatrix, camMatrix;
   vec3 p,l, c, cam, lookAtPoint, c2;
   GLuint program, skyboxProg, pageShader;
-  GLuint sphereTex, waterTex, snowTex, skytex,grassTex, tex2, bookTex;
+  GLuint sphereTex, waterTex, snowTex, skytex,grassTex, tex2, bookTex, leatherTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   vec3 v = {0.0, 1.0, 0.0};
