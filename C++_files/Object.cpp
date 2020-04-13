@@ -9,14 +9,23 @@ Object::Object()
     _direction = vec3(0.0f, 0.0f, 0.0f);
     _size = vec3(0.0f, 0.0f, 0.0f);
 }
-Object::Object(vec3 pos, vec3 direction)
+Object::Object(Model* model, GLuint tex)
 {
-    _position = pos + direction * 0.5;
-    _direction = direction * 2;
-    //_model = model;
-    //setBoundingBox();
+    _position = vec3(0.0f, 0.0f, 0.0f);
+    _model = model;
+    _texture = tex;
+    _size = vec3(0.0f, 0.0f, 0.0f);
+    setBoundingBox();
 }
 
+Object::Object(vec3 pos, Model* model, GLuint tex)
+{
+    _position = pos;
+    _model = model;
+    _texture = tex;
+    _size = vec3(0.0f, 0.0f, 0.0f);
+    setBoundingBox();
+}
 vec3 Object::getPosition()
 {
     return _position;
@@ -51,6 +60,17 @@ void Object::setModel(Model* model)
 {
     _model = model;
 }
+
+GLuint Object::getTexture()
+{
+    return _texture;
+}
+
+void Object::setTexture(GLuint tex)
+{
+    _texture = tex;
+}
+
 
 void Object::setBoundingBox()
 {

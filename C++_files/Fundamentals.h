@@ -2,6 +2,7 @@
 #define FUNDAMENTALS_H
 
 #include "Object.h"
+#include "Book.h"
 #include "Camera.h"
 #include "VectorUtils3.h"
 
@@ -12,11 +13,12 @@ public:
     void loadfiles();
     void cameraCollision();
     void update();
+    mat4 rotate(Object* obj, GLfloat time);
 
 
 private:
 
-  Model *bookModel, *bookbackModel, *skybox, *carModel;
+  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *skybox, *carModel;
   mat4 projectionMatrix, camMatrix;
   vec3 p,l, c, cam, lookAtPoint, c2;
   GLuint program, skyboxProg, pageShader;
@@ -39,6 +41,7 @@ private:
   Object* bottompage;
   Object* pageStraight;
   Object* pageBent;
+  Book* book;
 
 };
 
