@@ -22,7 +22,7 @@ void Fundamentals::loadfiles(){
 	void LoadTGATextureSimple(char const *filename, GLuint *tex);
 	glEnable(GL_DEPTH_TEST);
 
-	//init camera
+	//init matrices
 	camMatrix = camera->getCamMatrix();
 	projectionMatrix = camera->getProj_matrix();
 	glClearColor(0.9,0.9,1,0);
@@ -76,22 +76,6 @@ void Fundamentals::cameraCollision(){
 
 }
 
-
-mat4 Fundamentals::rotate(Object* obj, GLfloat time){
-	int i = 0;
-	while (time*i < 100){
-	mat4 invRot = T(-rotationAxis.x, -rotationAxis.y, -rotationAxis.z);
-	mat4 totRot = Mult(Rz(i), invRot);
-	mat4 transRot = T(rotationAxis.x, rotationAxis.y, rotationAxis.z);
-	totRot = Mult(transRot, totRot);
-	mat4 modelViewTop = T(obj->getPosition().x, obj->getPosition().y ,obj->getPosition().z);
-	totRot = Mult(modelViewTop, totRot);
-	return totRot;
-	i++;
-}
-}
-
-
 void Fundamentals::update(){
 	cameraCollision();
 
@@ -126,6 +110,11 @@ void Fundamentals::update(){
 
 	//Draw complete book
 	book->draw(camMatrix, program, t);
+	if (glutKeyIsDown('r')){
+    //for (GLfloat i = 0; i < 3.14; i+=0.01)
+      book->browse(camMatrix, program, t);
+			book->setBool();
+  }
 
 	//Car
 	car->setPosition(rotationAxis);
