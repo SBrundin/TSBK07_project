@@ -38,6 +38,7 @@ void Fundamentals::loadfiles(){
 	LoadTGATextureSimple("../textures/SkyBox512.tga", &skytex);
 	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
 
+
 	//Create Objects
 	car = new Object(vec3(25.0f, 1.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f));
 	car->setModel(LoadModelPlus("../Modeller/bilskiss.obj"));
@@ -48,9 +49,9 @@ void Fundamentals::loadfiles(){
 	bottompage = new Object();
 	bottompage->setModel(LoadModelPlus("../Modeller/BookBot.obj"));
 	bottompage->setBoundingBox();
-	toppage = new Object(topPos, nullVec);
-	toppage->setModel(LoadModelPlus("../Modeller/BookTop.obj"));
-	toppage->setBoundingBox();
+	//toppage = new Object(topPos, nullVec);
+	//toppage->setModel(LoadModelPlus("../Modeller/BookTop.obj"));
+	//toppage->setBoundingBox();
 	pageStraight = new Object();
 	pageStraight->setModel(LoadModelPlus("../Modeller/PageStraight.obj"));
 	pageStraight->setBoundingBox();
@@ -58,6 +59,11 @@ void Fundamentals::loadfiles(){
 	pageBent->setModel(LoadModelPlus("../Modeller/PageBent.obj"));
 	pageBent->setBoundingBox();
 	skybox = LoadModelPlus("../Modeller/skybox.obj");
+
+	truck = new Object(topPos, nullVec);
+	truck->setModel(LoadModelPlus("../Modeller/LPBus.obj"));
+	truck->setBoundingBox();
+
 
 	glUseProgram(program);
 	printError("init shader");
@@ -69,8 +75,11 @@ void Fundamentals::cameraCollision(){
 	cameraCollisionFlag = camera->CheckCollision(car, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(bookback, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(bottompage, cameraCollisionFlag);
-	cameraCollisionFlag = camera->CheckCollision(toppage, cameraCollisionFlag);
-
+	//cameraCollisionFlag = camera->CheckCollision(toppage, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(pageStraight, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(pageBent, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(truck, cameraCollisionFlag);
+	//cameraCollisionFlag = camera->CheckCollision(stolpe, cameraCollisionFlag);
 	camera->checkFlag(cameraCollisionFlag);
 	cameraCollisionFlag = false;
 
@@ -118,8 +127,8 @@ void Fundamentals::update(){
 	mat4 totalBack = Mult(camMatrix, Mult(modelViewBack, scale));
 
 	//Toppage
-	mat4 modelViewTop = T(toppage->getPosition().x, toppage->getPosition().y ,toppage->getPosition().z);
-	mat4 totalTop = Mult(camMatrix, Mult(modelViewTop, scale));
+	// mat4 modelViewTop = T(toppage->getPosition().x, toppage->getPosition().y ,toppage->getPosition().z);
+	// mat4 totalTop = Mult(camMatrix, Mult(modelViewTop, scale));
 
 	//Drawing of the book
   glActiveTexture(GL_TEXTURE0);
@@ -129,8 +138,8 @@ void Fundamentals::update(){
   DrawModel(bottompage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
   glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBack.m);
 	DrawModel(bookback->getModel(), program, "inPosition", "inNormal", "inTexCoord");
-	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
-	DrawModel(toppage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+	// glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
+	// DrawModel(toppage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
 
 	//Time variable
 	glUniform1f(glGetUniformLocation(program, "t"), t);
@@ -142,6 +151,15 @@ void Fundamentals::update(){
 	glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, carTot.m);
 	DrawModel(car->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+
+	//extra
+	mat4 modelViewTruck = T(truck->getPosition().x, truck->getPosition().y, truck->getPosition().z );
+	mat4 truckTot = Mult(camMatrix, modelViewTruck);
+	glBindTexture(GL_TEXTURE_2D, snowTex);
+	glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, truckTot.m);
+	DrawModel(truck->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+
 
 	//Straight page
 	mat4 pageSTot = T(pageStraight->getPosition().x, pageStraight->getPosition().y, pageStraight->getPosition().z );

@@ -36,6 +36,8 @@ private:
   Object* bottompage;
   Object* pageStraight;
   Object* pageBent;
+  Object* truck;
+
 
 };
 
