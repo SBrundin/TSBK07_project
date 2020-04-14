@@ -6,13 +6,18 @@
 Object::Object()
 {
     _position = vec3(0.0f, 0.0f, 0.0f);
-
-    _direction = vec3(0.0f, 0.0f, 0.0f);
 }
-Object::Object(vec3 pos, vec3 direction)
+
+Object::Object(Model* model)
 {
-    _position = pos + direction * 0.5;
-    _direction = direction * 2;
+    _position = vec3(0.0f, 0.0f, 0.0f);
+    _model = model;
+}
+
+Object::Object(vec3 pos, Model* model)
+{
+    _position = pos;
+    _model = model;
 }
 
 vec3 Object::getPosition()

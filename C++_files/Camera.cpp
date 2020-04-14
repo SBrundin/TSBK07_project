@@ -80,7 +80,7 @@ bool Camera::CheckCollision(Object* two, bool flag) // AABB - AABB collision
 	// Collision y-axis?
 	bool collisionY = position.y >= two->getPosition().y - 0.5*two->getSize().y && two->getPosition().y + 0.5*two->getSize().y >= position.y;
 	// Collision z-axis?
-	bool collisionZ = position.z >= two->getPosition().z - 0.5*two->getSize().z && two->getPosition().z + 0.5*two->getSize().z >= position.za;
+	bool collisionZ = position.z >= two->getPosition().z - 0.5*two->getSize().z && two->getPosition().z + 0.5*two->getSize().z >= position.z;
 	// Collision only if on both axes
   flag = collisionX && collisionY && collisionZ;
   }

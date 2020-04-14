@@ -8,7 +8,8 @@ class Object
 {
 public:
     Object();
-    Object(vec3 pos, vec3 direction);
+    Object(Model* model, GLuint tex);
+    Object(vec3 pos, Model* model, GLuint tex);
 
     vec3 getPosition();
     void setPosition(vec3 position);
@@ -19,6 +20,9 @@ public:
     Model* getModel();
     void setModel(Model* model);
 
+    GLuint getTexture();
+    void setTexture(GLuint tex);
+
     void setBoundingBox();
     vec3 getSize();
 
@@ -28,6 +32,7 @@ private:
     vec3 _size;
     vec3 _speed;
     Model* _model;
+    GLuint _texture;
 };
 
 #endif
