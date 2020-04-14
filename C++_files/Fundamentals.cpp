@@ -31,6 +31,7 @@ void Fundamentals::loadfiles(){
 	program = loadShaders("terrain.vert", "terrain.frag");
 	skyboxProg = loadShaders("sky.vert", "sky.frag");
 	pageShader = loadShaders("pageShader.vert", "pageShader.frag");
+	programObj = loadShaders("obj.vert", "obj.frag");
 	printError("load shader");
 
 	//Load textures
@@ -39,6 +40,7 @@ void Fundamentals::loadfiles(){
 	LoadTGATextureSimple("../textures/water.tga", &waterTex);
 	LoadTGATextureSimple("../textures/SkyBox512.tga", &skytex);
 	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
+	LoadTGATextureSimple("../textures/bilskissred.tga", &bilTex);
 
 	// Load Models
 	carModel = LoadModelPlus("../Modeller/bilskiss.obj");
@@ -50,7 +52,7 @@ void Fundamentals::loadfiles(){
 	skybox = LoadModelPlus("../Modeller/skybox.obj");
 
 	//Create Objects
-	car = new Object(carModel, waterTex);
+	car = new Object(vec3(0.0f, 4.5f, 0.0f), carModel, bilTex);
 	bookback = new Object(backPos, backModel, leatherTex);
 	bottompage = new Object(bottomModel, leatherTex);
 	toppage = new Object(topPos, topModel, leatherTex);
@@ -60,10 +62,12 @@ void Fundamentals::loadfiles(){
 	//Book
 	book = new Book(bottompage, bookback, toppage, pageStraight, pageBent);
 
-	glUseProgram(program);
 	printError("init shader");
+	glUseProgram(program);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
+	glUseProgram(programObj);
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 }
 
 void Fundamentals::cameraCollision(){
@@ -71,6 +75,8 @@ void Fundamentals::cameraCollision(){
 	cameraCollisionFlag = camera->CheckCollision(bookback, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(bottompage, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(toppage, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(pageStraight, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(pageBent, cameraCollisionFlag);
 
 	camera->checkFlag(cameraCollisionFlag);
 	cameraCollisionFlag = false;
@@ -112,13 +118,15 @@ void Fundamentals::update(){
 	//Draw complete book
 	book->draw(camMatrix, program, t);
 
+	//draw scene
+	glUseProgram(programObj);
 	//Car
-	car->setPosition(rotationAxis);
-	mat4 modelViewCar = T(car->getPosition().x, car->getPosition().y, car->getPosition().z );
+	mat4 modelViewCar = T(car->getPosition().x, car->getPosition().y, car->getPosition().z);
 	mat4 carTot = Mult(camMatrix, modelViewCar);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, car->getTexture());
-	glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
-	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, carTot.m);
-	DrawModel(car->getModel(), program, "inPosition", "inNormal", "inTexCoord");
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, carTot.m);
+	DrawModel(car->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 
 }

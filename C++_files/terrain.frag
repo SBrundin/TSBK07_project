@@ -19,17 +19,5 @@ float texture1 = 1;
 float snowFloat = 0;
 float waterFloat = 0;
 
-if (height > 45){
-  texture1 = 0;
-  snowFloat = 1;
-}
-else if (height > 10){
-  texture1 = 10/height;
-  snowFloat = 1 - texture1;
-}
-else if(height < water){
-waterFloat = 1;
-texture1 = 0;
-}
-out_Color = snowFloat*texture(snowTex, ex_TexCoord)* vec4(shade, shade, shade, 1.0) + texture1*texture(tex, ex_TexCoord)* vec4(shade, shade, shade, 1.0) + waterFloat*texture(waterTex, ex_TexCoord*10)* vec4(shade, shade, shade, 1.0);
+out_Color = texture(tex, 50*ex_TexCoord)*vec4(shade, shade, shade, 1.0);
 }
