@@ -42,8 +42,14 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
 	//Drawing of the book
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());
+  if (glutKeyIsDown('r')){
+    //for (GLfloat i = 0; i < 3.14; i+=0.01)
+      browse(camMatrix, shader, t);
+  }
+  else{
 	glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
 	DrawModel(_top->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
+}
   glUniform1i(glGetUniformLocation(shader, "bookTex"), 0);
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalBottom.m);
   DrawModel(_bottom->getModel(), shader, "inPosition", "inNormal", "inTexCoord");

@@ -110,11 +110,6 @@ void Fundamentals::update(){
 
 	//Draw complete book
 	book->draw(camMatrix, program, t);
-	if (glutKeyIsDown('r')){
-    //for (GLfloat i = 0; i < 3.14; i+=0.01)
-      book->browse(camMatrix, program, t);
-			book->setBool();
-  }
 
 	//Car
 	car->setPosition(rotationAxis);
