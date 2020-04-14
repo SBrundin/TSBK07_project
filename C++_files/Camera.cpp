@@ -25,9 +25,6 @@ void Camera::getMouse(int x, int y){
     totY += deltaY; //+ totY;
     GLfloat angX = mspeed*(float)totX/glutGet(GLUT_WINDOW_WIDTH)*2*M_PI; //angle
     GLfloat angY = mspeed*(float)totY/glutGet(GLUT_WINDOW_HEIGHT)*2*M_PI;
-    //angY = std::min((GLfloat)M_PI, angY);
-    //angY = std::min((GLfloat)M_PI, angY);
-    //printf("%g\n", lookAtPoint.z);
     lookAtPoint.x = -10*sin(angY)*sin(angX)+position.x;
     lookAtPoint.y = 10*cos(angY)+position.y;
     lookAtPoint.z = 10*sin(angY)*cos(angX)+position.z;

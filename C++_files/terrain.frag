@@ -19,5 +19,5 @@ float texture1 = 1;
 float snowFloat = 0;
 float waterFloat = 0;
 
-out_Color = texture(tex, 20*ex_TexCoord)*vec4(shade, shade, shade, 1.0);
+out_Color = texture(tex, 50*ex_TexCoord)*vec4(shade, shade, shade, 1.0);
 }
