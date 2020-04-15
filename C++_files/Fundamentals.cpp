@@ -39,23 +39,23 @@ void Fundamentals::loadfiles(){
 	//Load textures
 	LoadTGATextureSimple("../textures/grass.tga", &grassTex);
 	LoadTGATextureSimple("../textures/snow.tga", &snowTex);
-	//LoadTGATextureSimple("../textures/Paper.tga", &paperTex);
 	LoadTGATextureSimple("../textures/SkyBox512.tga", &skytex);
 	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
 	LoadTGATextureSimple("../textures/bilskissred.tga", &bilTex);
+	LoadTGATextureSimple("../textures/water.tga", &truckTex);
 
 	//Load Models
-	carModel = LoadModelPlus("../Modeller/bilskiss.obj");
 	backModel = LoadModelPlus("../Modeller/BookBack.obj");
 	bottomModel = LoadModelPlus("../Modeller/BookBot.obj");
 	topModel = LoadModelPlus("../Modeller/BookTop.obj");
 	straightPageModel = LoadModelPlus("../Modeller/PageStraight.obj");
 	bentPageModel =LoadModelPlus("../Modeller/PageBent.obj");
 	skybox = LoadModelPlus("../Modeller/skybox.obj");
+	carModel = LoadModelPlus("../Modeller/bilskiss.obj");
+	truckModel = LoadModelPlus("../Modeller/LPTruck.obj");
 
 
-	//Create Objects
-	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
+	//Create Book Objects
 	bookback = new Object(backPos, backModel, leatherTex);
 	bottompage = new Object(bottomModel, leatherTex);
 	toppage = new Object(topPos, topModel, leatherTex);
@@ -64,10 +64,14 @@ void Fundamentals::loadfiles(){
 	pageBent->setTextureSide(snowTex);
 	pageStraight->setTextureSide(snowTex);
 
-	//Book
 	book = new Book(bottompage, bookback, toppage, pageStraight, pageBent);
 
-	printError("init shader");
+	//Worlds Objects
+	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
+	truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, truckTex);
+	truck->updateBoundingBox(Ry(M_PI/2), 3.0);
+
+
 	glUseProgram(program);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
@@ -78,23 +82,23 @@ void Fundamentals::loadfiles(){
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 	glUniform1i(glGetUniformLocation(pageShader, "Tex"), 0); // Texture unit 0
 	glUniform1i(glGetUniformLocation(pageShader, "sideTex"), 1);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, pageStraight->getTexture());
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, pageBent->getTexture());
+	printError("init shader");
 }
 
 void Fundamentals::cameraCollision(){
-	cameraCollisionFlag = camera->CheckCollision(car, cameraCollisionFlag);
+	// Book
 	cameraCollisionFlag = camera->CheckCollision(bookback, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(bottompage, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(toppage, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(pageStraight, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(pageBent, cameraCollisionFlag);
 
+
+	//object
+	cameraCollisionFlag = camera->CheckCollision(truck, cameraCollisionFlag);
+	//cameraCollisionFlag = camera->CheckCollision(car, cameraCollisionFlag);
 	camera->checkFlag(cameraCollisionFlag);
 	cameraCollisionFlag = false;
-
 }
 
 void Fundamentals::update(){
@@ -136,6 +140,7 @@ void Fundamentals::update(){
 
 	//draw scene
 	glUseProgram(programObj);
+
 	//Car
 	mat4 modelViewCar = T(car->getPosition().x, car->getPosition().y, car->getPosition().z);
 	mat4 carTot = Mult(camMatrix, modelViewCar);
@@ -144,5 +149,14 @@ void Fundamentals::update(){
 	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, carTot.m);
 	DrawModel(car->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
+	//Fueltruck
+	mat4 modelViewTruck = T(truck->getPosition().x, truck->getPosition().y, truck->getPosition().z);
+	mat4 truckTot = Mult(camMatrix, Mult(Mult(modelViewTruck, S(3,3,3)), Ry(M_PI/2)));
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, truck->getTexture());
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, truckTot.m);
+	DrawModel(truck->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 
 }

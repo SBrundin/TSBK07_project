@@ -18,11 +18,12 @@ public:
 
 private:
 
-  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *skybox, *carModel;
+  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *skybox, *carModel, *truckModel;
   mat4 projectionMatrix, camMatrix;
   vec3 p,l, c, cam, lookAtPoint, c2;
   GLuint program, skyboxProg, pageShader, programObj;
-  GLuint sphereTex, waterTex, snowTex, skytex,grassTex, tex2, bookTex, leatherTex, bilTex, paperTex;
+  GLuint sphereTex, waterTex, snowTex, skytex,grassTex, tex2, bookTex, leatherTex, bilTex, paperTex, truckTex;
+  GLfloat alpha;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   vec3 v = {0.0, 1.0, 0.0};
@@ -41,6 +42,8 @@ private:
   Object* bottompage;
   Object* pageStraight;
   Object* pageBent;
+  Object* truck;
+
   Book* book;
 
 };
