@@ -63,19 +63,48 @@ void LoadFiles::update(mat4 projectionMatrix, mat4 camMatrix){
   camMat2.m[11] = 0;
   camMat2.m[15] = 1;
 
+
+
   //Skybox with corr program
   glUseProgram(skyboxProg);
   glDisable(GL_DEPTH_TEST);
+
+	timer += 0.01;
+	timer = std::min(timer, 1.0f);
+
+
   //glBindTexture(GL_TEXTURE_2D, skytex);
   glUniform1i(glGetUniformLocation(skyboxProg, "texUnit"), 0); // Texture unit 0
+	glUniform1i(glGetUniformLocation(skyboxProg, "test"), 1); // Texture unit 1
+glUniform1i(glGetUniformLocation(skyboxProg, "page"), page);
+	glUniform1f(glGetUniformLocation(skyboxProg, "timer"), timer);
   glUniformMatrix4fv(glGetUniformLocation(skyboxProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
   glUniformMatrix4fv(glGetUniformLocation(skyboxProg, "mdlMatrix"), 1, GL_TRUE, camMat2.m);
 	for (unsigned int i = 0; i < 6; i++)
 	{
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, skytex[i].texID);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, skytex[i + 6].texID);
+
 		DrawModel(skybox[i], skyboxProg, "inPosition", NULL, "inTexCoord");
 	}
 
+	if (glutKeyIsDown(GLUT_KEY_LEFT))
+	{
+		if (page == 0)
+	{
+		page = 1;
+		timer = 0.0f;
+	}
+	else if (page == 1)
+	{
+		page = 0;
+		timer = 0.0f;
+	}
+	}
+	
 //Camera vectors
   glEnable(GL_DEPTH_TEST);
   mat4 scale = S(5,5,5);
@@ -106,7 +135,7 @@ void LoadFiles::update(mat4 projectionMatrix, mat4 camMatrix){
 
 void LoadFiles::loadskybox()
 {
-	glActiveTexture(GL_TEXTURE0);
+	//glActiveTexture(GL_TEXTURE0);
 
 	std::string	skytextures[6*2] =
 	{
@@ -135,13 +164,17 @@ void LoadFiles::loadskybox()
 	"../Modeller/skybox/side5.obj"
 };
 
-	for (unsigned int i = 0; i < 6; i++)
+	for (unsigned int i = 0; i < 6*2; i++)
 	{
 		printf("Loading texture %s\n", skytextures[i].c_str());
 		LoadTGATexture(skytextures[i].c_str(), &skytex[i]);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		skybox[i] = LoadModelPlus(filename[i].c_str());
 	};
+
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		skybox[i] = LoadModelPlus(filename[i].c_str());
+	}
 
 }

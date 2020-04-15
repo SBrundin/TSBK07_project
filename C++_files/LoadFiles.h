@@ -27,6 +27,8 @@ private:
   GLfloat Bookx = 0.0f;
   GLfloat Bookz = 0.0f;
   GLfloat Booky = 0.0f;
+  float timer = 1.0f;
+  int page = 0;
   TextureData skytex[6*2];
 
 };
