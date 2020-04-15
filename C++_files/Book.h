@@ -34,14 +34,12 @@ private:
     vec3 _topPos = {0.0f, 5.3f, 0.0f};
     vec3 rotationAxis = {-15.0f, 0.0f, 0.0f};
     vec3 topPosOpen = {-29.7f, 5.0f, 0.0f};
-    vec3 bentOpen = {-30.0f, 6.0f, 0.0f};
+    vec3 bentOpen = {-29.5f, 5.6f, 0.0f};
     GLuint _currentPage;
     GLuint _pageNbr;
     bool _bool;
     GLfloat _timer;
     char _buttonPressed;
-
-
 };
 
 #endif

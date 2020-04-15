@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include "VectorUtils3.h"
 #include "loadobj.h"
+#include<iostream>
+#include<array>
+
+
 class Object
 {
 public:
@@ -21,7 +25,9 @@ public:
     void setModel(Model* model);
 
     GLuint getTexture();
+    GLuint getTextureSide();
     void setTexture(GLuint tex);
+    void setTextureSide(GLuint tex);
 
     void setBoundingBox();
     vec3 getSize();
@@ -33,6 +39,7 @@ private:
     vec3 _speed;
     Model* _model;
     GLuint _texture;
+    GLuint _textureSide;
 };
 
 #endif
