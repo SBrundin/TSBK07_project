@@ -11,15 +11,13 @@
 #include "LoadTGA.h"
 #include "LoadFiles.h"
 #include "Camera.h"
+#include <string>
 
 
 void LoadFiles::initiate(mat4 projectionMatrix){
 
   void LoadTGATextureSimple(char const *filename, GLuint *tex);
-  // cam = SetVector(0, 5, 8);
-	// lookAtPoint = SetVector(0,5,0);
-	// v = SetVector(0,1,0);
-	// projectionMatrix2 = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 200.0);
+
 	// GL inits
 	glClearColor(0.5,0.5,1,0);
 	glEnable(GL_DEPTH_TEST);
@@ -35,12 +33,14 @@ void LoadFiles::initiate(mat4 projectionMatrix){
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 	glUniformMatrix4fv(glGetUniformLocation(pageShader, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
+	LoadFiles::loadskybox();
+
   LoadTGATextureSimple("../textures/grass.tga", &grassTex);
   LoadTGATextureSimple("../textures/snow.tga", &snowTex);
   LoadTGATextureSimple("../textures/water.tga", &waterTex);
-  LoadTGATextureSimple("../textures/SkyBox512.tga", &skytex);
+  //LoadTGATextureSimple("../textures/grass.tga", &skytex);
 
-  skybox = LoadModelPlus("../Modeller/skybox.obj");
+  //skybox = LoadModelPlus("../Modeller/SkyboxKUB.obj");
   boktop = LoadModelPlus("../Modeller/Boktop.obj");
   bokrygg = LoadModelPlus("../Modeller/bokrygg.obj");
 }
@@ -66,11 +66,15 @@ void LoadFiles::update(mat4 projectionMatrix, mat4 camMatrix){
   //Skybox with corr program
   glUseProgram(skyboxProg);
   glDisable(GL_DEPTH_TEST);
-  glBindTexture(GL_TEXTURE_2D, skytex);
+  //glBindTexture(GL_TEXTURE_2D, skytex);
   glUniform1i(glGetUniformLocation(skyboxProg, "texUnit"), 0); // Texture unit 0
   glUniformMatrix4fv(glGetUniformLocation(skyboxProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
   glUniformMatrix4fv(glGetUniformLocation(skyboxProg, "mdlMatrix"), 1, GL_TRUE, camMat2.m);
-  DrawModel(skybox, skyboxProg, "in_Position", NULL, "inTexCoord");
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		glBindTexture(GL_TEXTURE_2D, skytex[i].texID);
+		DrawModel(skybox[i], skyboxProg, "inPosition", NULL, "inTexCoord");
+	}
 
 //Camera vectors
   glEnable(GL_DEPTH_TEST);
@@ -100,43 +104,39 @@ void LoadFiles::update(mat4 projectionMatrix, mat4 camMatrix){
 
 }
 
-// void LoadFiles::keyboardInput(){
-//   vec3 forward = VectorSub(cam, lookAtPoint);
-//
-//   if (glutKeyIsDown('w')) {
-//   c = Normalize(forward);
-//   c = ScalarMult(c,0.5);
-//   cam = VectorSub(cam, c);
-//   lookAtPoint = VectorSub(lookAtPoint, c);
-//   }
-//   if (glutKeyIsDown('s')) {
-//    c = Normalize(forward);
-//    c = ScalarMult(c,0.5);
-//   cam = VectorAdd(cam, c);
-//   lookAtPoint = VectorAdd(lookAtPoint, c);
-//   }
-//   if (glutKeyIsDown('a')) {
-//     c = CrossProduct(v, forward);
-//     c = Normalize(c);
-//     c = ScalarMult(c,0.5);
-//     cam = VectorSub(cam, c);
-//     lookAtPoint = VectorSub(lookAtPoint, c);
-//   }
-//   if (glutKeyIsDown('d')) {
-//      c = CrossProduct(v, forward);
-//      c = Normalize(c);
-//      c = ScalarMult(c,0.5);
-//      cam = VectorAdd(cam, c);
-//      lookAtPoint = VectorAdd(lookAtPoint, c);
-//   }
-// }
-//
-// void LoadFiles::getMouse(int x, int y){
-//   viewX = (float)x/600*2*M_PI;
-//   viewY = (float)y/600*M_PI;
-//
-//   lookAtPoint.x = -10 *sin(viewY)*sin(viewX) + cam.x;
-//   lookAtPoint.y = 10*cos(viewY) + cam.y;
-//   lookAtPoint.z = 10 *sin(viewY)*cos(viewX) + cam.z;
-//
-// }
+void LoadFiles::loadskybox()
+{
+	glActiveTexture(GL_TEXTURE0);
+	
+	std::string	skytextures[6] =
+	{
+	// 0-5: petomavar: Pretty realistic skybox.
+		"../textures/skyboxdebug/left.tga",
+		"../textures/skyboxdebug/right.tga",
+		"../textures/skyboxdebug/top.tga",
+		"../textures/skyboxdebug/bottom.tga",
+		"../textures/skyboxdebug/front.tga",
+		"../textures/skyboxdebug/back.tga"
+	};
+
+	std::string filename[6] =
+{
+// 0-5: petomavar: Pretty realistic skybox.
+	"../Modeller/skybox/side0.obj",
+	"../Modeller/skybox/side1.obj",
+	"../Modeller/skybox/side2.obj",
+	"../Modeller/skybox/side3.obj",
+	"../Modeller/skybox/side4.obj",
+	"../Modeller/skybox/side5.obj"
+};
+
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		printf("Loading texture %s\n", skytextures[i].c_str());
+		LoadTGATexture(skytextures[i].c_str(), &skytex[i]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		skybox[i] = LoadModelPlus(filename[i].c_str());
+	};
+
+}
