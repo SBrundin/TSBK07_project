@@ -13,16 +13,18 @@ public:
     void loadfiles();
     void cameraCollision();
     void update();
+    void loadskybox();
     mat4 rotate(Object* obj, GLfloat time);
 
 
 private:
 
-  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *skybox, *carModel;
+  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *carModel;
+  Model *skybox[6];
   mat4 projectionMatrix, camMatrix;
   vec3 p,l, c, cam, lookAtPoint, c2;
   GLuint program, skyboxProg, pageShader, programObj;
-  GLuint sphereTex, waterTex, snowTex, skytex,grassTex, tex2, bookTex, leatherTex, bilTex, paperTex;
+  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   vec3 v = {0.0, 1.0, 0.0};
@@ -42,6 +44,7 @@ private:
   Object* pageStraight;
   Object* pageBent;
   Book* book;
+  TextureData skytex[6*2];
 
 };
 

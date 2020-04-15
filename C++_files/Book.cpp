@@ -152,3 +152,7 @@ void Book::setBool(){
 bool Book::getBool(){
   return _bool;
 }
+
+GLuint Book::getCurrentPage(){
+  return _currentPage;
+}

@@ -15,6 +15,7 @@ public:
 
     void setBool();
     bool getBool();
+    GLuint getCurrentPage();
 
 private:
     Object* _bottom;
