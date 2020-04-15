@@ -17,7 +17,10 @@ Book::Book(Object* bot, Object* back, Object* top, Object* ps, Object* pb){
   _bool = false;
 }
 
-void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
+void Book::draw(mat4 camMatrix, GLuint Covershader, GLuint shader, GLfloat t){
+  //Time variable
+  glUseProgram(Covershader);
+  glUniform1f(glGetUniformLocation(Covershader, "t"), t);
   //Bottompage
 	mat4 scale = S(1,1,1);
 	mat4 modelViewBottom = T(_bottom->getPosition().x, _bottom->getPosition().y ,_bottom->getPosition().z);
@@ -44,34 +47,44 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());
   if (glutKeyIsDown('r')){
     //for (GLfloat i = 0; i < 3.14; i+=0.01)
-      browse(camMatrix, shader, t);
+      browse(camMatrix, Covershader, t);
   }
   else{
-	glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
-	DrawModel(_top->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
-}
-  glUniform1i(glGetUniformLocation(shader, "bookTex"), 0);
-  glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalBottom.m);
-  DrawModel(_bottom->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
-  glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalBack.m);
-  DrawModel(_back->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
+	glUniformMatrix4fv(glGetUniformLocation(Covershader, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
+	//DrawModel(_top->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
+  }
+  glUniform1i(glGetUniformLocation(Covershader, "bookTex"), 0);
+  glUniformMatrix4fv(glGetUniformLocation(Covershader, "mdlMatrix"), 1, GL_TRUE, totalBottom.m);
+  DrawModel(_bottom->getModel(), Covershader, "inPosition", "inNormal", "inTexCoord");
+  glUniformMatrix4fv(glGetUniformLocation(Covershader, "mdlMatrix"), 1, GL_TRUE, totalBack.m);
+  DrawModel(_back->getModel(), Covershader, "inPosition", "inNormal", "inTexCoord");
 
+  //page
+  glUseProgram(shader);
+  glUniform1f(glGetUniformLocation(shader, "t"), t);
   //Straight page
 	mat4 pageSTot = T(_pageStraight->getPosition().x, _pageStraight->getPosition().y, _pageStraight->getPosition().z );
  	pageSTot= Mult(camMatrix, pageSTot);
-	glBindTexture(GL_TEXTURE_2D, _pageStraight->getTexture());
-	glUniform1i(glGetUniformLocation(shader, "bookTex"), 0); // Texture unit 0
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, _pageStraight->getTexture());
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, _pageStraight->getTextureSide());
+	//glBindTexture(GL_TEXTURE_2D, _pageStraight->getTexture());
+	//glUniform1i(glGetUniformLocation(shader, "bookTex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, pageSTot.m);
 	DrawModel(_pageStraight->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
 
 	//Bent page
 	mat4 pageBTot = T(_pageBent->getPosition().x, _pageBent->getPosition().y, _pageBent->getPosition().z );
 	pageBTot = Mult(camMatrix, pageBTot);
-	glBindTexture(GL_TEXTURE_2D, _pageBent->getTexture());
-	glUniform1i(glGetUniformLocation(shader, "bookTex"), 0); // Texture unit 0
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, _pageBent->getTexture());
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, _pageBent->getTextureSide());
+
+	//glUniform1i(glGetUniformLocation(shader, "bookTex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, pageBTot.m);
 	DrawModel(_pageBent->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
-
 }
 
 

@@ -13,6 +13,8 @@
 #include "Object.h"
 #include "Camera.h"
 #include "Book.h"
+#include <iostream>
+using namespace std;
 
 Fundamentals::Fundamentals(Camera* cam){
 	camera = cam;
@@ -37,12 +39,12 @@ void Fundamentals::loadfiles(){
 	//Load textures
 	LoadTGATextureSimple("../textures/grass.tga", &grassTex);
 	LoadTGATextureSimple("../textures/snow.tga", &snowTex);
-	LoadTGATextureSimple("../textures/water.tga", &waterTex);
+	//LoadTGATextureSimple("../textures/Paper.tga", &paperTex);
 	LoadTGATextureSimple("../textures/SkyBox512.tga", &skytex);
 	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
 	LoadTGATextureSimple("../textures/bilskissred.tga", &bilTex);
 
-	// Load Models
+	//Load Models
 	carModel = LoadModelPlus("../Modeller/bilskiss.obj");
 	backModel = LoadModelPlus("../Modeller/BookBack.obj");
 	bottomModel = LoadModelPlus("../Modeller/BookBot.obj");
@@ -51,13 +53,16 @@ void Fundamentals::loadfiles(){
 	bentPageModel =LoadModelPlus("../Modeller/PageBent.obj");
 	skybox = LoadModelPlus("../Modeller/skybox.obj");
 
+
 	//Create Objects
-	car = new Object(vec3(0.0f, 4.5f, 0.0f), carModel, bilTex);
+	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
 	bookback = new Object(backPos, backModel, leatherTex);
 	bottompage = new Object(bottomModel, leatherTex);
 	toppage = new Object(topPos, topModel, leatherTex);
 	pageStraight = new Object(straightPageModel, grassTex);
-	pageBent = new Object(bentPos, bentPageModel, snowTex);
+	pageBent = new Object(bentPos, bentPageModel, grassTex);
+	pageBent->setTextureSide(snowTex);
+	pageStraight->setTextureSide(snowTex);
 
 	//Book
 	book = new Book(bottompage, bookback, toppage, pageStraight, pageBent);
@@ -68,13 +73,22 @@ void Fundamentals::loadfiles(){
 
 	glUseProgram(programObj);
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+
+	glUseProgram(pageShader);
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+	glUniform1i(glGetUniformLocation(pageShader, "Tex"), 0); // Texture unit 0
+	glUniform1i(glGetUniformLocation(pageShader, "sideTex"), 1);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, pageStraight->getTexture());
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, pageBent->getTexture());
 }
 
 void Fundamentals::cameraCollision(){
 	cameraCollisionFlag = camera->CheckCollision(car, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(bookback, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(bottompage, cameraCollisionFlag);
-	cameraCollisionFlag = camera->CheckCollision(toppage, cameraCollisionFlag);
+	//cameraCollisionFlag = camera->CheckCollision(toppage, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(pageStraight, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(pageBent, cameraCollisionFlag);
 
@@ -111,12 +125,14 @@ void Fundamentals::update(){
   DrawModel(skybox, skyboxProg, "in_Position", NULL, "inTexCoord");
 
   glEnable(GL_DEPTH_TEST);
-  glUseProgram(program);
-	//Time variable
-	glUniform1f(glGetUniformLocation(program, "t"), t);
+
+
+  // glUseProgram(pageShader);
+	// //Time variable
+	// glUniform1f(glGetUniformLocation(pageShader, "t"), t);
 
 	//Draw complete book
-	book->draw(camMatrix, program, t);
+	book->draw(camMatrix, programObj, pageShader, t);
 
 	//draw scene
 	glUseProgram(programObj);

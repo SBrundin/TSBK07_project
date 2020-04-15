@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include "VectorUtils3.h"
 #include "loadobj.h"
+#include<iostream>
+#include<array>
 
 Object::Object()
 {
@@ -9,6 +11,7 @@ Object::Object()
     _direction = vec3(0.0f, 0.0f, 0.0f);
     _size = vec3(0.0f, 0.0f, 0.0f);
 }
+
 Object::Object(Model* model, GLuint tex)
 {
     _position = vec3(0.0f, 0.0f, 0.0f);
@@ -26,6 +29,7 @@ Object::Object(vec3 pos, Model* model, GLuint tex)
     _size = vec3(0.0f, 0.0f, 0.0f);
     setBoundingBox();
 }
+
 vec3 Object::getPosition()
 {
     return _position;
@@ -66,11 +70,20 @@ GLuint Object::getTexture()
     return _texture;
 }
 
+GLuint Object::getTextureSide()
+{
+    return _textureSide;
+}
+
 void Object::setTexture(GLuint tex)
 {
     _texture = tex;
 }
 
+void Object::setTextureSide(GLuint tex)
+{
+    _textureSide = tex;
+}
 
 void Object::setBoundingBox()
 {

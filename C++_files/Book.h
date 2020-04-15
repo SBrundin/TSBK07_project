@@ -9,7 +9,7 @@ class Book
 {
 public:
     Book(Object* bot, Object* back, Object* top, Object* ps, Object* pb);
-    void draw(mat4 camMatrix, GLuint shader, GLfloat t);
+    void draw(mat4 camMatrix, GLuint Covershader, GLuint shader, GLfloat t);
     void browse(mat4 camMatrix, GLuint shader, GLfloat time);
     void setBool();
     bool getBool();
