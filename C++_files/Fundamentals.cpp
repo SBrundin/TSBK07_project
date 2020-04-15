@@ -88,7 +88,7 @@ void Fundamentals::cameraCollision(){
 	cameraCollisionFlag = camera->CheckCollision(car, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(bookback, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(bottompage, cameraCollisionFlag);
-	//cameraCollisionFlag = camera->CheckCollision(toppage, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(toppage, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(pageStraight, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(pageBent, cameraCollisionFlag);
 
@@ -132,7 +132,7 @@ void Fundamentals::update(){
 	// glUniform1f(glGetUniformLocation(pageShader, "t"), t);
 
 	//Draw complete book
-	book->draw(camMatrix, programObj, pageShader, t);
+	book->draw(camMatrix, pageShader, t);
 
 	//draw scene
 	glUseProgram(programObj);
