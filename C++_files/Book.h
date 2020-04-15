@@ -11,9 +11,9 @@ class Book
 public:
     Book(Object* bot, Object* back, Object* top, Object* ps, Object* pb);
     void draw(mat4 camMatrix, GLuint shader, GLfloat t);
-    void browseForward(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Object* second, GLuint pageNbr);
-    void browseBackward(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Object* second, GLuint pageNbr);
+    void browse(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Object* second, GLuint pageNbr, char button);
     void makeRotation(GLfloat timer, GLuint page, mat4 camMatrix, GLuint shader, char button);
+    mat4 generateRotationMat(vec3 rotationAxis, GLfloat time);
 
     void setBool(){
       _bool = !_bool;

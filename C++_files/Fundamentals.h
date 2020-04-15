@@ -19,7 +19,7 @@ public:
 
 private:
 
-  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *carModel;
+  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *carModel, *coronaModel1, *coronaModel2;
   Model *skybox[6];
   mat4 projectionMatrix, camMatrix;
   vec3 p,l, c, cam, lookAtPoint, c2;
@@ -43,6 +43,8 @@ private:
   Object* bottompage;
   Object* pageStraight;
   Object* pageBent;
+  Object* coronaSimple;
+  Object* coronaBase;
   Book* book;
   TextureData skytex[6*2];
 
