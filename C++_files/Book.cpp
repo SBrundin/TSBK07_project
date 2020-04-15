@@ -232,10 +232,3 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
   }
 
 }
-<<<<<<< HEAD
-=======
-
-// GLuint Book::getCurrentPage(){
-//   return _currentPage;
-// }
->>>>>>> 84c50f2c6ae5ef8a736f249a50cbdcf38580ae4d
