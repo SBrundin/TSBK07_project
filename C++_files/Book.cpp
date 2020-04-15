@@ -163,6 +163,7 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
     _top->setPosition(topPosOpen);
     setBool();
     _currentPage++;
+    _timer = 0;
   }
   //TOP ROTATION BACKWARD
   else if (timer <= 3.13 && currentPage == 2 && button == 'r')
@@ -176,6 +177,7 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
     _top->setPosition(_topPos);
     setBool();
     _currentPage--;
+    _timer = 0;
   }
 
   //BENT PAGE ROTATION FORWARD
@@ -197,16 +199,14 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
     _pageNbr = 2;
     browseBackward(camMatrix, shader, _timer, _top, _pageBent, _pageNbr);
     _timer = _timer +0.05;
+
   }
 
   else if (timer > 3.13 && currentPage == 3 && button == 'r'){
     _pageBent->setPosition(_bentPos);
     setBool();
     _currentPage--;
+    _timer = 0;
   }
 
-}
-
-GLuint Book::getCurrentPage(){
-  return _currentPage;
 }

@@ -14,7 +14,12 @@ public:
     void browseForward(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Object* second, GLuint pageNbr);
     void browseBackward(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Object* second, GLuint pageNbr);
     void makeRotation(GLfloat timer, GLuint page, mat4 camMatrix, GLuint shader, char button);
-    GLuint getCurrentPage();
+    GLuint getCurrentPage(){
+      return _currentPage;
+    };
+    GLfloat getTimer(){
+      return _timer;
+    };
     void setBool(){
       _bool = !_bool;
     }
@@ -40,7 +45,7 @@ private:
     GLuint _currentPage;
     GLuint _pageNbr;
     bool _bool;
-    GLfloat _timer;
+    GLfloat _timer = 0;
     char _buttonPressed;
 };
 

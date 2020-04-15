@@ -120,6 +120,7 @@ void Fundamentals::update(){
 	glUniform1i(glGetUniformLocation(skyboxProg, "tex0"), 0); // Texture unit 0
 	glUniform1i(glGetUniformLocation(skyboxProg, "tex1"), 1); // Texture unit 1
 	glUniform1i(glGetUniformLocation(skyboxProg, "ID"), book->getCurrentPage());
+	glUniform1f(glGetUniformLocation(skyboxProg, "timer"), book->getTimer()/3.13);
   glUniformMatrix4fv(glGetUniformLocation(skyboxProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
   glUniformMatrix4fv(glGetUniformLocation(skyboxProg, "mdlMatrix"), 1, GL_TRUE, camMat2.m);
 
