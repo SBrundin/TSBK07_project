@@ -107,10 +107,16 @@ void LoadFiles::update(mat4 projectionMatrix, mat4 camMatrix){
 void LoadFiles::loadskybox()
 {
 	glActiveTexture(GL_TEXTURE0);
-	
-	std::string	skytextures[6] =
+
+	std::string	skytextures[6*2] =
 	{
-	// 0-5: petomavar: Pretty realistic skybox.
+		"../textures/skybox0/left.tga",
+		"../textures/skybox0/right.tga",
+		"../textures/skybox0/top.tga",
+		"../textures/skybox0/bottom.tga",
+		"../textures/skybox0/front.tga",
+		"../textures/skybox0/back.tga",
+
 		"../textures/skyboxdebug/left.tga",
 		"../textures/skyboxdebug/right.tga",
 		"../textures/skyboxdebug/top.tga",
@@ -121,7 +127,6 @@ void LoadFiles::loadskybox()
 
 	std::string filename[6] =
 {
-// 0-5: petomavar: Pretty realistic skybox.
 	"../Modeller/skybox/side0.obj",
 	"../Modeller/skybox/side1.obj",
 	"../Modeller/skybox/side2.obj",
