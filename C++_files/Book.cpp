@@ -48,12 +48,12 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());
-  if (glutKeyIsDown(GLUT_KEY_LEFT) && getBool() == false && _currentPage != 2)
+  if (glutKeyIsDown('n') && getBool() == false && _currentPage != 2)
     {
       _timer = t/t -1;
       setBool();
     }
-  if (glutKeyIsDown(GLUT_KEY_RIGHT) && getBool() == false && _currentPage != 1)
+  if (glutKeyIsDown('m') && getBool() == false && _currentPage != 1)
       {
         _timer = t/t -1;
         setBool();
