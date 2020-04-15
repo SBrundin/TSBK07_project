@@ -51,10 +51,14 @@ void Fundamentals::loadfiles(){
 	topModel = LoadModelPlus("../Modeller/BookTop.obj");
 	straightPageModel = LoadModelPlus("../Modeller/PageStraight.obj");
 	bentPageModel =LoadModelPlus("../Modeller/PageBent.obj");
+	coronaModel1 = LoadModelPlus("../Modeller/coronaSimple.obj");
+	coronaModel2 =LoadModelPlus("../Modeller/coronaSimpleBase.obj");
 
 
 	//Create Objects
 	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
+	coronaSimple = new Object(vec3(0.0f, 4.0f, 5.0f), coronaModel1, snowTex);
+	coronaBase = new Object(vec3(5.0f, 4.0f, 0.0f), coronaModel2, grassTex);
 	bookback = new Object(backPos, backModel, leatherTex);
 	bottompage = new Object(bottomModel, leatherTex);
 	toppage = new Object(topPos, topModel, leatherTex);
@@ -136,11 +140,6 @@ void Fundamentals::update(){
 
   glEnable(GL_DEPTH_TEST);
 
-
-  // glUseProgram(pageShader);
-	// //Time variable
-	// glUniform1f(glGetUniformLocation(pageShader, "t"), t);
-
 	//Draw complete book
 	book->draw(camMatrix, pageShader, t);
 
@@ -154,6 +153,22 @@ void Fundamentals::update(){
 	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, carTot.m);
 	DrawModel(car->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
+	mat4 modelViewCor1 = T(coronaSimple->getPosition().x, coronaSimple->getPosition().y, coronaSimple->getPosition().z);
+	mat4 corTot1 = Mult(camMatrix, modelViewCor1);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, coronaSimple->getTexture());
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, corTot1.m);
+	DrawModel(coronaSimple->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
+	mat4 modelViewCor2 = T(coronaBase->getPosition().x, coronaBase->getPosition().y, coronaBase->getPosition().z);
+	mat4 corTot2 = Mult(camMatrix, modelViewCor2);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, coronaBase->getTexture());
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, corTot2.m);
+	DrawModel(coronaBase->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 
 }
 
