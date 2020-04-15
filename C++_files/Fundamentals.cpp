@@ -40,7 +40,7 @@ void Fundamentals::loadfiles(){
 	LoadTGATextureSimple("../textures/grass.tga", &grassTex);
 	LoadTGATextureSimple("../textures/snow.tga", &snowTex);
 	//LoadTGATextureSimple("../textures/Paper.tga", &paperTex);
-	LoadTGATextureSimple("../textures/SkyBox512.tga", &skytex);
+	Fundamentals::loadskybox();
 	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
 	LoadTGATextureSimple("../textures/bilskissred.tga", &bilTex);
 
@@ -51,7 +51,6 @@ void Fundamentals::loadfiles(){
 	topModel = LoadModelPlus("../Modeller/BookTop.obj");
 	straightPageModel = LoadModelPlus("../Modeller/PageStraight.obj");
 	bentPageModel =LoadModelPlus("../Modeller/PageBent.obj");
-	skybox = LoadModelPlus("../Modeller/skybox.obj");
 
 
 	//Create Objects
@@ -118,11 +117,22 @@ void Fundamentals::update(){
   //Skybox with corr program
   glUseProgram(skyboxProg);
   glDisable(GL_DEPTH_TEST);
-  glBindTexture(GL_TEXTURE_2D, skytex);
-  glUniform1i(glGetUniformLocation(skyboxProg, "texUnit"), 0); // Texture unit 0
+	glUniform1i(glGetUniformLocation(skyboxProg, "tex0"), 0); // Texture unit 0
+	glUniform1i(glGetUniformLocation(skyboxProg, "tex1"), 1); // Texture unit 1
+	glUniform1i(glGetUniformLocation(skyboxProg, "ID"), book->getCurrentPage());
   glUniformMatrix4fv(glGetUniformLocation(skyboxProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
   glUniformMatrix4fv(glGetUniformLocation(skyboxProg, "mdlMatrix"), 1, GL_TRUE, camMat2.m);
-  DrawModel(skybox, skyboxProg, "in_Position", NULL, "inTexCoord");
+
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, skytex[i].texID);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, skytex[i + 6].texID);
+
+		DrawModel(skybox[i], skyboxProg, "inPosition", NULL, "inTexCoord");
+	}
 
   glEnable(GL_DEPTH_TEST);
 
@@ -144,5 +154,51 @@ void Fundamentals::update(){
 	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, carTot.m);
 	DrawModel(car->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
+}
+
+void Fundamentals::loadskybox()
+{
+	//glActiveTexture(GL_TEXTURE0);
+
+	std::string	skytextures[6*2] =
+	{
+		"../textures/skybox0/left.tga",
+		"../textures/skybox0/right.tga",
+		"../textures/skybox0/top.tga",
+		"../textures/skybox0/bottom.tga",
+		"../textures/skybox0/front.tga",
+		"../textures/skybox0/back.tga",
+
+		"../textures/skyboxdebug/left.tga",
+		"../textures/skyboxdebug/right.tga",
+		"../textures/skyboxdebug/top.tga",
+		"../textures/skyboxdebug/bottom.tga",
+		"../textures/skyboxdebug/front.tga",
+		"../textures/skyboxdebug/back.tga"
+	};
+
+	std::string filename[6] =
+{
+	"../Modeller/skybox/side0.obj",
+	"../Modeller/skybox/side1.obj",
+	"../Modeller/skybox/side2.obj",
+	"../Modeller/skybox/side3.obj",
+	"../Modeller/skybox/side4.obj",
+	"../Modeller/skybox/side5.obj"
+};
+
+	for (unsigned int i = 0; i < 6*2; i++)
+	{
+		printf("Loading texture %s\n", skytextures[i].c_str());
+		LoadTGATexture(skytextures[i].c_str(), &skytex[i]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	};
+
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		skybox[i] = LoadModelPlus(filename[i].c_str());
+	}
 
 }
