@@ -14,13 +14,18 @@ public:
     void browseForward(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Object* second, GLuint pageNbr);
     void browseBackward(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Object* second, GLuint pageNbr);
     void makeRotation(GLfloat timer, GLuint page, mat4 camMatrix, GLuint shader, char button);
-    GLuint getCurrentPage();
+
     void setBool(){
       _bool = !_bool;
     }
+
     bool getBool(){
       return _bool;
-    };
+    }
+
+    GLuint getCurrentPage(){
+      return _currentPage;
+    }
 
 
 private:
@@ -34,9 +39,9 @@ private:
     vec3 _bentPos = {0.0f, 5.0f, 0.0f};
     vec3 _straightPos = {0.0f, 1.0f, 0.0f};
     vec3 _topPos = {0.0f, 5.3f, 0.0f};
-    vec3 rotationAxis = {-15.0f, 0.0f, 0.0f};
-    vec3 topPosOpen = {-29.7f, 5.0f, 0.0f};
-    vec3 bentOpen = {-29.5f, 5.6f, 0.0f};
+    vec3 _rotationAxis = {-15.0f, 0.0f, 0.0f};
+    vec3 _topPosOpen = {-29.7f, 5.0f, 0.0f};
+    vec3 _bentOpen = {-29.5f, 5.6f, 0.0f};
     GLuint _currentPage;
     GLuint _pageNbr;
     bool _bool;
