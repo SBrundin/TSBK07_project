@@ -53,10 +53,11 @@ void Fundamentals::loadfiles(){
 	bentPageModel =LoadModelPlus("../Modeller/PageBent.obj");
 	coronaModel1 = LoadModelPlus("../Modeller/coronaSimple.obj");
 	coronaModel2 =LoadModelPlus("../Modeller/coronaSimpleBase.obj");
+	carModel = LoadModelPlus("../Modeller/bilskiss.obj");
 
 
 	//Create Objects
-	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
+	//car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
 	coronaSimple = new Object(vec3(0.0f, 4.0f, 5.0f), coronaModel1, snowTex);
 	coronaBase = new Object(vec3(5.0f, 4.0f, 0.0f), coronaModel2, grassTex);
 	bookback = new Object(backPos, backModel, leatherTex);
