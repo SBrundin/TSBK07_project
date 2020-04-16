@@ -73,7 +73,7 @@ void Fundamentals::loadfiles(){
 	//Worlds Objects
 	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
 	truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, truckTex);
-	truck->updateBoundingBox(Ry(M_PI/2), 3.0);
+	//truck->updateBoundingBox(Ry(M_PI/2), 3.0);
 
 
 	glUseProgram(program);
