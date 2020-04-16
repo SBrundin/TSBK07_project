@@ -47,9 +47,11 @@ void Fundamentals::loadfiles(){
 
 	//Load Models
 	backModel = LoadModelPlus("../Modeller/BookBack.obj");
+	carModel = LoadModelPlus("../Modeller/bilskiss.obj");
 	bottomModel = LoadModelPlus("../Modeller/BookBot.obj");
 	topModel = LoadModelPlus("../Modeller/BookTop.obj");
 	straightPageModel = LoadModelPlus("../Modeller/PageStraight.obj");
+	truckModel = LoadModelPlus("../Modeller/LPTruck.obj");
 	bentPageModel =LoadModelPlus("../Modeller/PageBent.obj");
 	coronaModel1 = LoadModelPlus("../Modeller/coronaSimple.obj");
 	coronaModel2 =LoadModelPlus("../Modeller/coronaSimpleBase.obj");
@@ -70,9 +72,9 @@ void Fundamentals::loadfiles(){
 	book = new Book(bottompage, bookback, toppage, pageStraight, pageBent);
 
 	//Worlds Objects
-	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
+	//car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
 	truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, truckTex);
-	truck->updateBoundingBox(Ry(M_PI/2), 3.0);
+	truck->updateBoundingBox(Ry(M_PI/2), 3.0f);
 
 
 	glUseProgram(program);
