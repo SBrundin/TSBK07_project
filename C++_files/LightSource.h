@@ -48,7 +48,7 @@ private:
     vec3 diffuse;
     vec3 specular;
     vec3 viewPos;
-    vec3 colour
+    vec3 colour;
     vec3 direction;
     GLfloat constant;
     GLfloat linear;

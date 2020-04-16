@@ -20,7 +20,7 @@ private:
 
   Model *bookModel, *bookbackModel, *skybox, *carModel, *boxModel;
   Lamp* lampLight;
-  LightSource* lightSource, dirrLight;
+  LightSource *lightSource, *dirrLight;
   mat4 projectionMatrix, camMatrix;
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
   GLuint program, skyboxProg, pageShader, lampProg, mainProg;
