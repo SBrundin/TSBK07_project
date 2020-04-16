@@ -20,10 +20,10 @@ private:
 
   Model *bookModel, *bookbackModel, *skybox, *carModel, *boxModel;
   Lamp* lampLight;
-  LightSource* lightSource;
+  LightSource* lightSource, dirrLight;
   mat4 projectionMatrix, camMatrix;
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
-  GLuint program, skyboxProg, pageShader, lampProg;
+  GLuint program, skyboxProg, pageShader, lampProg, mainProg;
   GLuint sphereTex, waterTex, snowTex, skytex,grassTex, tex2, bookTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
@@ -37,6 +37,7 @@ private:
   Object* toppage;
   Object* bottompage;
   Object* lamp;
+  Object* box;
 };
 
 #endif

@@ -5,6 +5,7 @@
 #include "VectorUtils3.h"
 #include "loadobj.h"
 #include "Object.h"
+#include "LightSource.h"
 
 class Lamp
 {
