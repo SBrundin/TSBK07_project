@@ -26,8 +26,10 @@ public:
 
     GLuint getTexture();
     GLuint getTextureSide();
+    GLuint getTextureUp();
     void setTexture(GLuint tex);
     void setTextureSide(GLuint tex);
+    void setTextureUp(GLuint tex);
 
     void setBoundingBox();
     void updateBoundingBox(mat4 rotation, GLfloat scale);
@@ -41,6 +43,7 @@ private:
     Model* _model;
     GLuint _texture;
     GLuint _textureSide;
+    GLuint _textureUp;
 };
 
 #endif

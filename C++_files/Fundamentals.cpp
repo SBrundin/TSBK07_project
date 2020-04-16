@@ -56,26 +56,25 @@ void Fundamentals::loadfiles(){
 	coronaModel1 = LoadModelPlus("../Modeller/coronaSimple.obj");
 	coronaModel2 =LoadModelPlus("../Modeller/coronaSimpleBase.obj");
 
-
 	//Create Objects
-	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
-	coronaSimple = new Object(vec3(0.0f, 4.0f, 5.0f), coronaModel1, snowTex);
-	coronaBase = new Object(vec3(5.0f, 4.0f, 0.0f), coronaModel2, grassTex);
+	car = new Object(vec3(0.0f, 5.3f, 0.0f), carModel, bilTex);
+	coronaSimple = new Object(vec3(0.0f, 5.0f, 5.0f), coronaModel1, snowTex);
+	coronaBase = new Object(vec3(5.0f, 5.0f, 0.0f), coronaModel2, grassTex);
 	bookback = new Object(backPos, backModel, leatherTex);
 	bottompage = new Object(bottomModel, leatherTex);
 	toppage = new Object(topPos, topModel, leatherTex);
-	pageStraight = new Object(straightPageModel, grassTex);
+	pageStraight = new Object(straightPos, straightPageModel, grassTex);
 	pageBent = new Object(bentPos, bentPageModel, grassTex);
 	pageBent->setTextureSide(snowTex);
+	pageBent->setTextureUp(grassTex);
 	pageStraight->setTextureSide(snowTex);
 
 	book = new Book(bottompage, bookback, toppage, pageStraight, pageBent);
 
 	//Worlds Objects
 	//car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
-	truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, truckTex);
+	truck = new Object(vec3(-10.2f, 5.3f, -18.9f), truckModel, truckTex);
 	truck->updateBoundingBox(Ry(M_PI/2), 3.0f);
-
 
 	glUseProgram(program);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
@@ -86,7 +85,8 @@ void Fundamentals::loadfiles(){
 	glUseProgram(pageShader);
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 	glUniform1i(glGetUniformLocation(pageShader, "Tex"), 0); // Texture unit 0
-	glUniform1i(glGetUniformLocation(pageShader, "sideTex"), 1);
+	glUniform1i(glGetUniformLocation(pageShader, "TexUp"), 1);
+	glUniform1i(glGetUniformLocation(pageShader, "sideTex"), 2);
 	printError("init shader");
 }
 
@@ -98,10 +98,11 @@ void Fundamentals::cameraCollision(){
 	cameraCollisionFlag = camera->CheckCollision(pageStraight, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(pageBent, cameraCollisionFlag);
 
-
 	//object
 	cameraCollisionFlag = camera->CheckCollision(truck, cameraCollisionFlag);
-	//cameraCollisionFlag = camera->CheckCollision(car, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(coronaSimple, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(coronaBase, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(car, cameraCollisionFlag);
 	camera->checkFlag(cameraCollisionFlag);
 	cameraCollisionFlag = false;
 }
@@ -154,6 +155,7 @@ void Fundamentals::update(){
 	glUseProgram(programObj);
 
 	//Car
+	if (book->getCurrentPage() == 2 ){
 	mat4 modelViewCar = T(car->getPosition().x, car->getPosition().y, car->getPosition().z);
 	mat4 carTot = Mult(camMatrix, modelViewCar);
 	glActiveTexture(GL_TEXTURE0);
@@ -186,6 +188,7 @@ void Fundamentals::update(){
 	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, truckTot.m);
 	DrawModel(truck->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+}
 }
 
 void Fundamentals::loadskybox()

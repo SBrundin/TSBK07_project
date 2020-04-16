@@ -76,6 +76,11 @@ GLuint Object::getTextureSide()
     return _textureSide;
 }
 
+GLuint Object::getTextureUp()
+{
+    return _textureUp;
+}
+
 void Object::setTexture(GLuint tex)
 {
     _texture = tex;
@@ -84,6 +89,11 @@ void Object::setTexture(GLuint tex)
 void Object::setTextureSide(GLuint tex)
 {
     _textureSide = tex;
+}
+
+void Object::setTextureUp(GLuint tex)
+{
+    _textureUp = tex;
 }
 
 void Object::setBoundingBox()
