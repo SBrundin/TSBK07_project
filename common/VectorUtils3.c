@@ -94,7 +94,7 @@ char transposed = 0;
 	vec3 SetVector(GLfloat x, GLfloat y, GLfloat z)
 	{
 		vec3 v;
-		
+
 		v.x = x;
 		v.y = y;
 		v.z = z;
@@ -120,7 +120,7 @@ char transposed = 0;
 // Like above; Modern C doesn't need this, but Visual STudio insists on old-fashioned C and needs this.
 	mat4 SetMat4(GLfloat p0, GLfloat p1, GLfloat p2, GLfloat p3,
 				GLfloat p4, GLfloat p5, GLfloat p6, GLfloat p7,
-				GLfloat p8, GLfloat p9, GLfloat p10, GLfloat p11, 
+				GLfloat p8, GLfloat p9, GLfloat p10, GLfloat p11,
 				GLfloat p12, GLfloat p13, GLfloat p14, GLfloat p15
 				)
 	{
@@ -152,17 +152,17 @@ char transposed = 0;
 	vec3 VectorSub(vec3 a, vec3 b)
 	{
 		vec3 result;
-		
+
 		result.x = a.x - b.x;
 		result.y = a.y - b.y;
 		result.z = a.z - b.z;
 		return result;
 	}
-	
+
 	vec3 VectorAdd(vec3 a, vec3 b)
 	{
 		vec3 result;
-		
+
 		result.x = a.x + b.x;
 		result.y = a.y + b.y;
 		result.z = a.z + b.z;
@@ -176,7 +176,7 @@ char transposed = 0;
 		result.x = a.y*b.z - a.z*b.y;
 		result.y = a.z*b.x - a.x*b.z;
 		result.z = a.x*b.y - a.y*b.x;
-		
+
 		return result;
 	}
 
@@ -188,11 +188,11 @@ char transposed = 0;
 	vec3 ScalarMult(vec3 a, GLfloat s)
 	{
 		vec3 result;
-		
+
 		result.x = a.x * s;
 		result.y = a.y * s;
 		result.z = a.z * s;
-		
+
 		return result;
 	}
 
@@ -222,7 +222,7 @@ char transposed = 0;
 
 		n = CrossProduct(VectorSub(a, b), VectorSub(a, c));
 		n = ScalarMult(n, 1/Norm(n));
-		
+
 		return n;
 	}
 
@@ -275,6 +275,20 @@ char transposed = 0;
 		return m;
 	}
 
+  mat4 Rx2(GLfloat a)
+	{
+		mat4 m;
+		m = IdentityMatrix();
+		m.m[5] = (GLfloat)cos(a);
+		if (transposed)
+			m.m[9] = (GLfloat)-sin(a)*2;
+		else
+			m.m[9] = (GLfloat)sin(a)*2;
+		m.m[6] = -m.m[9]; //sin(a);
+		m.m[10] = m.m[5]; //cos(a);
+		return m;
+	}
+
 	mat4 Ry(GLfloat a)
 	{
 		mat4 m;
@@ -321,6 +335,23 @@ char transposed = 0;
 		}
 		return m;
 	}
+
+  vec3 mat4vec3(mat4 m)
+  {
+    vec3 res;
+    GLfloat normScale = m.m[15];
+    normScale = 1/normScale;
+    //mat4 divMat = SetMat4(normScale, normScale, normScale, normScale, normScale, normScale, normScale, normScale,normScale, normScale, normScale, normScale,normScale, normScale, normScale, normScale);
+    if (transposed)
+    {
+      res = SetVector(m.m[12], m.m[13], m.m[14]);
+    }
+    else
+    {
+      res = SetVector(m.m[3], m.m[7], m.m[11]);
+    }
+    return ScalarMult(res, normScale);
+  }
 
 	mat4 S(GLfloat sx, GLfloat sy, GLfloat sz)
 	{
@@ -399,7 +430,7 @@ char transposed = 0;
 	vec3 MultMat3Vec3(mat3 a, vec3 b) // result = a * b
 	{
 		vec3 r;
-		
+
 		if (!transposed)
 		{
 			r.x = a.m[0]*b.x + a.m[1]*b.y + a.m[2]*b.z;
@@ -412,7 +443,7 @@ char transposed = 0;
 			r.y = a.m[1]*b.x + a.m[4]*b.y + a.m[7]*b.z;
 			r.z = a.m[2]*b.x + a.m[5]*b.y + a.m[8]*b.z;
 		}
-		
+
 		return r;
 	}
 
@@ -524,12 +555,12 @@ char transposed = 0;
 //	mat4 TransposeRotation(mat4 m)
 //	{
 //		mat4 a;
-//		
+//
 //		a.m[0] = m.m[0]; a.m[4] = m.m[1]; a.m[8] = m.m[2];      a.m[12] = m.m[12];
 //		a.m[1] = m.m[4]; a.m[5] = m.m[5]; a.m[9] = m.m[6];      a.m[13] = m.m[13];
 //		a.m[2] = m.m[8]; a.m[6] = m.m[9]; a.m[10] = m.m[10];    a.m[14] = m.m[14];
 //		a.m[3] = m.m[3]; a.m[7] = m.m[7]; a.m[11] = m.m[11];    a.m[15] = m.m[15];
-//		
+//
 //		return a;
 //	}
 
@@ -537,12 +568,12 @@ char transposed = 0;
 	mat4 Transpose(mat4 m)
 	{
 		mat4 a;
-		
+
 		a.m[0] = m.m[0]; a.m[4] = m.m[1]; a.m[8] = m.m[2];      a.m[12] = m.m[3];
 		a.m[1] = m.m[4]; a.m[5] = m.m[5]; a.m[9] = m.m[6];      a.m[13] = m.m[7];
 		a.m[2] = m.m[8]; a.m[6] = m.m[9]; a.m[10] = m.m[10];    a.m[14] = m.m[11];
 		a.m[3] = m.m[12]; a.m[7] = m.m[13]; a.m[11] = m.m[14];    a.m[15] = m.m[15];
-		
+
 		return a;
 	}
 
@@ -550,11 +581,11 @@ char transposed = 0;
 	mat3 TransposeMat3(mat3 m)
 	{
 		mat3 a;
-		
+
 		a.m[0] = m.m[0]; a.m[3] = m.m[1]; a.m[6] = m.m[2];
 		a.m[1] = m.m[3]; a.m[4] = m.m[4]; a.m[7] = m.m[5];
 		a.m[2] = m.m[6]; a.m[5] = m.m[7]; a.m[8] = m.m[8];
-		
+
 		return a;
 	}
 
@@ -604,32 +635,32 @@ mat4 ArbRotate(vec3 axis, GLfloat fi)
 		R.m[12] = 0.0; R.m[13] = 0.0; R.m[14] = 0.0;  R.m[15] = 1.0;
 	}
 
-	Rt = Transpose(R); // Transpose = Invert -> felet ej i Transpose, och det Šr en ortonormal matris
+	Rt = Transpose(R); // Transpose = Invert -> felet ej i Transpose, och det ï¿½r en ortonormal matris
 
 	Raxel = Rx(fi); // Rotate around x axis
 
 	// m := Rt * Rx * R
 	m = Mult(Mult(Rt, Raxel), R);
-	
+
 	return m;
 }
 
 
 
 
-// Inte testad mycket. Hoppas jag inte vŠnt pŒ den.
-mat4 CrossMatrix(vec3 a) // Skapar matris fšr kryssprodukt
+// Inte testad mycket. Hoppas jag inte vï¿½nt pï¿½ den.
+mat4 CrossMatrix(vec3 a) // Skapar matris fï¿½r kryssprodukt
 {
 	mat4 m;
-	
+
 	if (transposed)
 	{
 		m.m[0] =    0; m.m[4] =-a.z; m.m[8] = a.y; m.m[12] = 0.0;
 		m.m[1] = a.z; m.m[5] =    0; m.m[9] =-a.x; m.m[13] = 0.0;
 		m.m[2] =-a.y; m.m[6] = a.x; m.m[10]=    0; m.m[14] = 0.0;
 		m.m[3] =  0.0; m.m[7] =  0.0; m.m[11]=  0.0; m.m[15] = 0.0;
-		// OBS! 0.0 i homogena koordinaten. DŠrmed kan matrisen
-		// inte anvŠndas generellt, men duger fšr matrisderivatan.
+		// OBS! 0.0 i homogena koordinaten. Dï¿½rmed kan matrisen
+		// inte anvï¿½ndas generellt, men duger fï¿½r matrisderivatan.
 	}
 	else
 	{
@@ -637,10 +668,10 @@ mat4 CrossMatrix(vec3 a) // Skapar matris fšr kryssprodukt
 		m.m[4] = a.z; m.m[5] =    0; m.m[6] =-a.x; m.m[7] = 0.0;
 		m.m[8] =-a.y; m.m[9] = a.x; m.m[10]=    0; m.m[11] = 0.0;
 		m.m[12] =  0.0; m.m[13] =  0.0; m.m[14]=  0.0; m.m[15] = 0.0;
-		// OBS! 0.0 i homogena koordinaten. DŠrmed kan matrisen
-		// inte anvŠndas generellt, men duger fšr matrisderivatan.
+		// OBS! 0.0 i homogena koordinaten. Dï¿½rmed kan matrisen
+		// inte anvï¿½ndas generellt, men duger fï¿½r matrisderivatan.
 	}
-	
+
 	return m;
 }
 
@@ -649,11 +680,11 @@ mat4 CrossMatrix(vec3 a) // Skapar matris fšr kryssprodukt
 mat4 MatrixAdd(mat4 a, mat4 b)
 {
 	mat4 dest;
-	
+
 	int i;
 	for (i = 0; i < 16; i++)
 		dest.m[i] = a.m[i] + b.m[i];
-	
+
 	return dest;
 }
 
@@ -688,16 +719,16 @@ mat4 lookAtv(vec3 p, vec3 l, vec3 v)
 	return Mult(rot, trans);
 }
 
-mat4 lookAt(GLfloat px, GLfloat py, GLfloat pz, 
+mat4 lookAt(GLfloat px, GLfloat py, GLfloat pz,
 			GLfloat lx, GLfloat ly, GLfloat lz,
 			GLfloat vx, GLfloat vy, GLfloat vz)
 {
 	vec3 p, l, v;
-	
+
 	p = SetVector(px, py, pz);
 	l = SetVector(lx, ly, lz);
 	v = SetVector(vx, vy, vz);
-	
+
 	return lookAtv(p, l, v);
 }
 
@@ -722,7 +753,7 @@ mat4 perspective(float fovyInDegrees, float aspectRatio,
 	    xmax = znear * tanf(fovyInDegrees * M_PI / 360.0);
        ymax = xmax / aspectRatio;
     }
-    
+
     return frustum(-xmax, xmax, -ymax, ymax, znear, zfar);
 }
 
@@ -731,7 +762,7 @@ mat4 frustum(float left, float right, float bottom, float top,
 {
     float temp, temp2, temp3, temp4;
     mat4 matrix;
-    
+
     temp = 2.0f * znear;
     temp2 = right - left;
     temp3 = top - bottom;
@@ -752,10 +783,10 @@ mat4 frustum(float left, float right, float bottom, float top,
     matrix.m[13] = 0.0;
     matrix.m[14] = (-temp * zfar) / temp4; // D = -2fn / f-n
     matrix.m[15] = 0.0;
-    
+
     if (!transposed)
     	matrix = Transpose(matrix);
-    
+
     return matrix;
 }
 
@@ -788,7 +819,7 @@ mat3 InvertMat3(mat3 in)
 	float a11, a12, a13, a21, a22, a23, a31, a32, a33;
 	mat3 out, nanout;
 	float DET;
-	
+
 	// Copying to internal variables both clarify the code and
 	// buffers data so the output may be identical to the input!
 	a11 = in.m[0];
@@ -820,7 +851,7 @@ mat3 InvertMat3(mat3 in)
 								NAN, NAN, NAN);
 		out = nanout;
 	}
-	
+
 	return out;
 }
 
@@ -832,7 +863,7 @@ mat3 InverseTranspose(mat4 in)
 	float a11, a12, a13, a21, a22, a23, a31, a32, a33;
 	mat3 out, nanout;
 	float DET;
-	
+
 	// Copying to internal variables
 	a11 = in.m[0];
 	a12 = in.m[1];
@@ -872,7 +903,7 @@ mat3 InverseTranspose(mat4 in)
 mat3 mat4tomat3(mat4 m)
 {
 	mat3 result;
-	
+
 	result.m[0] = m.m[0];
 	result.m[1] = m.m[1];
 	result.m[2] = m.m[2];
@@ -888,7 +919,7 @@ mat3 mat4tomat3(mat4 m)
 mat4 mat3tomat4(mat3 m)
 {
 	mat4 result;
-	
+
 	result.m[0] = m.m[0];
 	result.m[1] = m.m[1];
 	result.m[2] = m.m[2];
@@ -935,7 +966,7 @@ vec4 vec3tovec4(vec3 v)
 mat4 InvertMat4(mat4 a)
 {
    mat4 b;
-     
+
    float c=a.m[0],d=a.m[1],e=a.m[2],g=a.m[3],
 	f=a.m[4],h=a.m[5],i=a.m[6],j=a.m[7],
 	k=a.m[8],l=a.m[9],o=a.m[10],m=a.m[11],
@@ -988,7 +1019,7 @@ void printMat4(mat4 m)
 	printf(" ---------------------------------------------------------------\n");
 }
 
-void printVec3(vec3 in) 
+void printVec3(vec3 in)
 {
 	printf("(%f, %f, %f)\n", in.x, in.y, in.z);
 }
