@@ -71,16 +71,21 @@ void Camera::keyboardInput(){
 
 bool Camera::CheckCollision(Object* two, bool flag) // AABB - AABB collision
 {
+  // //std::cout << _size.x << ' ' << _size.y << ' ' << _size.z << '\n';
   if (!flag){
   // Collision x-axis?
+  //std::cout << two->getPosition().x - 0.5*two->getSize().x << ' ' << two->getPosition().x + 0.5*two->getSize().x << '\n';
 	bool collisionX = position.x >= two->getPosition().x - 0.5*two->getSize().x && two->getPosition().x + 0.5*two->getSize().x >= position.x;
 	// Collision y-axis?
+  //std::cout << two->getPosition().y - 0.5*two->getSize().y << ' ' << two->getPosition().y + 0.5*two->getSize().y << '\n';
 	bool collisionY = position.y >= two->getPosition().y - 0.5*two->getSize().y && two->getPosition().y + 0.5*two->getSize().y >= position.y;
 	// Collision z-axis?
+  //std::cout << two->getPosition().z - 0.5*two->getSize().z << ' ' << two->getPosition().z + 0.5*two->getSize().z << '\n';
 	bool collisionZ = position.z >= two->getPosition().z - 0.5*two->getSize().z && two->getPosition().z + 0.5*two->getSize().z >= position.z;
 	// Collision only if on both axes
   flag = collisionX && collisionY && collisionZ;
   }
+  // std::cout << position.x << ' ' << position.y << ' ' << position.z << '\n' << '\n';
   return flag;
 }
 

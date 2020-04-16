@@ -30,6 +30,7 @@ public:
     void setTextureSide(GLuint tex);
 
     void setBoundingBox();
+    void updateBoundingBox(mat4 rotation, GLfloat scale);
     vec3 getSize();
 
 private:

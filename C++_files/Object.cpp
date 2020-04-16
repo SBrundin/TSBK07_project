@@ -4,6 +4,7 @@
 #include "loadobj.h"
 #include<iostream>
 #include<array>
+using namespace std;
 
 Object::Object()
 {
@@ -90,7 +91,7 @@ void Object::setBoundingBox()
 	int i;
 	float maxx = -1e10, maxy = -1e10, maxz = -1e10, minx = 1e10, miny = 1e10, minz = 1e10;
 
-	for (i=0;i< _model->numVertices; i++)
+	for (i=0; i < _model->numVertices; i++)
 	{
 		if (_model->vertexArray[3 * i] < minx) minx = _model->vertexArray[3 * i];
 		if (_model->vertexArray[3 * i] > maxx) maxx = _model->vertexArray[3 * i];
@@ -100,4 +101,22 @@ void Object::setBoundingBox()
 		if (_model->vertexArray[3 * i+2] > maxz) maxz = _model->vertexArray[3 * i+2];
 	}
 	_size = SetVector(maxx-minx, maxy-miny, maxz-minz);
+  // fprintf(stderr, "maxx %f minx %f \n", maxx, minx);
+  // fprintf(stderr, "maxy %f miny %f \n", maxy, miny);
+  // fprintf(stderr, "maxz %f minz %f \n", maxz, minz);
+  // std::cout <<  _model->numVertices << '\n';
+}
+
+void Object::updateBoundingBox(mat4 rotation, GLfloat scale)
+{
+  //std::cout << _size.x << ' ' << _size.y << ' ' << _size.z << '\n';
+
+  vec4 size4 = vec4(_size.x*scale, _size.y*scale, _size.z*scale, 1);
+  vec4 temp =  MultVec4(rotation, size4);
+
+  _size.x = abs(temp.x / temp.w);
+  _size.y = abs(temp.y / temp.w);
+  _size.z = abs(temp.z / temp.w);
+  //_size = ScalarMult(_size, scale);
+  //std::cout << _size.x << ' ' << _size.y << ' ' << _size.z << '\n';
 }
