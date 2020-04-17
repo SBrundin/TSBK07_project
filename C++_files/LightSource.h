@@ -42,6 +42,12 @@ public:
     vec3 getDirection();
     void setDirection(vec3 dir);
 
+    GLfloat getCutOff();
+    void setCutOff(GLfloat co);
+
+    GLfloat getOuterCutOff();
+    void setOuterCutOff(GLfloat oCo);
+
 private:
     vec3 position;
     vec3 ambient;
@@ -53,6 +59,8 @@ private:
     GLfloat constant;
     GLfloat linear;
     GLfloat quadratic;
+    GLfloat cutOff;
+    GLfloat outerCutOff;
 };
 
 #endif

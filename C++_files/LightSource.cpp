@@ -15,6 +15,8 @@ LightSource::LightSource(vec3 position, vec3 col, GLfloat constant, GLfloat line
     constant = constant;
     linear = linear;
     quadratic = quadratic;
+    cutOff = cos(  12.5f*2*M_PI/180  );
+    outerCutOff = cos(  15.5f*2*M_PI/180 );
 }
 
 
@@ -75,7 +77,7 @@ GLfloat LightSource::getConstant()
   return constant;
 }
 
-void LightSource::setConstant(float constant)
+void LightSource::setConstant(GLfloat constant)
 {
   constant = constant;
 }
@@ -85,12 +87,12 @@ GLfloat LightSource::getLinear()
   return linear;
 }
 
-void LightSource::setLinear(float lin)
+void LightSource::setLinear(GLfloat lin)
 {
   linear = lin;
 }
 
-void LightSource::setQuadratic(float qua)
+void LightSource::setQuadratic(GLfloat qua)
 {
   quadratic = qua;
 }
@@ -122,4 +124,24 @@ void LightSource::setDirection(vec3 dir)
 vec3 LightSource::getDirection()
 {
   return direction;
+}
+
+void LightSource::setCutOff(GLfloat co)
+{
+  cutOff = cos(  co*2*M_PI/180 );
+}
+
+GLfloat LightSource::getCutOff()
+{
+  return cutOff;
+}
+
+void LightSource::setOuterCutOff(GLfloat oCo)
+{
+  outerCutOff = cos(oCo*2*M_PI/180);
+}
+
+GLfloat LightSource::getOuterCutOff()
+{
+  return outerCutOff;
 }

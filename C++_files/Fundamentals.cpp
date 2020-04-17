@@ -68,23 +68,29 @@ void Fundamentals::loadfiles(){
 	glUniformMatrix4fv(glGetUniformLocation(lampProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 	glUniform3fv(glGetUniformLocation(lampProg, "lampColour"), 1, &lampColour.x);
 
-	//Light
+	///////////////////7Light////////////////////7
+	//lightHandler
+	lightHandler = new LightHandler();
+
 	//pointlight
 	lightPos = {1.0f, 3.0f, 0.0f};
 	lightPos = lamp->getPosition();
-	vec3 viewPos = {camera-> getPosition().x, camera-> getPosition().y, camera-> getPosition().z};
-	GLfloat constant = 1.0f;
+	GLfloat constant = 1.0f;//liten betyder starkt
 	GLfloat linear = 0.09;
-	GLfloat quadratic = 0.000032;
-	vec3 lightColour = {1.0f, 1.0f, 1.0f};
+	GLfloat quadratic = 0.012;
+	vec3 lightColour = {1.0f, 0.0f, 0.0f};
 	lightSource = new LightSource(lightPos, lightColour, constant, linear, quadratic);
+	int index = lightHandler -> addLight(lightSource);
+	vec3 colourArray = lightHandler->getColourArray();
+	//printf(std::to_string(index).c_str());
+	std::cout << index << std::endl;
 	vec3 ambient = lightSource->getAmbient();
 	vec3 diffuse = lightSource->getDiffuse();
 	vec3 specular = lightSource->getSpecular();
-	lightColour = lightSource->getColour();
+	//lightColour =  colourArray;//lightSource->getColour();
 	glUseProgram(mainProg);
 	glUniformMatrix4fv(glGetUniformLocation(mainProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
-	glUniform3fv(glGetUniformLocation(mainProg, "lightColour"), 1, &lightColour.x);
+	glUniform3fv(glGetUniformLocation(mainProg, "pointLight.colour"), 1, &lightColour.x);
 	glUniform3fv(glGetUniformLocation(mainProg, "pointLight.ambient"), 1, &ambient.x);
 	glUniform3fv(glGetUniformLocation(mainProg, "pointLight.diffuse"), 1, &diffuse.x);
 	glUniform3fv(glGetUniformLocation(mainProg, "pointLight.specular"), 1, &specular.x);
@@ -98,14 +104,44 @@ void Fundamentals::loadfiles(){
 	dirrLight -> setAmbient({0.05f, 0.05f, 0.05f});
 	dirrLight -> setDiffuse({0.4f, 0.4f, 0.4f});
 	dirrLight -> setSpecular({0.5f, 0.5f, 0.5f});
+	dirrLight -> setColour({1.0f, 1.0f, 1.0f});
 	vec3 dirrAmb = dirrLight->getAmbient();
 	vec3 dirrDif = dirrLight->getDiffuse();
 	vec3 dirrSpec = dirrLight->getSpecular();
 	vec3 dirrDirr = dirrLight->getDirection();
+	vec3 dirrColour = dirrLight->getColour();
 	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.ambient"), 1, &dirrAmb.x);
 	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.diffuse"), 1, &dirrDif.x);
-	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.specular"), 1, &dirrDif.x);
+	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.specular"), 1, &dirrSpec.x);
 	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.direction"), 1, &dirrDirr.x);
+	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.colour"), 1, &dirrColour.x);
+
+	//spotLight
+	spotLight = new LightSource(lightPos, lightColour, constant, linear, quadratic);
+	spotLight -> setAmbient({0.0f, 0.0f, 0.0f});
+	spotLight -> setDiffuse({1.0f, 1.0f, 1.0f});
+	spotLight -> setSpecular({1.0f, 1.0f, 1.0f});
+	spotLight -> setColour({1.0f, 1.0f, 1.0f});
+	spotLight -> setDirection({0.0f, -1.0f, 0.0f});
+	vec3 spotAmb = spotLight->getAmbient();
+	vec3 spotDif = spotLight->getDiffuse();
+	vec3 spotSpec = spotLight->getSpecular();
+	vec3 spotDirr = spotLight->getDirection();
+	vec3 spotColour = spotLight->getColour();
+	GLfloat cutOff = spotLight->getCutOff();
+	GLfloat outerCutOff = spotLight->getOuterCutOff();
+	glUniform3fv(glGetUniformLocation(mainProg, "spotLight.ambient"), 1, &spotAmb.x);
+	glUniform3fv(glGetUniformLocation(mainProg, "spotLight.diffuse"), 1, &spotDif.x);
+	glUniform3fv(glGetUniformLocation(mainProg, "spotLight.specular"), 1, &spotSpec.x);
+	glUniform3fv(glGetUniformLocation(mainProg, "spotLight.direction"), 1, &spotDirr.x);
+	glUniform3fv(glGetUniformLocation(mainProg, "spotLight.colour"), 1, &spotColour.x);
+	glUniform1f(glGetUniformLocation(mainProg, "spotLight.constant" ), constant);
+	glUniform1f(glGetUniformLocation(mainProg, "spotLight.lineart" ), linear);
+	glUniform1f(glGetUniformLocation(mainProg, "spotLight.quadratic" ), quadratic);
+	glUniform1f(glGetUniformLocation(mainProg, "spotLight.cutOff" ), cutOff);
+	glUniform1f(glGetUniformLocation(mainProg, "spotLight.outerCutOff" ), outerCutOff);
+
+
 
 	//SkyBox
 	skybox = LoadModelPlus("../Modeller/skybox.obj");
@@ -204,9 +240,18 @@ void Fundamentals::update(){
 	//object
 	glUseProgram(mainProg);
 	scale = S(6,6,6);
+	//pointLight
 	vec3 viewPos = {camera-> getPosition().x, camera-> getPosition().y, camera-> getPosition().z};
-	lightSource->setPosition(upperCoord*3*sin(t));
-	lightPos = lightSource-> getPosition();
+	spotLight->setPosition(upperCoord*3*sin(t));
+	lightPos = spotLight-> getPosition();
+	//lightSource->setColour({0.2f, 0.8f*sin(t*5), 0.4f});
+	//vec3 pointColour = lightSource->getColour();
+	//glUniform3fv(glGetUniformLocation(mainProg, "pointLight.colour"), 1, &pointColour.x);
+	//dirLight
+	dirrLight->setDirection( {-0.5f, -0.5f, -0.5});
+	vec3 dirrDirr = dirrLight->getDirection();
+	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.direction"), 1, &dirrDirr.x);
+	//Box
 	mat4 modelPos = T(box->getPosition().x, box->getPosition().y, box->getPosition().z);
 	mat4 boxTot = Mult(camMatrix, Mult(scale, modelPos));
 	//TExture
@@ -215,7 +260,7 @@ void Fundamentals::update(){
   glUniform1i(glGetUniformLocation(mainProg, "boxTex"), 0);
 	//To shader
 	glUniform3fv(glGetUniformLocation(mainProg, "viewPos"), 1, &viewPos.x);
-	glUniform3fv(glGetUniformLocation(mainProg, "pointLight.position"), 1, &lightPos.x);
+	glUniform3fv(glGetUniformLocation(mainProg, "spotLight.position"), 1, &lightPos.x);
 	glUniformMatrix4fv(glGetUniformLocation(mainProg, "mdlMatrix"), 1, GL_TRUE, boxTot.m);
 	glUniformMatrix4fv(glGetUniformLocation(mainProg, "model"), 1, GL_TRUE, modelPos.m);
 	DrawModel(box->getModel(), mainProg, "inPosition", "inNormal", "inTexCoord");
