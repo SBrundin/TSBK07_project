@@ -23,7 +23,7 @@ private:
   Model *skybox[6];
   mat4 projectionMatrix, camMatrix;
   vec3 p,l, c, cam, lookAtPoint, c2;
-  GLuint program, skyboxProg, pageShader, programObj;
+  GLuint program, skyboxProg, pageShader, programObj, fadeShade;
   GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex , truckTex;;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;

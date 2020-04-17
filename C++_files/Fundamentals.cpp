@@ -9,6 +9,8 @@
 #include "loadobj.h"
 #include "VectorUtils3.h"
 #include "LoadTGA.h"
+// #include "LoadTextureCombo.h"
+// #include "LoadTexture.h"
 #include "Fundamentals.h"
 #include "Object.h"
 #include "Camera.h"
@@ -34,6 +36,7 @@ void Fundamentals::loadfiles(){
 	skyboxProg = loadShaders("sky.vert", "sky.frag");
 	pageShader = loadShaders("pageShader.vert", "pageShader.frag");
 	programObj = loadShaders("obj.vert", "obj.frag");
+	fadeShade = loadShaders("tex.vert", "tex.frag");
 	printError("load shader");
 
 	//Load textures
@@ -44,6 +47,7 @@ void Fundamentals::loadfiles(){
 	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
 	LoadTGATextureSimple("../textures/bilskissred.tga", &bilTex);
 	LoadTGATextureSimple("../textures/water.tga", &truckTex);
+	//GLuint pngTex = LoadTexture("../textures/png.png", 1);
 
 	//Load Models
 	backModel = LoadModelPlus("../Modeller/BookBack.obj");
@@ -54,6 +58,7 @@ void Fundamentals::loadfiles(){
 	coronaModel1 = LoadModelPlus("../Modeller/coronaSimple.obj");
 	coronaModel2 =LoadModelPlus("../Modeller/coronaSimpleBase.obj");
 	carModel = LoadModelPlus("../Modeller/bilskiss.obj");
+	truckModel = LoadModelPlus("../Modeller/LPTruck.obj");
 
 
 	//Create Objects
@@ -73,11 +78,14 @@ void Fundamentals::loadfiles(){
 	//Worlds Objects
 	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
 	truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, truckTex);
-	//truck->updateBoundingBox(Ry(M_PI/2), 3.0);
+	truck->updateBoundingBox(Ry(M_PI/2), 3.0);
 
 
 	glUseProgram(program);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+
+	glUseProgram(fadeShade);
+	glUniformMatrix4fv(glGetUniformLocation(fadeShade, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
 	glUseProgram(programObj);
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
@@ -100,7 +108,7 @@ void Fundamentals::cameraCollision(){
 
 	//object
 	cameraCollisionFlag = camera->CheckCollision(truck, cameraCollisionFlag);
-	//cameraCollisionFlag = camera->CheckCollision(car, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(car, cameraCollisionFlag);
 	camera->checkFlag(cameraCollisionFlag);
 	cameraCollisionFlag = false;
 }
@@ -178,13 +186,48 @@ void Fundamentals::update(){
 	DrawModel(coronaBase->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 
 	//Truck
-	mat4 modelViewTruck = T(truck->getPosition().x, truck->getPosition().y, truck->getPosition().z);
+	if (book->getCurrentPage() == 2){
+
+		// GLubyte minitexrgba[4][4][4] =
+		// {
+		// 	{ {255,  0,255, 255}, {  0,  0,255, 128}, {  0,  0,255, 128}, {  0,255,255, 255}},
+		// 	{ {  0,  0,255, 128}, {255,  0,255, 0}, {  0,255,255, 0}, {  0,  0,255, 128}},
+		// 	{ {  0,  0,255, 128}, {  0,255,255, 0}, {255,  0,255, 0}, {  0,  0,255, 128}},
+		// 	{ {  0,255,255, 255}, {  0,  0,255, 128}, {  0,  0,255, 128}, {255,  0,255, 255}},
+		// };
+
+		GLubyte minitexrgba2[4][4][4] =
+		{
+			{ {  0,  0,255*sin(t), 128*sin(t)}, {  0,  0,255*sin(t), 128*sin(t)}, {  0,  0,255*sin(t), 128*sin(t)}, {  0,  0,255*sin(t), 128*sin(t)}},
+			{ {  0,  0,255, 128}, {  0,  0,255, 128}, {  0,  0,255, 128}, {  0,  0,255, 128}},
+			{ {  0,  0,255, 128}, {  0,  0,255, 128}, {  0,  0,255, 128}, {  0,  0,255, 128}},
+			{ {  0,  0,255, 128}, {  0,  0,255, 128}, {  0,  0,255, 128}, {  0,  0,255, 128}},
+		};
+		//glUseProgram(fadeShade);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, minitexrgba2);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+	mat4 modelViewTruck = T(-25.0f, 5.5f, truck->getPosition().z);
 	mat4 truckTot = Mult(camMatrix, Mult(Mult(modelViewTruck, S(3,3,3)), Ry(M_PI/2)));
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, truck->getTexture());
-	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, truck->getTexture());
+
+	//glUniform1i(glGetUniformLocation(programObj, "tex3"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, truckTot.m);
 	DrawModel(truck->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+}
 }
 
 void Fundamentals::loadskybox()
