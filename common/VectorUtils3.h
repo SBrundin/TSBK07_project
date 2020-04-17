@@ -20,15 +20,23 @@
 #define M_PI           3.14159265358979323846
 #endif
 
+// Really old type names
 #define Vector3f Point3D
 #define Matrix3f Matrix3D
 #define Matrix4f Matrix4D
 
 // GLSL-style
+// These are already changed, here I define the intermediate type names that I use in some demos.
 #define Point3D vec3
 #define Matrix3D mat3
 #define Matrix4D mat4
-	
+// These are not changed below yet
+#define dot DotProduct
+#define cross CrossProduct
+#define normalize Normalize
+// Furthermore, SplitVector should be revised to conform with reflect()
+
+
 	// vec3 is very useful
 	typedef struct vec3
 	{
@@ -49,11 +57,24 @@
 		#ifdef __cplusplus
             vec4() {}
 			vec4(GLfloat x2, GLfloat y2, GLfloat z2, GLfloat w2) : x(x2), y(y2), z(z2), w(w2) {}
+			vec4(GLfloat xyz, GLfloat w2) : x(xyz), y(xyz), z(xyz), w(w2) {}
+			vec4(vec3 v, GLfloat w2) : x(v.x), y(v.y), z(v.z), w(w2) {}
 			
 			vec4(vec3 v) : x(v.x), y(v.y), z(v.z), w(1) {}
 		#endif
 	} vec4, *vec4Ptr;
+
+// vec2 is mostly used for texture cordinates, so I havn't bothered defining any operations for it
+	typedef struct vec2
+	{
+		GLfloat x, y;
+		#ifdef __cplusplus
+            vec2() {}
+			vec2(GLfloat x2, GLfloat y2) : x(x2), y(y2) {}
+		#endif
+	} vec2, *vec2Ptr;
 	
+
 	typedef struct mat4
 	{
 		GLfloat m[16];
@@ -69,6 +90,12 @@ extern "C" {
 
 //	void CopyVector(vec3 *v, vec3 *dest); // Will probably be removed
 	vec3 SetVector(GLfloat x, GLfloat y, GLfloat z);
+	mat3 SetMat3(GLfloat p0, GLfloat p1, GLfloat p2, GLfloat p3, GLfloat p4, GLfloat p5, GLfloat p6, GLfloat p7, GLfloat p8);
+	mat4 SetMat4(GLfloat p0, GLfloat p1, GLfloat p2, GLfloat p3,
+				GLfloat p4, GLfloat p5, GLfloat p6, GLfloat p7,
+				GLfloat p8, GLfloat p9, GLfloat p10, GLfloat p11, 
+				GLfloat p12, GLfloat p13, GLfloat p14, GLfloat p15
+				);
 // Basic vector operations on vec3's. (vec4 not included since I never need them.)
 	vec3 VectorSub(vec3 a, vec3 b);
 	vec3 VectorAdd(vec3 a, vec3 b);
@@ -140,6 +167,9 @@ extern "C" {
 	void printMat4(mat4 m);
 	void printVec3(vec3 in);
 
+
+
+
 #ifdef __cplusplus
 }
 #endif
@@ -159,6 +189,12 @@ inline
 vec3 operator-(const vec3 &a, const vec3 &b) // vec3-vec3
 {
 	return vec3(a.x-b.x, a.y-b.y, a.z-b.z);
+}
+
+inline
+vec3 operator-(const vec3 &a)
+{
+		return vec3(-a.x, -a.y, -a.z);
 }
 
 	// Questionable, not like GLSL

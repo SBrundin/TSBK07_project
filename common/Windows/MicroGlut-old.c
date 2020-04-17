@@ -24,6 +24,7 @@
 // 160309: Added glutFullScreen, glutExitFullScreen, glutToggleFullScreen.
 // 170221: Added glutPositionWindow, glutReshapeWindow. Changed default behavior on resize.
 // 170913: Added glutMouseIsDown, corrected support for glutMotionFunc (dragging).
+// 180131: New solution for console output. The old one stopped for unknown reasons.
 
 
 #include <windows.h>
@@ -171,13 +172,16 @@ void glutInit(int *argcp, char **argv)
 
 	// Make printf work!
 	AllocConsole();
-	hCrt = _open_osfhandle(
-		(long) GetStdHandle(STD_OUTPUT_HANDLE),
-		_O_TEXT
-		);
-	hf = _fdopen( hCrt, "w" );
-	*stdout = *hf;
-	i = setvbuf( stdout, NULL, _IONBF, 0 );
+//	hCrt = _open_osfhandle(
+//		(long) GetStdHandle(STD_OUTPUT_HANDLE),
+//		_O_TEXT
+//		);
+//	hf = _fdopen( hCrt, "w" );
+	freopen_s(&hf, "CONOUT$", "w", stdout);
+	freopen_s(&hf, "CONOUT$", "w", stderr);
+	//	*stdout = *hf;
+//	i = setvbuf( stdout, NULL, _IONBF, 0 );
+//	printf("stdio output open\n");
 }
 
 int gWindowPosX = 10;

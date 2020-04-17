@@ -65,6 +65,7 @@
 // 160302: Added empty constuctors for vec3 and vec4.
 // 170221: Uses _WIN32 instead of WIN32
 // 170331: Added stdio.h for printMat4 and printVec3
+// 180314: Added some #defines for moving closer to GLSL (dot, cross...).
 
 // You may use VectorUtils as you please. A reference to the origin is appreciated
 // but if you grab some snippets from it without reference... no problem.
@@ -974,16 +975,29 @@ mat4 InvertMat4(mat4 a)
 
 
 // Two convenient printing functions suggested by Christian Luckey 2015.
+// Added printMat3 2019.
 void printMat4(mat4 m)
 {
 	unsigned int i;
-//	printf(" _______________________________________________________________\n");
 	printf(" ---------------------------------------------------------------\n");
 	for (i = 0; i < 4; i++)
 	{
 		int n = i * 4;
 		printf("| %11.5f\t| %11.5f\t| %11.5f\t| %11.5f\t|\n",
 			m.m[n], m.m[n+1], m.m[n+2], m.m[n+3]);
+	}
+	printf(" ---------------------------------------------------------------\n");
+}
+
+void printMat3(mat3 m)
+{
+	unsigned int i;
+	printf(" ---------------------------------------------------------------\n");
+	for (i = 0; i < 3; i++)
+	{
+		int n = i * 3;
+		printf("| %11.5f\t| %11.5f\t| %11.5f\t| \n",
+			m.m[n], m.m[n+1], m.m[n+2]);
 	}
 	printf(" ---------------------------------------------------------------\n");
 }

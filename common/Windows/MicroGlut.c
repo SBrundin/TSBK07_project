@@ -24,8 +24,8 @@
 // 160309: Added glutFullScreen, glutExitFullScreen, glutToggleFullScreen.
 // 170221: Added glutPositionWindow, glutReshapeWindow. Changed default behavior on resize.
 // 170913: Added glutMouseIsDown, corrected support for glutMotionFunc (dragging).
-// 180131: New solution for console output. The old one stopped for unknown reasons.
-
+// 200405: Added BeginPaint etc as response to WM_PAINT to make Windows stop sending PAINT repeatedly.
+// Also avoided having events blocking timers in the event loop.
 
 #include <windows.h>
 #include "glew.h"
@@ -172,16 +172,13 @@ void glutInit(int *argcp, char **argv)
 
 	// Make printf work!
 	AllocConsole();
-//	hCrt = _open_osfhandle(
-//		(long) GetStdHandle(STD_OUTPUT_HANDLE),
-//		_O_TEXT
-//		);
-//	hf = _fdopen( hCrt, "w" );
-	freopen_s(&hf, "CONOUT$", "w", stdout);
-	freopen_s(&hf, "CONOUT$", "w", stderr);
-	//	*stdout = *hf;
-//	i = setvbuf( stdout, NULL, _IONBF, 0 );
-//	printf("stdio output open\n");
+	hCrt = _open_osfhandle(
+		(long) GetStdHandle(STD_OUTPUT_HANDLE),
+		_O_TEXT
+		);
+	hf = _fdopen( hCrt, "w" );
+	*stdout = *hf;
+	i = setvbuf( stdout, NULL, _IONBF, 0 );
 }
 
 int gWindowPosX = 10;
@@ -254,7 +251,7 @@ void glutMainLoop()
 				DispatchMessage( &msg );
 			}
 		} 
-		else 
+//		else  - SKIPPED in order not to have events blocking timers
 		{
 			if (updatePending)
 			{
@@ -271,15 +268,6 @@ void glutMainLoop()
 
 // This won't work yet
 //void glutCheckLoop()
-//{
-//}
-
-//void glutTimerFunc(int millis, void (*func)(int arg), int arg)
-//{
-//}
-
-// Added by Ingemar
-//void glutRepeatingTimerFunc(int millis)
 //{
 //}
 
@@ -505,7 +493,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_PAINT: // Don't have Windows fighting us while resize!
 		if (gDisplay)
+		{
+			PAINTSTRUCT ps;
+			HDC hdc;
+			hdc = BeginPaint(hWnd, &ps); // Added to make Windows stop sending PAINT repeatedly.
+			OutputDebugStringA("paint\n");
 			gDisplay();
+			EndPaint(hWnd, &ps);
+			updatePending = 0;
+		}
 		break;
 	case WM_ERASEBKGND:
 		return 1;

@@ -444,7 +444,7 @@ static void ParseOBJ(MeshPtr theMesh)
 				theMesh->groupCount += 1;
 				if (theMesh->coordStarts != NULL) // NULL if we are just counting
 				{
-					theMesh->coordStarts = realloc(theMesh->coordStarts, (theMesh->groupCount+1)*sizeof(int));
+					theMesh->coordStarts = (int *)realloc(theMesh->coordStarts, (theMesh->groupCount+1)*sizeof(int));
 					theMesh->coordStarts[theMesh->groupCount] = coordCount;
 				}
 				printf("groupCount = %d\n", theMesh->groupCount);
@@ -477,7 +477,7 @@ static struct Mesh * LoadOBJ(const char *filename)
 	Mesh *theMesh;
 	
 	// Allocate Mesh but not the buffers
-	theMesh = malloc(sizeof(Mesh));
+	theMesh = (Mesh *)malloc(sizeof(Mesh));
 	theMesh->coordIndex = NULL;
 	theMesh->vertices = NULL;
 	// ProcessMesh may deal with these
@@ -518,22 +518,22 @@ static struct Mesh * LoadOBJ(const char *filename)
 
 	// Allocate arrays!
 	if (vertCount > 0)
-		theMesh->vertices = malloc(sizeof(GLfloat) * vertCount);
+		theMesh->vertices = (GLfloat *)malloc(sizeof(GLfloat) * vertCount);
 	if (texCount > 0)
-		theMesh->textureCoords = malloc(sizeof(GLfloat) * texCount);
+		theMesh->textureCoords = (GLfloat *)malloc(sizeof(GLfloat) * texCount);
 	if (normalsCount > 0)
-		theMesh->vertexNormals = malloc(sizeof(GLfloat) * normalsCount);
+		theMesh->vertexNormals = (GLfloat *)malloc(sizeof(GLfloat) * normalsCount);
 	if (hasPositionIndices)
-//		theMesh->coordIndex = malloc(sizeof(int) * coordCount);
-		theMesh->coordIndex = calloc(coordCount, sizeof(int));
+//		theMesh->coordIndex = (int *)malloc(sizeof(int) * coordCount);
+		theMesh->coordIndex = (int *)calloc(coordCount, sizeof(int));
 	if (hasNormalIndices)
 //		theMesh->normalsIndex = malloc(sizeof(int) * coordCount);
-		theMesh->normalsIndex = calloc(coordCount, sizeof(int));
+		theMesh->normalsIndex = (int *)calloc(coordCount, sizeof(int));
 	if (hasTexCoordIndices)
 //		theMesh->textureIndex = malloc(sizeof(int) * coordCount);
-		theMesh->textureIndex = calloc(coordCount, sizeof(int));
+		theMesh->textureIndex = (int *)calloc(coordCount, sizeof(int));
 
-	theMesh->coordStarts = malloc(sizeof(int));
+	theMesh->coordStarts = (int *)malloc(sizeof(int));
 	theMesh->coordStarts[0] = 0;
 	theMesh->groupCount = 0;
 
@@ -566,7 +566,7 @@ static struct Mesh * LoadOBJ(const char *filename)
 	// Add a finish to coordStarts
 	if (theMesh->coordStarts != NULL)
 	{
-		theMesh->coordStarts = realloc(theMesh->coordStarts, (theMesh->groupCount+1)*sizeof(int));
+		theMesh->coordStarts = (int *)realloc(theMesh->coordStarts, (theMesh->groupCount+1)*sizeof(int));
 		theMesh->coordStarts[theMesh->groupCount+1] = coordCount;
 }
 
@@ -601,13 +601,13 @@ void DecomposeToTriangles(struct Mesh *theMesh)
 	fprintf(stderr, "Found %d triangles\n", triangleCount);
 	
 //	newCoords = malloc(sizeof(int) * triangleCount * 3);
-	newCoords = calloc(triangleCount * 3, sizeof(int));
+	newCoords = (int *)calloc(triangleCount * 3, sizeof(int));
 	if (theMesh->normalsIndex != NULL)
 //		newNormalsIndex = malloc(sizeof(int) * triangleCount * 3);
-		newNormalsIndex = calloc(triangleCount * 3, sizeof(int));
+		newNormalsIndex = (int *)calloc(triangleCount * 3, sizeof(int));
 	if (theMesh->textureIndex != NULL)
 //		newTextureIndex = malloc(sizeof(int) * triangleCount * 3);
-		newTextureIndex = calloc(triangleCount * 3, sizeof(int));
+		newTextureIndex = (int *)calloc(triangleCount * 3, sizeof(int));
 	
 	// 1.2 Loop through old list and write the new one
 	// Almost same loop but now it has space to write the result
@@ -672,13 +672,13 @@ static void GenerateNormals(Mesh* mesh)
 		int face;
 		int normalIndex;
 
-		mesh->vertexNormals = malloc(3 * sizeof(GLfloat) * mesh->vertexCount);
+		mesh->vertexNormals = (GLfloat *)malloc(3 * sizeof(GLfloat) * mesh->vertexCount);
 		memset(mesh->vertexNormals, 0, 3 * sizeof(GLfloat) * mesh->vertexCount);
 
 		mesh->normalsCount = mesh->vertexCount;
 
-//		mesh->normalsIndex = malloc(sizeof(GLuint) * mesh->coordCount);
-		mesh->normalsIndex = calloc(mesh->coordCount, sizeof(GLuint));
+//		mesh->normalsIndex = (GLuint *)malloc(sizeof(GLuint) * mesh->coordCount);
+		mesh->normalsIndex = (int *)calloc(mesh->coordCount, sizeof(GLuint));
 		memcpy(mesh->normalsIndex, mesh->coordIndex,
 			sizeof(GLuint) * mesh->coordCount);
 
@@ -780,7 +780,7 @@ static Model* GenerateModel(Mesh* mesh)
 
 	int indexHashMapSize = (mesh->vertexCount * hashGap + mesh->coordCount);
 
-	IndexTriplet* indexHashMap = malloc(sizeof(IndexTriplet)
+	IndexTriplet* indexHashMap = (IndexTriplet *)malloc(sizeof(IndexTriplet)
 							* indexHashMapSize);
 
 	int numNewVertices = 0;
@@ -788,10 +788,10 @@ static Model* GenerateModel(Mesh* mesh)
 
 	int maxValue = 0;
 		
-	Model* model = malloc(sizeof(Model));
+	Model* model = (Model *)malloc(sizeof(Model));
 	memset(model, 0, sizeof(Model));
 
-	model->indexArray = malloc(sizeof(GLuint) * mesh->coordCount);
+	model->indexArray = (GLuint *)malloc(sizeof(GLuint) * mesh->coordCount);
 	model->numIndices = mesh->coordCount;
 
 	memset(indexHashMap, 0xff, sizeof(IndexTriplet) * indexHashMapSize);
@@ -839,11 +839,11 @@ static Model* GenerateModel(Mesh* mesh)
 	}
 
 	if (mesh->vertices)
-		model->vertexArray = malloc(sizeof(GLfloat) * 3 * numNewVertices);
+		model->vertexArray = (GLfloat *)malloc(sizeof(GLfloat) * 3 * numNewVertices);
 	if (mesh->vertexNormals)
-		model->normalArray = malloc(sizeof(GLfloat) * 3 * numNewVertices);
+		model->normalArray = (GLfloat *)malloc(sizeof(GLfloat) * 3 * numNewVertices);
 	if (mesh->textureCoords)
-		model->texCoordArray = malloc(sizeof(GLfloat) * 2 * numNewVertices);
+		model->texCoordArray = (GLfloat *)malloc(sizeof(GLfloat) * 2 * numNewVertices);
 	
 	model->numVertices = numNewVertices;
 
@@ -935,18 +935,18 @@ Mesh **SplitToMeshes(Mesh *m)
 		printf("Building mesh number %d\n", i);// sleep(1);
 		mm[i] = (Mesh *)malloc(sizeof(Mesh));
 		// allocate c1, t1, n1, mapc, mapt, mapn, coordIndex, textureIndex, normalsIndex
-		mm[i]->vertices = malloc(m->vertexCount * sizeof(GLfloat) * 3);
+		mm[i]->vertices = (GLfloat *)malloc(m->vertexCount * sizeof(GLfloat) * 3);
 		if (m->normalsCount > 0)
-			mm[i]->vertexNormals = malloc(m->normalsCount * sizeof(GLfloat) * 3);
+			mm[i]->vertexNormals = (GLfloat *)malloc(m->normalsCount * sizeof(GLfloat) * 3);
 		else
 			mm[i]->vertexNormals = NULL;
 		if (m->texCount > 0)
-			mm[i]->textureCoords = malloc(m->texCount * sizeof(GLfloat) * 2);
+			mm[i]->textureCoords = (GLfloat *)malloc(m->texCount * sizeof(GLfloat) * 2);
 		else
 			mm[i]->textureCoords = NULL;
-		mm[i]->coordIndex = malloc(m->coordCount * sizeof(int));
-		mm[i]->normalsIndex = malloc(m->coordCount * sizeof(int));
-		mm[i]->textureIndex = malloc(m->coordCount * sizeof(int));
+		mm[i]->coordIndex = (int *)malloc(m->coordCount * sizeof(int));
+		mm[i]->normalsIndex = (int *)malloc(m->coordCount * sizeof(int));
+		mm[i]->textureIndex = (int *)malloc(m->coordCount * sizeof(int));
 		mm[i]->coordStarts = NULL; // No coord starts for separated parts!
 		// zero counters for new Mesh
 		mm[i]->vertexCount = 0;
@@ -1325,7 +1325,7 @@ Model* LoadDataToModel(
 			int numVert,
 			int numInd)
 {
-	Model* m = malloc(sizeof(Model));
+	Model* m = (Model *)malloc(sizeof(Model));
 	memset(m, 0, sizeof(Model));
 	
 	m->vertexArray = vertices;
