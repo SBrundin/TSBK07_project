@@ -2,8 +2,11 @@
 #include <stdio.h>
 #include "VectorUtils3.h"
 #include "loadobj.h"
-#include<iostream>
-#include<array>
+#include "LoadTGA.h"
+#include "MicroGlut.h"
+#include "GL_utilities.h"
+#include <iostream>
+#include <array>
 using namespace std;
 
 Object::Object()
@@ -130,3 +133,22 @@ void Object::updateBoundingBox(mat4 rotation, GLfloat scale)
   //_size = ScalarMult(_size, scale);
   //std::cout << _size.x << ' ' << _size.y << ' ' << _size.z << '\n';
 }
+
+
+GLfloat Object::getCorrHeightInt(int x, int z){
+	return _model->vertexArray[(x + z)*3 + 1];
+}
+
+GLfloat Object::getRealHeight(GLfloat x, GLfloat z){
+		GLfloat p1,p2,p3,p4,height,u,v,uPrim,vPrim;
+		p1 = getCorrHeightInt(floor(x), ceil(z));
+		p2 = getCorrHeightInt(ceil(x), ceil(z));
+		p3 = getCorrHeightInt(floor(x), floor(z));
+		p4 = getCorrHeightInt(ceil(x), floor(z));
+		u = x-floor(x);
+		uPrim = 1-u;
+		v = z-floor(z);
+		vPrim = 1-v;
+		height = _position.y + v*(uPrim*p1 + u*p2) + vPrim*(uPrim*p3 + u*p4);
+		return height;
+  }

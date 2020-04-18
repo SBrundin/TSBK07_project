@@ -39,7 +39,7 @@ void Fundamentals::loadfiles(){
 	//Load textures
 	LoadTGATextureSimple("../textures/grass.tga", &grassTex);
 	LoadTGATextureSimple("../textures/snow.tga", &snowTex);
-	//LoadTGATextureSimple("../textures/Paper.tga", &paperTex);
+	//sLoadTGATextureSimple("../textures/Paper.tga", &paperTex);
 	Fundamentals::loadskybox();
 	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
 	LoadTGATextureSimple("../textures/bilskissred.tga", &bilTex);
@@ -58,7 +58,7 @@ void Fundamentals::loadfiles(){
 
 	//Create Objects
 	car = new Object(vec3(0.0f, 5.3f, 0.0f), carModel, bilTex);
-	coronaSimple = new Object(vec3(0.0f, 5.0f, 5.0f), coronaModel1, snowTex);
+	coronaSimple = new Object(vec3(0.0f, 5.0f, 5.0f), coronaModel1, waterTex);
 	coronaBase = new Object(vec3(5.0f, 5.0f, 0.0f), coronaModel2, grassTex);
 	bookback = new Object(backPos, backModel, leatherTex);
 	bottompage = new Object(bottomModel, leatherTex);
@@ -164,7 +164,11 @@ void Fundamentals::update(){
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, carTot.m);
 	DrawModel(car->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 
-	mat4 modelViewCor1 = T(coronaSimple->getPosition().x, coronaSimple->getPosition().y, coronaSimple->getPosition().z);
+	GLfloat coronaSimpleY = pageBent->getRealHeight(coronaSimple->getPosition().x, coronaSimple->getPosition().z);
+
+	//std::cout << coronaSimpleY << '\n';
+
+	mat4 modelViewCor1 = T(coronaSimple->getPosition().x, coronaSimpleY, coronaSimple->getPosition().z);
 	mat4 corTot1 = Mult(camMatrix, modelViewCor1);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, coronaSimple->getTexture());

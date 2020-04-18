@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include "VectorUtils3.h"
 #include "loadobj.h"
+#include "LoadTGA.h"
+#include "MicroGlut.h"
+#include "GL_utilities.h"
 #include<iostream>
 #include<array>
 
@@ -34,6 +37,9 @@ public:
     void setBoundingBox();
     void updateBoundingBox(mat4 rotation, GLfloat scale);
     vec3 getSize();
+
+    GLfloat getCorrHeightInt(int x, int z);
+    GLfloat getRealHeight(GLfloat x, GLfloat z);
 
 private:
     vec3 _position;
