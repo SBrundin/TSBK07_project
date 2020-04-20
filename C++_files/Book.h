@@ -9,10 +9,9 @@
 class Book
 {
 public:
-    Book(Object* bot, Object* back, Object* top, Object* ps, Object* pb);
-    Book(Object* top, Object* second, Object* frame);
+    Book(Object* top, Object* firstPage, Object* secondPage, Object* frame, Object* pages);
     void draw(mat4 camMatrix, GLuint shader, GLfloat t);
-    void browse(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Object* second, GLuint pageNbr, char button);
+    void browse(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Object* firstPage, GLuint pageNbr, char button);
     void makeRotation(GLfloat timer, GLuint page, mat4 camMatrix, GLuint shader, char button);
     mat4 generateRotationMat(vec3 rotationAxis, GLfloat time);
 
@@ -34,19 +33,16 @@ public:
 
 
 private:
-    Object* _bottom;
-    Object* _back;
+    Object* _frame;
     Object* _top;
-    Object* _pageBent;
-    Object* _pageStraight;
-    vec3 nullVec = {0.0f, 0.0f, 0.0f};
-    vec3 _backPos = {-15.17f, 2.5f, 0.0f};
-    vec3 _bentPos = {0.0f, 5.0f, 0.0f};
-    vec3 _straightPos = {0.0f, 1.0f, 0.0f};
-    vec3 _topPos = {0.0f, 5.3f, 0.0f};
-    vec3 _rotationAxis = {-15.0f, 0.0f, 0.0f};
-    vec3 _topPosOpen = {-29.7f, 5.0f, 0.0f};
-    vec3 _bentOpen = {-29.5f, 5.6f, 0.0f};
+    Object* _firstPage;
+    Object* _secondPage;
+    Object* _pages;
+    vec3 _firstPos = {0.0f, 3.0f, 0.0f};
+    vec3 _topPos = {0.4f, 3.6f, 0.0f};
+    vec3 _topPosOpen = {-29.4f, 2.8f, 0.0f};
+    vec3 _firstOpen = {-29.2f, 3.0f, 0.0f};
+    vec3 _rotationAxis = {-15.0f, -0.25f, 0.0f};
     GLuint _currentPage;
     GLuint _pageNbr;
     bool _bool;

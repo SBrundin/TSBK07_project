@@ -17,6 +17,8 @@ public:
     Object();
     Object(Model* model, GLuint tex);
     Object(vec3 pos, Model* model, GLuint tex);
+    Object(Model* model, GLuint tex, GLuint texSide, GLuint texUp);
+    Object(vec3 pos, Model* model, GLuint tex, GLuint texSide, GLuint texUp);
 
     vec3 getPosition();
     void setPosition(vec3 position);

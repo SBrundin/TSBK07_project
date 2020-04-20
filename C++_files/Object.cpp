@@ -34,6 +34,31 @@ Object::Object(vec3 pos, Model* model, GLuint tex)
     setBoundingBox();
 }
 
+Object::Object(vec3 pos, Model* model, GLuint tex, GLuint texSide, GLuint texUp)
+{
+    _position = pos;
+    _model = model;
+    _texture = tex;
+    _size = vec3(0.0f, 0.0f, 0.0f);
+    _textureSide = texSide;
+    _textureUp = texUp;
+
+    setBoundingBox();
+}
+
+Object::Object(Model* model, GLuint tex, GLuint texSide, GLuint texUp)
+{
+    _position = vec3(0.0f, 0.0f, 0.0f);
+    _model = model;
+    _texture = tex;
+    _size = vec3(0.0f, 0.0f, 0.0f);
+    _textureSide = texSide;
+    _textureUp = texUp;
+
+    setBoundingBox();
+}
+
+
 vec3 Object::getPosition()
 {
     return _position;

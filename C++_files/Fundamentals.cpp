@@ -54,45 +54,35 @@ void Fundamentals::loadfiles(){
 	//GLuint pngTex = LoadTexture("../textures/png.png", 1);
 
 	//Load Models
-	backModel = LoadModelPlus("../Modeller/BookBack.obj");
-	bottomModel = LoadModelPlus("../Modeller/BookBot.obj");
-	topModel = LoadModelPlus("../Modeller/BookTop.obj");
-	straightPageModel = LoadModelPlus("../Modeller/PageStraight.obj");
-	bentPageModel =LoadModelPlus("../Modeller/PageBent.obj");
+	topModel = LoadModelPlus("../Modeller/booktopreal.obj");
+	firstModel =LoadModelPlus("../Modeller/pagefirst.obj");
+	secondModel =LoadModelPlus("../Modeller/pagesecond.obj");
+	frameModel = LoadModelPlus("../Modeller/bookstaticcover.obj");
+	pagesModel = LoadModelPlus("../Modeller/bookstaticpages.obj");
 	coronaModel1 = LoadModelPlus("../Modeller/coronaSimple.obj");
 	coronaModel2 =LoadModelPlus("../Modeller/coronaSimpleBase.obj");
 	carModel = LoadModelPlus("../Modeller/bilskiss.obj");
 	truckModel = LoadModelPlus("../Modeller/LPTruck.obj");
-	bookModel = LoadModelPlus("../Modeller/bookstatic.obj");
 	boxModel = LoadModelPlus("../Modeller/box.obj");
 	lampModel = LoadModelPlus("../Modeller/box.obj");
 
-	//Create Objects
-
+	//SIMPLE OBJECTS
 	box = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, grassTex);
 	lamp = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, snowTex);
 	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
-
 	coronaSimple = new Object(vec3(0.0f, 4.0f, 5.0f), coronaModel1, snowTex);
 	coronaBase = new Object(vec3(5.0f, 4.0f, 0.0f), coronaModel2, grassTex);
-	bookback = new Object(backPos, backModel, leatherTex);
-	bottompage = new Object(bottomModel, leatherTex);
-	toppage = new Object(topPos, topModel, leatherTex);
-	pageStraight = new Object(straightPageModel, grassTex);
-	pageBent = new Object(bentPos, bentPageModel, grassTex);
-	pageBent->setTextureSide(snowTex);
-	pageBent->setTextureUp(grassTex);
-	pageStraight->setTextureSide(snowTex);
-	staticBook = new Object(bookModel, leatherTex);
-
-	//book = new Book(bottompage, bookback, toppage, pageStraight, pageBent);
-	book = new Book(toppage, pageBent, staticBook);
-
-	//Worlds Objects
 	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
 	truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, truckTex);
 	truck->updateBoundingBox(Ry(M_PI/2), 3.0);
+	toppage = new Object(initTop, topModel, leatherTex);
 
+	//MULTIPLE TEXTURE OBJECTS, Object(pos, model, tex, texside, texup)
+	frame = new Object(initOrigin, frameModel, leatherTex, leatherTex, leatherTex);
+	firstPage = new Object(initFirst, firstModel, grassTex, snowTex, grassTex);
+	secondPage = new Object(initSecond, secondModel, grassTex, snowTex, grassTex);
+	pages = new Object(initOrigin,pagesModel, waterTex, grassTex, snowTex);
+	book = new Book(toppage, firstPage, secondPage, frame, pages);
 
 
 	//lamp
@@ -196,11 +186,11 @@ void Fundamentals::loadfiles(){
 
 void Fundamentals::cameraCollision(){
 	// Book
-	cameraCollisionFlag = camera->CheckCollision(bookback, cameraCollisionFlag);
-	cameraCollisionFlag = camera->CheckCollision(bottompage, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(pages, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(frame, cameraCollisionFlag);
 	cameraCollisionFlag = camera->CheckCollision(toppage, cameraCollisionFlag);
-	cameraCollisionFlag = camera->CheckCollision(pageStraight, cameraCollisionFlag);
-	cameraCollisionFlag = camera->CheckCollision(pageBent, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(firstPage, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(secondPage, cameraCollisionFlag);
 
 	//object
 	cameraCollisionFlag = camera->CheckCollision(truck, cameraCollisionFlag);
@@ -262,7 +252,7 @@ void Fundamentals::update(){
 	//vec3 newPos = {4.0f, 4.0f, 4.0f};
 	//lamp->setPosition(newPos);
 	mat4 scale = S(5,5,5);
-	lamp->setPosition(topPos*3*sin(t));
+	lamp->setPosition(initTop*3*sin(t));
 	mat4 lampTot = T(lamp->getPosition().x, lamp->getPosition().y, lamp->getPosition().z );
 	lampTot = Mult(camMatrix, Mult(scale, lampTot));
 	glUniformMatrix4fv(glGetUniformLocation(lampProg, "mdlMatrix"), 1, GL_TRUE, lampTot.m);
@@ -273,7 +263,7 @@ void Fundamentals::update(){
 	scale = S(6,6,6);
 	//pointLight
 	vec3 viewPos = {camera-> getPosition().x, camera-> getPosition().y, camera-> getPosition().z};
-	spotLight->setPosition(topPos*3*sin(t));
+	spotLight->setPosition(initTop*3*sin(t));
 	lightPos = spotLight-> getPosition();
 	//lightSource->setColour({0.2f, 0.8f*sin(t*5), 0.4f});
 	//vec3 pointColour = lightSource->getColour();
@@ -313,7 +303,7 @@ void Fundamentals::update(){
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, carTot.m);
 	DrawModel(car->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 
-	GLfloat coronaSimpleY = pageBent->getRealHeight(coronaSimple->getPosition().x, coronaSimple->getPosition().z);
+	GLfloat coronaSimpleY = firstPage->getRealHeight(coronaSimple->getPosition().x, coronaSimple->getPosition().z);
 
 	//std::cout << coronaSimpleY << '\n';
 
