@@ -239,6 +239,8 @@ void Fundamentals::update(){
 	}
 
   glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//Draw complete book
 	book->draw(camMatrix, pageShader, t);
 
