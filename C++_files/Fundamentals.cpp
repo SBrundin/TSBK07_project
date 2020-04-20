@@ -61,12 +61,12 @@ void Fundamentals::loadfiles(){
 	bentPageModel =LoadModelPlus("../Modeller/PageBent.obj");
 	coronaModel1 = LoadModelPlus("../Modeller/coronaSimple.obj");
 	coronaModel2 =LoadModelPlus("../Modeller/coronaSimpleBase.obj");
-<<<<<<< HEAD
+
 	carModel = LoadModelPlus("../Modeller/bilskiss.obj");
 	truckModel = LoadModelPlus("../Modeller/LPTruck.obj");
 
 	//Create Objects
-=======
+
 	boxModel = LoadModelPlus("../Modeller/box.obj");
 	lampModel = LoadModelPlus("../Modeller/box.obj");
 
@@ -75,7 +75,7 @@ void Fundamentals::loadfiles(){
 	box = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, grassTex);
 	lamp = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, snowTex);
 	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
->>>>>>> 079b9949a766ff10a236525868b878d0c28dd868
+
 	coronaSimple = new Object(vec3(0.0f, 4.0f, 5.0f), coronaModel1, snowTex);
 	coronaBase = new Object(vec3(5.0f, 4.0f, 0.0f), coronaModel2, grassTex);
 	bookback = new Object(backPos, backModel, leatherTex);
@@ -89,15 +89,10 @@ void Fundamentals::loadfiles(){
 	book = new Book(bottompage, bookback, toppage, pageStraight, pageBent);
 
 	//Worlds Objects
-<<<<<<< HEAD
 	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
 	truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, truckTex);
 	truck->updateBoundingBox(Ry(M_PI/2), 3.0);
-=======
-	//car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
-	truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, truckTex);
-	truck->updateBoundingBox(Ry(M_PI/2), 3.0f);
->>>>>>> 079b9949a766ff10a236525868b878d0c28dd868
+
 
 
 	//lamp
@@ -256,6 +251,8 @@ void Fundamentals::update(){
 	}
 
   glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//Draw complete book
 	book->draw(camMatrix, pageShader, t);
 

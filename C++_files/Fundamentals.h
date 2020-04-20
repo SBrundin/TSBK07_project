@@ -28,15 +28,9 @@ private:
   LightSource *lightSource, *dirrLight, *spotLight;
   LightHandler *lightHandler;
   mat4 projectionMatrix, camMatrix;
-<<<<<<< HEAD
-  vec3 p,l, c, cam, lookAtPoint, c2;
-  GLuint program, skyboxProg, pageShader, programObj, fadeShade;
-  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex , truckTex;;
-=======
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
-  GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg;
+  GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
   GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex , truckTex;
->>>>>>> 079b9949a766ff10a236525868b878d0c28dd868
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   vec3 v = {0.0, 1.0, 0.0};

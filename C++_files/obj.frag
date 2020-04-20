@@ -13,5 +13,5 @@ float shade;
 shade = dot(normalize(ex_Normal), light);
 shade = clamp(shade,0,1);
 
-out_Color = texture(Tex, ex_TexCoord)*vec4(shade, shade, shade, 1.0);
+out_Color = texture(Tex, ex_TexCoord)*vec4(shade, shade, shade, 0.5);
 }
