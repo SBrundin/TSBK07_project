@@ -2,6 +2,12 @@
 #include <stdio.h>
 #include "VectorUtils3.h"
 #include "loadobj.h"
+#include "LoadTGA.h"
+#include "MicroGlut.h"
+#include "GL_utilities.h"
+#include <iostream>
+#include <array>
+using namespace std;
 
 Object::Object()
 {
@@ -9,12 +15,23 @@ Object::Object()
     _direction = vec3(0.0f, 0.0f, 0.0f);
     _size = vec3(0.0f, 0.0f, 0.0f);
 }
-Object::Object(vec3 pos, vec3 direction)
+
+Object::Object(Model* model, GLuint tex)
 {
-    _position = pos + direction * 0.5;
-    _direction = direction * 2;
-    //_model = model;
-    //setBoundingBox();
+    _position = vec3(0.0f, 0.0f, 0.0f);
+    _model = model;
+    _texture = tex;
+    _size = vec3(0.0f, 0.0f, 0.0f);
+    setBoundingBox();
+}
+
+Object::Object(vec3 pos, Model* model, GLuint tex)
+{
+    _position = pos;
+    _model = model;
+    _texture = tex;
+    _size = vec3(0.0f, 0.0f, 0.0f);
+    setBoundingBox();
 }
 
 vec3 Object::getPosition()
@@ -52,12 +69,42 @@ void Object::setModel(Model* model)
     _model = model;
 }
 
+GLuint Object::getTexture()
+{
+    return _texture;
+}
+
+GLuint Object::getTextureSide()
+{
+    return _textureSide;
+}
+
+GLuint Object::getTextureUp()
+{
+    return _textureUp;
+}
+
+void Object::setTexture(GLuint tex)
+{
+    _texture = tex;
+}
+
+void Object::setTextureSide(GLuint tex)
+{
+    _textureSide = tex;
+}
+
+void Object::setTextureUp(GLuint tex)
+{
+    _textureUp = tex;
+}
+
 void Object::setBoundingBox()
 {
 	int i;
 	float maxx = -1e10, maxy = -1e10, maxz = -1e10, minx = 1e10, miny = 1e10, minz = 1e10;
 
-	for (i=0;i< _model->numVertices; i++)
+	for (i=0; i < _model->numVertices; i++)
 	{
 		if (_model->vertexArray[3 * i] < minx) minx = _model->vertexArray[3 * i];
 		if (_model->vertexArray[3 * i] > maxx) maxx = _model->vertexArray[3 * i];
@@ -67,4 +114,41 @@ void Object::setBoundingBox()
 		if (_model->vertexArray[3 * i+2] > maxz) maxz = _model->vertexArray[3 * i+2];
 	}
 	_size = SetVector(maxx-minx, maxy-miny, maxz-minz);
+  // fprintf(stderr, "maxx %f minx %f \n", maxx, minx);
+  // fprintf(stderr, "maxy %f miny %f \n", maxy, miny);
+  // fprintf(stderr, "maxz %f minz %f \n", maxz, minz);
+  // std::cout <<  _model->numVertices << '\n';
 }
+
+void Object::updateBoundingBox(mat4 rotation, GLfloat scale)
+{
+  //std::cout << _size.x << ' ' << _size.y << ' ' << _size.z << '\n';
+
+  vec4 size4 = vec4(_size.x*scale, _size.y*scale, _size.z*scale, 1);
+  vec4 temp =  MultVec4(rotation, size4);
+
+  _size.x = abs(temp.x / temp.w);
+  _size.y = abs(temp.y / temp.w);
+  _size.z = abs(temp.z / temp.w);
+  //_size = ScalarMult(_size, scale);
+  //std::cout << _size.x << ' ' << _size.y << ' ' << _size.z << '\n';
+}
+
+
+GLfloat Object::getCorrHeightInt(int x, int z){
+	return _model->vertexArray[(x + z)*3 + 1];
+}
+
+GLfloat Object::getRealHeight(GLfloat x, GLfloat z){
+		GLfloat p1,p2,p3,p4,height,u,v,uPrim,vPrim;
+		p1 = getCorrHeightInt(floor(x), ceil(z));
+		p2 = getCorrHeightInt(ceil(x), ceil(z));
+		p3 = getCorrHeightInt(floor(x), floor(z));
+		p4 = getCorrHeightInt(ceil(x), floor(z));
+		u = x-floor(x);
+		uPrim = 1-u;
+		v = z-floor(z);
+		vPrim = 1-v;
+		height = _position.y + v*(uPrim*p1 + u*p2) + vPrim*(uPrim*p3 + u*p4);
+		return height;
+  }

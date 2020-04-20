@@ -31,7 +31,6 @@ public:
 private:
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
-  vec3 size = vec3(1.0f, 1.0f, 1.0f);
   vec3 position, oldPosition, up, lookAtPoint, c;
   mat4 proj_matrix, camMatrix;
   GLfloat totX = 0;

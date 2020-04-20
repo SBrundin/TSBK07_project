@@ -14,7 +14,9 @@
 #include "Camera.h"
 #include "Lamp.h"
 #include "LightSource.h"
+#include "Book.h"
 #include <iostream>
+using namespace std;
 
 Fundamentals::Fundamentals(Camera* cam){
 	camera = cam;
@@ -24,6 +26,7 @@ void Fundamentals::loadfiles(){
 	void LoadTGATextureSimple(char const *filename, GLuint *tex);
 	glEnable(GL_DEPTH_TEST);
 
+	//init matrices
 	camMatrix = camera->getCamMatrix();
 	projectionMatrix = camera->getProj_matrix();
 	glClearColor(0.2,0.2,0.2,0);
@@ -33,27 +36,32 @@ void Fundamentals::loadfiles(){
 	skyboxProg = loadShaders("sky.vert", "sky.frag");
 	lampProg = loadShaders("lamp.vert", "lamp.frag");
 	mainProg = loadShaders("LightSource.vert", "LightSource.frag");
+	pageShader = loadShaders("pageShader.vert", "pageShader.frag");
+	programObj = loadShaders("obj.vert", "obj.frag");
 	printError("load shader");
 
 	//Load textures
 	LoadTGATextureSimple("../textures/grass.tga", &grassTex);
 	LoadTGATextureSimple("../textures/snow.tga", &snowTex);
-	LoadTGATextureSimple("../textures/water.tga", &waterTex);
-	LoadTGATextureSimple("../textures/SkyBox512.tga", &skytex);
+	//sLoadTGATextureSimple("../textures/Paper.tga", &paperTex);
+	Fundamentals::loadskybox();
+	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
+	LoadTGATextureSimple("../textures/bilskissred.tga", &bilTex);
+	LoadTGATextureSimple("../textures/water.tga", &truckTex);
+
+	//Load Models
+	backModel = LoadModelPlus("../Modeller/BookBack.obj");
+	carModel = LoadModelPlus("../Modeller/bilskiss.obj");
+	bottomModel = LoadModelPlus("../Modeller/BookBot.obj");
+	topModel = LoadModelPlus("../Modeller/BookTop.obj");
+	straightPageModel = LoadModelPlus("../Modeller/PageStraight.obj");
+	truckModel = LoadModelPlus("../Modeller/LPTruck.obj");
+	bentPageModel =LoadModelPlus("../Modeller/PageBent.obj");
+	coronaModel1 = LoadModelPlus("../Modeller/coronaSimple.obj");
+	coronaModel2 =LoadModelPlus("../Modeller/coronaSimpleBase.obj");
 
 	//Create Objects
-	car = new Object();
-	car->setModel(LoadModelPlus("../Modeller/bilskiss.obj"));
-	car->setBoundingBox();
-	bookback = new Object();
-	bookback->setModel(LoadModelPlus("../Modeller/bokrygg.obj"));
-	bookback->setBoundingBox();
-	bottompage = new Object();
-	bottompage->setModel(LoadModelPlus("../Modeller/Boktop.obj"));
-	bottompage->setBoundingBox();
-	toppage = new Object();
-	toppage->setModel(LoadModelPlus("../Modeller/Boktop.obj"));
-	toppage->setBoundingBox();
+
 	box = new Object();
 	box->setModel(LoadModelPlus("../Modeller/box.obj"));
 
@@ -141,28 +149,35 @@ void Fundamentals::loadfiles(){
 	glUniform1f(glGetUniformLocation(mainProg, "spotLight.cutOff" ), cutOff);
 	glUniform1f(glGetUniformLocation(mainProg, "spotLight.outerCutOff" ), outerCutOff);
 
-
-
-	//SkyBox
-	skybox = LoadModelPlus("../Modeller/skybox.obj");
 	glUseProgram(program);
-	printError("init shader");
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
+	glUseProgram(programObj);
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
-
-
+	glUseProgram(pageShader);
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+	glUniform1i(glGetUniformLocation(pageShader, "Tex"), 0); // Texture unit 0
+	glUniform1i(glGetUniformLocation(pageShader, "TexUp"), 1);
+	glUniform1i(glGetUniformLocation(pageShader, "sideTex"), 2);
+	printError("init shader");
 }
 
 void Fundamentals::cameraCollision(){
-	cameraCollisionFlag = camera->CheckCollision(car, cameraCollisionFlag);
-	//cameraCollisionFlag = camera->CheckCollision(bookback, cameraCollisionFlag);
-	//cameraCollisionFlag = camera->CheckCollision(bottompage, cameraCollisionFlag);
-	//cameraCollisionFlag = camera->CheckCollision(toppage, cameraCollisionFlag);
+	// Book
+	cameraCollisionFlag = camera->CheckCollision(bookback, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(bottompage, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(toppage, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(pageStraight, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(pageBent, cameraCollisionFlag);
 
+	//object
+	cameraCollisionFlag = camera->CheckCollision(truck, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(coronaSimple, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(coronaBase, cameraCollisionFlag);
+	cameraCollisionFlag = camera->CheckCollision(car, cameraCollisionFlag);
 	camera->checkFlag(cameraCollisionFlag);
 	cameraCollisionFlag = false;
-
 }
 
 void Fundamentals::update(){
@@ -186,52 +201,35 @@ void Fundamentals::update(){
   //Skybox with corr program
   glUseProgram(skyboxProg);
   glDisable(GL_DEPTH_TEST);
-  glBindTexture(GL_TEXTURE_2D, skytex);
-  glUniform1i(glGetUniformLocation(skyboxProg, "texUnit"), 0); // Texture unit 0
+	glUniform1i(glGetUniformLocation(skyboxProg, "tex0"), 0); // Texture unit 0
+	glUniform1i(glGetUniformLocation(skyboxProg, "tex1"), 1); // Texture unit 1
+	glUniform1i(glGetUniformLocation(skyboxProg, "ID"), book->getCurrentPage());
+	glUniform1f(glGetUniformLocation(skyboxProg, "timer"), book->getTimer()/3.13);
   glUniformMatrix4fv(glGetUniformLocation(skyboxProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
   glUniformMatrix4fv(glGetUniformLocation(skyboxProg, "mdlMatrix"), 1, GL_TRUE, camMat2.m);
-  //DrawModel(skybox, skyboxProg, "in_Position", NULL, "inTexCoord");
 
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, skytex[i].texID);
 
-	//Draw Objects
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, skytex[i + 6].texID);
+
+		DrawModel(skybox[i], skyboxProg, "inPosition", NULL, "inTexCoord");
+	}
+
   glEnable(GL_DEPTH_TEST);
-  glUseProgram(program);
-	mat4 scale = S(5,5,5);
-	mat4 modelViewBook = T(bottompage->getPosition().x, bottompage->getPosition().y ,bottompage->getPosition().z);
-	mat4 totalBook = Mult(camMatrix, Mult(modelViewBook, scale));
-	//Bottom page and the back of the book
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, grassTex);
-  glUniform1i(glGetUniformLocation(program, "bookTex"), 0);
-  glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBook.m);
-  //DrawModel(bookback->getModel(), program, "inPosition", "inNormal", "inTexCoord");
-  //DrawModel(bottompage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
-  glUniform1f(glGetUniformLocation(program, "t"), t);
+	//Draw complete book
+	book->draw(camMatrix, pageShader, t);
 
-	//Top page
-	toppage->setPosition(upperCoord*5);
-  mat4 modelViewBook2 = T(toppage->getPosition().x, toppage->getPosition().y ,toppage->getPosition().z);
-  mat4 totalBook2 = Mult(camMatrix, modelViewBook2);
-  totalBook2 = Mult(camMatrix, Mult(modelViewBook2,scale));
-  glBindTexture(GL_TEXTURE_2D, waterTex);
-  glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
-  glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, totalBook2.m);
-  //DrawModel(toppage->getModel(), program, "inPosition", "inNormal", "inTexCoord");
-
-	//Car
-	mat4 carTot = T(car->getPosition().x, car->getPosition().y, car->getPosition().z );
-	carTot = Mult(camMatrix, carTot);
-	glBindTexture(GL_TEXTURE_2D, waterTex);
-	glUniform1i(glGetUniformLocation(program, "bookTex"), 0); // Texture unit 0
-	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, carTot.m);
-	//DrawModel(car->getModel(), program, "inPosition", "inNormal", "inTexCoord");
 
 	//LampModel and lightsource position
 	glUseProgram(lampProg);
 	//vec3 newPos = {4.0f, 4.0f, 4.0f};
 	//lamp->setPosition(newPos);
-	scale = S(5,5,5);
-	lamp->setPosition(upperCoord*3*sin(t));
+	mat4 scale = S(5,5,5);
+	lamp->setPosition(topPos*3*sin(t));
 	mat4 lampTot = T(lamp->getPosition().x, lamp->getPosition().y, lamp->getPosition().z );
 	lampTot = Mult(camMatrix, Mult(scale, lampTot));
 	glUniformMatrix4fv(glGetUniformLocation(lampProg, "mdlMatrix"), 1, GL_TRUE, lampTot.m);
@@ -242,7 +240,7 @@ void Fundamentals::update(){
 	scale = S(6,6,6);
 	//pointLight
 	vec3 viewPos = {camera-> getPosition().x, camera-> getPosition().y, camera-> getPosition().z};
-	spotLight->setPosition(upperCoord*3*sin(t));
+	spotLight->setPosition(topPos*3*sin(t));
 	lightPos = spotLight-> getPosition();
 	//lightSource->setColour({0.2f, 0.8f*sin(t*5), 0.4f});
 	//vec3 pointColour = lightSource->getColour();
@@ -265,10 +263,96 @@ void Fundamentals::update(){
 	glUniformMatrix4fv(glGetUniformLocation(mainProg, "model"), 1, GL_TRUE, modelPos.m);
 	DrawModel(box->getModel(), mainProg, "inPosition", "inNormal", "inTexCoord");
 
+
+
+
+	//draw scene
+	glUseProgram(programObj);
+
+
+	//Car
+	if (book->getCurrentPage() == 2 ){
+	mat4 modelViewCar = T(car->getPosition().x, car->getPosition().y, car->getPosition().z);
+	mat4 carTot = Mult(camMatrix, modelViewCar);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, car->getTexture());
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, carTot.m);
+	DrawModel(car->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
+	GLfloat coronaSimpleY = pageBent->getRealHeight(coronaSimple->getPosition().x, coronaSimple->getPosition().z);
+
+	//std::cout << coronaSimpleY << '\n';
+
+	mat4 modelViewCor1 = T(coronaSimple->getPosition().x, coronaSimpleY, coronaSimple->getPosition().z);
+	mat4 corTot1 = Mult(camMatrix, modelViewCor1);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, coronaSimple->getTexture());
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, corTot1.m);
+	DrawModel(coronaSimple->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
+	mat4 modelViewCor2 = T(coronaBase->getPosition().x, coronaBase->getPosition().y, coronaBase->getPosition().z);
+	mat4 corTot2 = Mult(camMatrix, modelViewCor2);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, coronaBase->getTexture());
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, corTot2.m);
+	DrawModel(coronaBase->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
+	//Truck
+	mat4 modelViewTruck = T(truck->getPosition().x, truck->getPosition().y, truck->getPosition().z);
+	mat4 truckTot = Mult(camMatrix, Mult(Mult(modelViewTruck, S(3,3,3)), Ry(M_PI/2)));
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, truck->getTexture());
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, truckTot.m);
+	DrawModel(truck->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+}
 }
 
+void Fundamentals::loadskybox()
+{
+	//glActiveTexture(GL_TEXTURE0);
 
-// Objects* Fundamentals::getObject()
-// {
-//     return _object;
-// }
+	std::string	skytextures[6*2] =
+	{
+		"../textures/skybox0/left.tga",
+		"../textures/skybox0/right.tga",
+		"../textures/skybox0/top.tga",
+		"../textures/skybox0/bottom.tga",
+		"../textures/skybox0/front.tga",
+		"../textures/skybox0/back.tga",
+
+		"../textures/skyboxdebug/left.tga",
+		"../textures/skyboxdebug/right.tga",
+		"../textures/skyboxdebug/top.tga",
+		"../textures/skyboxdebug/bottom.tga",
+		"../textures/skyboxdebug/front.tga",
+		"../textures/skyboxdebug/back.tga"
+	};
+
+	std::string filename[6] =
+{
+	"../Modeller/skybox/side0.obj",
+	"../Modeller/skybox/side1.obj",
+	"../Modeller/skybox/side2.obj",
+	"../Modeller/skybox/side3.obj",
+	"../Modeller/skybox/side4.obj",
+	"../Modeller/skybox/side5.obj"
+};
+
+	for (unsigned int i = 0; i < 6*2; i++)
+	{
+		printf("Loading texture %s\n", skytextures[i].c_str());
+		LoadTGATexture(skytextures[i].c_str(), &skytex[i]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	};
+
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		skybox[i] = LoadModelPlus(filename[i].c_str());
+	}
+
+}
