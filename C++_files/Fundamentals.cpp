@@ -61,12 +61,9 @@ void Fundamentals::loadfiles(){
 	bentPageModel =LoadModelPlus("../Modeller/PageBent.obj");
 	coronaModel1 = LoadModelPlus("../Modeller/coronaSimple.obj");
 	coronaModel2 =LoadModelPlus("../Modeller/coronaSimpleBase.obj");
-
 	carModel = LoadModelPlus("../Modeller/bilskiss.obj");
 	truckModel = LoadModelPlus("../Modeller/LPTruck.obj");
-
-	//Create Objects
-
+	bookModel = LoadModelPlus("../Modeller/bookstatic.obj");
 	boxModel = LoadModelPlus("../Modeller/box.obj");
 	lampModel = LoadModelPlus("../Modeller/box.obj");
 
@@ -86,8 +83,10 @@ void Fundamentals::loadfiles(){
 	pageBent->setTextureSide(snowTex);
 	pageBent->setTextureUp(grassTex);
 	pageStraight->setTextureSide(snowTex);
+	staticBook = new Object(bookModel, leatherTex);
 
-	book = new Book(bottompage, bookback, toppage, pageStraight, pageBent);
+	//book = new Book(bottompage, bookback, toppage, pageStraight, pageBent);
+	book = new Book(toppage, pageBent, staticBook);
 
 	//Worlds Objects
 	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);

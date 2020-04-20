@@ -17,6 +17,14 @@ Book::Book(Object* bot, Object* back, Object* top, Object* ps, Object* pb){
   _bool = false;
 }
 
+Book::Book(Object* top, Object* second, Object* frame){
+  _bottom = frame;
+  _top = top;
+  _pageBent = second;
+  _currentPage = 1;
+  _bool = false;
+}
+
 void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
 
   glUseProgram(shader);
@@ -81,46 +89,46 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   }
 
   //DRAWS REST OF THE STATIC COMONENTS
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, _top->getTexture());
-  glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, _top->getTexture());
-  glActiveTexture(GL_TEXTURE2);
-  glBindTexture(GL_TEXTURE_2D, _top->getTexture());
-
-  //BOTTOMPAGE
-  mat4 modelViewBottom = T(_bottom->getPosition().x, _bottom->getPosition().y ,_bottom->getPosition().z);
-  mat4 totalBottom = Mult(camMatrix, modelViewBottom);
-  glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalBottom.m);
-  DrawModel(_bottom->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
-
-  //BACK OF THE BOOK
-  mat4 modelViewBack = T(_back->getPosition().x, _back->getPosition().y ,_back->getPosition().z);
-  mat4 totalBack = Mult(camMatrix, modelViewBack);
-  glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalBack.m);
-  DrawModel(_back->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
+  // glActiveTexture(GL_TEXTURE0);
+  // glBindTexture(GL_TEXTURE_2D, _top->getTexture());
+  // glActiveTexture(GL_TEXTURE1);
+  // glBindTexture(GL_TEXTURE_2D, _top->getTexture());
+  // glActiveTexture(GL_TEXTURE2);
+  // glBindTexture(GL_TEXTURE_2D, _top->getTexture());
+  //
+  // //BOTTOMPAGE
+  // mat4 modelViewBottom = T(_bottom->getPosition().x, _bottom->getPosition().y ,_bottom->getPosition().z);
+  // mat4 totalBottom = Mult(camMatrix, modelViewBottom);
+  // glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalBottom.m);
+  // DrawModel(_bottom->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
+  //
+  // //BACK OF THE BOOK
+  // mat4 modelViewBack = T(_back->getPosition().x, _back->getPosition().y ,_back->getPosition().z);
+  // mat4 totalBack = Mult(camMatrix, modelViewBack);
+  // glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalBack.m);
+  // DrawModel(_back->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
 
   //STRAIGHT PAGE
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, _pageStraight->getTexture());
+  glBindTexture(GL_TEXTURE_2D, _pageBent->getTexture());
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, _pageStraight->getTexture());
+  glBindTexture(GL_TEXTURE_2D, _pageBent->getTexture());
   glActiveTexture(GL_TEXTURE2);
-  glBindTexture(GL_TEXTURE_2D, _pageStraight->getTextureSide());
-  mat4 modelViewStraight = T(_pageStraight->getPosition().x, _pageStraight->getPosition().y, _pageStraight->getPosition().z );
+  glBindTexture(GL_TEXTURE_2D, _pageBent->getTextureSide());
+  mat4 modelViewStraight = T(_bottom->getPosition().x, _bottom->getPosition().y, _bottom->getPosition().z );
  	mat4 totalStraight= Mult(camMatrix, modelViewStraight);
 	glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalStraight.m);
-	DrawModel(_pageStraight->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
+	DrawModel(_bottom->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
 
   //all pages
-  float yPos = _pageStraight->getPosition().y;
-  for (unsigned int i = 0; i < 15; i++){
-  yPos -= 0.3;
-  mat4 modelViewStraight = T(_pageStraight->getPosition().x, yPos, _pageStraight->getPosition().z );
-  mat4 totalStraight= Mult(camMatrix, modelViewStraight);
-  glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalStraight.m);
-  DrawModel(_pageStraight->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
-  }
+  // float yPos = _pageStraight->getPosition().y;
+  // for (unsigned int i = 0; i < 15; i++){
+  // yPos -= 0.3;
+  // mat4 modelViewStraight = T(_pageStraight->getPosition().x, yPos, _pageStraight->getPosition().z );
+  // mat4 totalStraight= Mult(camMatrix, modelViewStraight);
+  // glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalStraight.m);
+  // DrawModel(_pageStraight->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
+  //}
 
 }
 

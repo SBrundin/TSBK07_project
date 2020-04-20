@@ -22,7 +22,7 @@ public:
 
 private:
 
-  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
+  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel, *bookModel;
   Model *skybox[6];
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight;
@@ -57,6 +57,7 @@ private:
   TextureData skytex[6*2];
   Object* lamp;
   Object* box;
+  Object* staticBook;
 
 };
 
