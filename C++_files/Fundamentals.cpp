@@ -75,6 +75,7 @@ void Fundamentals::loadfiles(){
 	pageStraight = new Object(straightPageModel, grassTex);
 	pageBent = new Object(bentPos, bentPageModel, grassTex);
 	pageBent->setTextureSide(snowTex);
+	pageBent->setTextureUp(grassTex);
 	pageStraight->setTextureSide(snowTex);
 
 	book = new Book(bottompage, bookback, toppage, pageStraight, pageBent);
