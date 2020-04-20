@@ -29,6 +29,18 @@
 #define Matrix3D mat3
 #define Matrix4D mat4
 
+	// vec2 necessary
+	typedef struct vec2
+	{
+		GLfloat x, y;
+		#ifdef __cplusplus
+						vec2() {}
+			vec2(GLfloat x2, GLfloat y2) : x(x2), y(y2) {}
+
+	//			vec3(vec4 v) : x(v.x), y(v.y), z(v.z) {}
+		#endif
+	} vec2, *vec2Ptr;
+
 	// vec3 is very useful
 	typedef struct vec3
 	{
