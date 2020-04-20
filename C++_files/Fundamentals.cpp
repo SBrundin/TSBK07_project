@@ -59,15 +59,33 @@ void Fundamentals::loadfiles(){
 	bentPageModel =LoadModelPlus("../Modeller/PageBent.obj");
 	coronaModel1 = LoadModelPlus("../Modeller/coronaSimple.obj");
 	coronaModel2 =LoadModelPlus("../Modeller/coronaSimpleBase.obj");
+	boxModel = LoadModelPlus("../Modeller/box.obj");
+	lampModel = LoadModelPlus("../Modeller/box.obj");
 
 	//Create Objects
 
-	box = new Object();
-	box->setModel(LoadModelPlus("../Modeller/box.obj"));
+	box = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, grassTex);
+	lamp = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, snowTex);
+	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
+	coronaSimple = new Object(vec3(0.0f, 4.0f, 5.0f), coronaModel1, snowTex);
+	coronaBase = new Object(vec3(5.0f, 4.0f, 0.0f), coronaModel2, grassTex);
+	bookback = new Object(backPos, backModel, leatherTex);
+	bottompage = new Object(bottomModel, leatherTex);
+	toppage = new Object(topPos, topModel, leatherTex);
+	pageStraight = new Object(straightPageModel, grassTex);
+	pageBent = new Object(bentPos, bentPageModel, grassTex);
+	pageBent->setTextureSide(snowTex);
+	pageStraight->setTextureSide(snowTex);
+
+	book = new Book(bottompage, bookback, toppage, pageStraight, pageBent);
+
+	//Worlds Objects
+	//car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
+	truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, truckTex);
+	truck->updateBoundingBox(Ry(M_PI/2), 3.0f);
+
 
 	//lamp
-	lamp = new Object();
-	lamp->setModel(LoadModelPlus("../Modeller/box.obj"));
 	lampLight = new Lamp(lamp);
 	lampLight -> setColour(vec3 {1.0f, 1.0f, 1.0f});
 	lampColour = lampLight -> getColour();

@@ -22,7 +22,7 @@ public:
 
 private:
 
-  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *carModel, *coronaModel1, *truckModel, *coronaModel2;
+  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
   Model *skybox[6];
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight;
