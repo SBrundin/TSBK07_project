@@ -5,6 +5,9 @@
 #include "Book.h"
 #include "Camera.h"
 #include "VectorUtils3.h"
+#include "Lamp.h"
+#include "LightSource.h"
+#include "LightHandler.h"
 
 class Fundamentals
 {
@@ -19,12 +22,21 @@ public:
 
 private:
 
-  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *carModel, *coronaModel1, *truckModel, *coronaModel2;
+  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
   Model *skybox[6];
+  Lamp* lampLight;
+  LightSource *lightSource, *dirrLight, *spotLight;
+  LightHandler *lightHandler;
   mat4 projectionMatrix, camMatrix;
+<<<<<<< HEAD
   vec3 p,l, c, cam, lookAtPoint, c2;
   GLuint program, skyboxProg, pageShader, programObj, fadeShade;
   GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex , truckTex;;
+=======
+  vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
+  GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg;
+  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex , truckTex;
+>>>>>>> 079b9949a766ff10a236525868b878d0c28dd868
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   vec3 v = {0.0, 1.0, 0.0};
@@ -49,6 +61,8 @@ private:
   Object* truck;
   Book* book;
   TextureData skytex[6*2];
+  Object* lamp;
+  Object* box;
 
 };
 
