@@ -14,9 +14,14 @@ class Fundamentals
 public:
     Fundamentals(Camera* cam);
     void loadfiles();
+    void loadtextures();
+    void initshaders();
+    void loadmodels();
     void cameraCollision();
     void update();
     void loadskybox();
+    void initobjects();
+    void drawall();
     mat4 rotate(Object* obj, GLfloat time);
 
 
@@ -27,10 +32,10 @@ private:
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight;
   LightHandler *lightHandler;
-  mat4 projectionMatrix, camMatrix;
+  mat4 projectionMatrix, camMatrix, camMat2;
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
   GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
-  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex , truckTex;
+  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex, truckTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   vec3 v = {0.0, 1.0, 0.0};
@@ -43,6 +48,7 @@ private:
   vec3 p1 = {-15.0f, 5.3f, -10.0f};
   vec3 p2 = {-15.0f, 5.3f, 10.0f};
   bool cameraCollisionFlag = false;
+  GLfloat t;
   Camera* camera;
   Object* car;
   Object* bookback;
