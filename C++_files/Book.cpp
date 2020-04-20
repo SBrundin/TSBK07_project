@@ -23,10 +23,23 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   glUniform1f(glGetUniformLocation(shader, "t"), t);
 
 	//INITIATES THE BROWSING
+  if (_currentPage == 2){
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, _top->getTexture());
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, _pageBent->getTextureUp());
+  glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, _top->getTexture());
+  }
+  else {
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());
+  glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, _top->getTexture());
+  }
+
 
   if (glutKeyIsDown('n') && getBool() == false && _currentPage != 3)
     {
@@ -58,6 +71,8 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, _pageBent->getTexture());
   glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, _pageBent->getTexture());
+  glActiveTexture(GL_TEXTURE2);
   glBindTexture(GL_TEXTURE_2D, _pageBent->getTextureSide());
   mat4 modelViewBent = T(_pageBent->getPosition().x, _pageBent->getPosition().y, _pageBent->getPosition().z );
   mat4 totalBent = Mult(camMatrix, modelViewBent);
@@ -69,6 +84,8 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());
   glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, _top->getTexture());
+  glActiveTexture(GL_TEXTURE2);
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());
 
   //BOTTOMPAGE
@@ -87,11 +104,24 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, _pageStraight->getTexture());
   glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, _pageStraight->getTexture());
+  glActiveTexture(GL_TEXTURE2);
   glBindTexture(GL_TEXTURE_2D, _pageStraight->getTextureSide());
   mat4 modelViewStraight = T(_pageStraight->getPosition().x, _pageStraight->getPosition().y, _pageStraight->getPosition().z );
  	mat4 totalStraight= Mult(camMatrix, modelViewStraight);
 	glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalStraight.m);
 	DrawModel(_pageStraight->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
+
+  //all pages
+  float yPos = _pageStraight->getPosition().y;
+  for (unsigned int i = 0; i < 15; i++){
+  yPos -= 0.3;
+  mat4 modelViewStraight = T(_pageStraight->getPosition().x, yPos, _pageStraight->getPosition().z );
+  mat4 totalStraight= Mult(camMatrix, modelViewStraight);
+  glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalStraight.m);
+  DrawModel(_pageStraight->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
+  }
+
 }
 
 mat4 Book::generateRotationMat(vec3 rotationAxis, GLfloat time){
@@ -133,6 +163,8 @@ void Book::browse(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Obje
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, _pageBent->getTexture());
   glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, _pageBent->getTexture());
+  glActiveTexture(GL_TEXTURE2);
   glBindTexture(GL_TEXTURE_2D, _pageBent->getTextureSide());
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalSec.m);
   DrawModel(second->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
