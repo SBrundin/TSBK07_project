@@ -28,7 +28,19 @@
 #define Point3D vec3
 #define Matrix3D mat3
 #define Matrix4D mat4
-	
+
+	// vec2 necessary
+	typedef struct vec2
+	{
+		GLfloat x, y;
+		#ifdef __cplusplus
+						vec2() {}
+			vec2(GLfloat x2, GLfloat y2) : x(x2), y(y2) {}
+
+	//			vec3(vec4 v) : x(v.x), y(v.y), z(v.z) {}
+		#endif
+	} vec2, *vec2Ptr;
+
 	// vec3 is very useful
 	typedef struct vec3
 	{
@@ -40,7 +52,7 @@
 //			vec3(vec4 v) : x(v.x), y(v.y), z(v.z) {}
 		#endif
 	} vec3, *vec3Ptr;
-	
+
 	// vec4 is not as useful. Can be a color with alpha, or a quaternion, but IMHO you
 	// rarely need homogenous coordinate vectors on the CPU.
 	typedef struct vec4
@@ -49,11 +61,11 @@
 		#ifdef __cplusplus
             vec4() {}
 			vec4(GLfloat x2, GLfloat y2, GLfloat z2, GLfloat w2) : x(x2), y(y2), z(z2), w(w2) {}
-			
+
 			vec4(vec3 v) : x(v.x), y(v.y), z(v.z), w(1) {}
 		#endif
 	} vec4, *vec4Ptr;
-	
+
 	typedef struct mat4
 	{
 		GLfloat m[16];
@@ -85,6 +97,7 @@ extern "C" {
 
 	mat4 IdentityMatrix();
 	mat4 Rx(GLfloat a);
+	mat4 Rx2(GLfloat a);
 	mat4 Ry(GLfloat a);
 	mat4 Rz(GLfloat a);
 	mat4 T(GLfloat tx, GLfloat ty, GLfloat tz);
@@ -96,6 +109,7 @@ extern "C" {
 	// Was MatrixMultPoint3D
 	vec3 MultVec3(mat4 a, vec3 b); // result = a * b
 	vec4 MultVec4(mat4 a, vec4 b);
+	vec3 mat4vec3(mat4 m);
 //	void CopyMatrix(GLfloat *src, GLfloat *dest); // Will probably be removed
 
 // Mat3 operations (new)
@@ -115,7 +129,7 @@ extern "C" {
 
 // GLU replacement functions
 	mat4 lookAtv(vec3 p, vec3 l, vec3 v);
-	mat4 lookAt(GLfloat px, GLfloat py, GLfloat pz, 
+	mat4 lookAt(GLfloat px, GLfloat py, GLfloat pz,
 			GLfloat lx, GLfloat ly, GLfloat lz,
 			GLfloat vx, GLfloat vy, GLfloat vz);
 	mat4 perspective(float fovyInDegrees, float aspectRatio,

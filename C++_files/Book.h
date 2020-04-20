@@ -10,6 +10,7 @@ class Book
 {
 public:
     Book(Object* bot, Object* back, Object* top, Object* ps, Object* pb);
+    Book(Object* top, Object* second, Object* frame);
     void draw(mat4 camMatrix, GLuint shader, GLfloat t);
     void browse(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Object* second, GLuint pageNbr, char button);
     void makeRotation(GLfloat timer, GLuint page, mat4 camMatrix, GLuint shader, char button);
