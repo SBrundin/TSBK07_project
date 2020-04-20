@@ -54,7 +54,7 @@ private:
   Object* coronaBase;
   Object* truck;
   Book* book;
-  TextureData skytex[6*2];
+  TextureData skytex[6*3];
   Object* lamp;
   Object* box;
 

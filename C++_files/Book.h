@@ -27,6 +27,11 @@ public:
       return _currentPage;
     }
 
+    GLuint getDirection(){
+      if (_buttonPressed == 'l') return 1;
+      if (_buttonPressed == 'r') return -1;
+    }
+
     GLfloat getTimer(){
       return _timer;
     }

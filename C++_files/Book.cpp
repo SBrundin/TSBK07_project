@@ -14,6 +14,7 @@ Book::Book(Object* bot, Object* back, Object* top, Object* ps, Object* pb){
   _pageBent = pb;
   _pageStraight = ps;
   _currentPage = 1;
+  _pageNbr = 1;
   _bool = false;
 }
 
@@ -211,6 +212,7 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
     _pageBent->setPosition(_bentOpen);
     setBool();
     _currentPage++;
+    _timer = 0;
   }
 
   //BENT PAGE ROTATION BACKWARD

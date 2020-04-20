@@ -222,7 +222,9 @@ void Fundamentals::update(){
   glDisable(GL_DEPTH_TEST);
 	glUniform1i(glGetUniformLocation(skyboxProg, "tex0"), 0); // Texture unit 0
 	glUniform1i(glGetUniformLocation(skyboxProg, "tex1"), 1); // Texture unit 1
+	glUniform1i(glGetUniformLocation(skyboxProg, "tex2"), 2); // Texture unit 2
 	glUniform1i(glGetUniformLocation(skyboxProg, "ID"), book->getCurrentPage());
+	glUniform1i(glGetUniformLocation(skyboxProg, "dir"), book->getDirection());
 	glUniform1f(glGetUniformLocation(skyboxProg, "timer"), book->getTimer()/3.13);
   glUniformMatrix4fv(glGetUniformLocation(skyboxProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
   glUniformMatrix4fv(glGetUniformLocation(skyboxProg, "mdlMatrix"), 1, GL_TRUE, camMat2.m);
@@ -234,6 +236,9 @@ void Fundamentals::update(){
 
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, skytex[i + 6].texID);
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, skytex[i + 12].texID);
 
 		DrawModel(skybox[i], skyboxProg, "inPosition", NULL, "inTexCoord");
 	}
@@ -285,11 +290,8 @@ void Fundamentals::update(){
 	DrawModel(box->getModel(), mainProg, "inPosition", "inNormal", "inTexCoord");
 
 
-
-
 	//draw scene
 	glUseProgram(programObj);
-
 
 	//Car
 	if (book->getCurrentPage() == 2 ){
@@ -336,7 +338,7 @@ void Fundamentals::loadskybox()
 {
 	//glActiveTexture(GL_TEXTURE0);
 
-	std::string	skytextures[6*2] =
+	std::string	skytextures[6*3] =
 	{
 		"../textures/skybox0/left.tga",
 		"../textures/skybox0/right.tga",
@@ -345,12 +347,19 @@ void Fundamentals::loadskybox()
 		"../textures/skybox0/front.tga",
 		"../textures/skybox0/back.tga",
 
-		"../textures/skyboxdebug/left.tga",
-		"../textures/skyboxdebug/right.tga",
-		"../textures/skyboxdebug/top.tga",
-		"../textures/skyboxdebug/bottom.tga",
-		"../textures/skyboxdebug/front.tga",
-		"../textures/skyboxdebug/back.tga"
+		"../textures/skybox2/left.tga",
+		"../textures/skybox2/right.tga",
+		"../textures/skybox2/top.tga",
+		"../textures/skybox2/bottom.tga",
+		"../textures/skybox2/front.tga",
+		"../textures/skybox2/back.tga",
+
+		"../textures/skybox1/left.tga",
+		"../textures/skybox1/right.tga",
+		"../textures/skybox1/top.tga",
+		"../textures/skybox1/bottom.tga",
+		"../textures/skybox1/front.tga",
+		"../textures/skybox1/back.tga"
 	};
 
 	std::string filename[6] =
@@ -363,7 +372,7 @@ void Fundamentals::loadskybox()
 	"../Modeller/skybox/side5.obj"
 };
 
-	for (unsigned int i = 0; i < 6*2; i++)
+	for (unsigned int i = 0; i < 6*3; i++)
 	{
 		printf("Loading texture %s\n", skytextures[i].c_str());
 		LoadTGATexture(skytextures[i].c_str(), &skytex[i]);
