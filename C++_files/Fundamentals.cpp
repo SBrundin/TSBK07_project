@@ -30,6 +30,7 @@ void Fundamentals::loadfiles(){
 	glClearColor(0.9,0.9,1,0);
 
 	//init shaders
+	opacityp = loadShaders("opacity.vert", "opacity.frag");
 	program = loadShaders("terrain.vert", "terrain.frag");
 	skyboxProg = loadShaders("sky.vert", "sky.frag");
 	pageShader = loadShaders("pageShader.vert", "pageShader.frag");
@@ -37,6 +38,7 @@ void Fundamentals::loadfiles(){
 	printError("load shader");
 
 	//Load textures
+	LoadTGATexture("../textures/grass.tga", &gtex);
 	LoadTGATextureSimple("../textures/grass.tga", &grassTex);
 	LoadTGATextureSimple("../textures/snow.tga", &snowTex);
 	//LoadTGATextureSimple("../textures/Paper.tga", &paperTex);
@@ -55,9 +57,11 @@ void Fundamentals::loadfiles(){
 	bentPageModel =LoadModelPlus("../Modeller/PageBent.obj");
 	coronaModel1 = LoadModelPlus("../Modeller/coronaSimple.obj");
 	coronaModel2 =LoadModelPlus("../Modeller/coronaSimpleBase.obj");
+	opacityModel = LoadModelPlus("../Modeller/testingmtl.obj");
 
 
 	//Create Objects
+	//opacity = new Object(vec3(0.0f, 4.0f, 0.0f), opacityModel, gtex);
 	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
 	coronaSimple = new Object(vec3(0.0f, 4.0f, 5.0f), coronaModel1, snowTex);
 	coronaBase = new Object(vec3(5.0f, 4.0f, 0.0f), coronaModel2, grassTex);
@@ -78,6 +82,9 @@ void Fundamentals::loadfiles(){
 
 
 	glUseProgram(program);
+	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+
+	glUseProgram(opacityp);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
 	glUseProgram(programObj);
@@ -186,6 +193,19 @@ void Fundamentals::update(){
 	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, truckTot.m);
 	DrawModel(truck->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
+	glUseProgram(opacityp);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glDisable(GL_CULL_FACE);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, gtex.texID);
+	glUniform1i(glGetUniformLocation(opacityp, "Tex"), 0); // Texture unit 0
+	glUniform1f(glGetUniformLocation(opacityp, "t"), t); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(opacityp, "mdlMatrix"), 1, GL_TRUE, truckTot.m);
+	DrawModel(opacityModel, opacityp, "inPosition", "inNormal", "inTexCoord");
+	//glEnable(GL_CULL_FACE);
+
 }
 
 void Fundamentals::loadskybox()

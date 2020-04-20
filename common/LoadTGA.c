@@ -29,7 +29,7 @@ void LoadTGASetMipmapping(bool active)
 	gMipmap = active;
 }
 
-bool LoadTGATextureData(char *filename, TextureData *texture)	// Loads A TGA File Into Memory
+bool LoadTGATextureData(const char *filename, TextureData *texture)	// Loads A TGA File Into Memory
 {
 	GLuint i;
 	GLubyte
@@ -210,7 +210,7 @@ texture->h = h;
 	return true;				// Texture loading Went Ok, Return True
 }
 
-bool LoadTGATexture(char *filename, TextureData *texture)	// Loads A TGA File Into Memory and creates texture object
+bool LoadTGATexture(const char *filename, TextureData *texture)	// Loads A TGA File Into Memory and creates texture object
 {
 	char ok;
 	GLuint type = GL_RGBA;		// Set The Default GL Mode To RBGA (32 BPP)
@@ -232,6 +232,7 @@ bool LoadTGATexture(char *filename, TextureData *texture)	// Loads A TGA File In
 	{
 		type=GL_RGB;			// If So Set The 'type' To GL_RGB
 	}
+    printf ("Decimals: %d\n", texture->bpp);
 	glTexImage2D(GL_TEXTURE_2D, 0, type, texture->w, texture->h, 0, type, GL_UNSIGNED_BYTE, texture[0].imageData);
 	
 	if (gMipmap)
@@ -243,7 +244,7 @@ bool LoadTGATexture(char *filename, TextureData *texture)	// Loads A TGA File In
 	return true;				// Texture Building Went Ok, Return True
 }
 
-void LoadTGATextureSimple(char *filename, GLuint *tex) // If you really only need the texture object.
+void LoadTGATextureSimple(const char *filename, GLuint *tex) // If you really only need the texture object.
 {
 	TextureData texture;
 	memset(&texture, 0, sizeof(texture)); // Bug fix 130905.

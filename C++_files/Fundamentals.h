@@ -19,12 +19,12 @@ public:
 
 private:
 
-  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *carModel, *coronaModel1, *truckModel, *coronaModel2;
+  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *opacityModel;
   Model *skybox[6];
   mat4 projectionMatrix, camMatrix;
   vec3 p,l, c, cam, lookAtPoint, c2;
-  GLuint program, skyboxProg, pageShader, programObj;
-  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex , truckTex;;
+  GLuint program, skyboxProg, pageShader, programObj, opacityp;
+  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex , truckTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   vec3 v = {0.0, 1.0, 0.0};
@@ -37,6 +37,7 @@ private:
   vec3 p2 = {-15.0f, 5.3f, 10.0f};
   bool cameraCollisionFlag = false;
   Camera* camera;
+  Object* opacity;
   Object* car;
   Object* bookback;
   Object* toppage;
@@ -48,6 +49,7 @@ private:
   Object* truck;
   Book* book;
   TextureData skytex[6*2];
+  TextureData gtex;
 
 };
 
