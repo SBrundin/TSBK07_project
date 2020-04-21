@@ -112,7 +112,6 @@ void Fundamentals::loadfiles(){
 	glUniform1f(glGetUniformLocation(mainProg, "spotLight.cutOff" ), cutOff);
 	glUniform1f(glGetUniformLocation(mainProg, "spotLight.outerCutOff" ), outerCutOff);
 
-
 	glUseProgram(program);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
@@ -124,6 +123,12 @@ void Fundamentals::loadfiles(){
 	glUniform1i(glGetUniformLocation(pageShader, "Tex"), 0); // Texture unit 0
 	glUniform1i(glGetUniformLocation(pageShader, "TexUp"), 1);
 	glUniform1i(glGetUniformLocation(pageShader, "sideTex"), 2);
+
+	glUseProgram(skyboxProg);
+	glUniform1i(glGetUniformLocation(skyboxProg, "tex0"), 0); // Texture unit 0
+	glUniform1i(glGetUniformLocation(skyboxProg, "tex1"), 1); // Texture unit 1
+	glUniform1i(glGetUniformLocation(skyboxProg, "tex2"), 2); // Texture unit 1
+
 	printError("init shader");
 }
 
@@ -136,28 +141,20 @@ void Fundamentals::cameraCollision(){
 	cameraCollisionFlag = camera->CheckCollision(secondPage, cameraCollisionFlag);
 
 	//object
-	cameraCollisionFlag = camera->CheckCollision(truck, cameraCollisionFlag);
-	cameraCollisionFlag = camera->CheckCollision(coronaSimple, cameraCollisionFlag);
-	cameraCollisionFlag = camera->CheckCollision(coronaBase, cameraCollisionFlag);
-	cameraCollisionFlag = camera->CheckCollision(car, cameraCollisionFlag);
 	camera->checkFlag(cameraCollisionFlag);
 	cameraCollisionFlag = false;
 }
 
 void Fundamentals::update(){
-	Fundamentals::cameraCollision();
+	cameraCollision();
 	camMatrix = camera->getCamMatrix();
+	camMat2 = camMatrix;
   t = (GLfloat)glutGet(GLUT_ELAPSED_TIME);
   t = t/1000;
   // clear the screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glDisable(GL_CULL_FACE);
   printError("pre display");
-  camMat2 = camMatrix;
-  camMat2.m[3] = 0;
-  camMat2.m[7] = 0;
-  camMat2.m[11] = 0;
-  camMat2.m[15] = 1;
 
 	drawall();
 	//LampModel and lightsource position
@@ -200,12 +197,13 @@ void Fundamentals::update(){
 }
 
 void Fundamentals::drawall(){
+	camMat2.m[3] = 0;
+	camMat2.m[7] = 0;
+	camMat2.m[11] = 0;
+	camMat2.m[15] = 1;
 	//Skybox with corr program
 	glUseProgram(skyboxProg);
 	glDisable(GL_DEPTH_TEST);
-	glUniform1i(glGetUniformLocation(skyboxProg, "tex0"), 0); // Texture unit 0
-	glUniform1i(glGetUniformLocation(skyboxProg, "tex1"), 1); // Texture unit 1
-	glUniform1i(glGetUniformLocation(skyboxProg, "tex2"), 2); // Texture unit 1
 	glUniform1i(glGetUniformLocation(skyboxProg, "ID"), book->getCurrentPage());
 	glUniform1i(glGetUniformLocation(skyboxProg, "dir"), book->getDirection());
 	glUniform1f(glGetUniformLocation(skyboxProg, "timer"), book->getTimer()/3.13);
@@ -232,6 +230,8 @@ void Fundamentals::drawall(){
 	glUseProgram(programObj);
 	//glUniform1f(glGetUniformLocation(programObj, "timer"), 1-getMyTimer());
 
+	//house->draw(camMatrix, programObj, 1.0, 0.0);
+
 	//Car
 	if (book->getCurrentPage() == 1 && book->getFadeBool()){
 				book->setFadeBool();
@@ -244,13 +244,17 @@ void Fundamentals::drawall(){
 			else{
 				fadeInObjects();
 			}
-		mat4 modelViewCar = T(car->getPosition().x, car->getPosition().y, car->getPosition().z);
-		mat4 carTot = Mult(camMatrix, modelViewCar);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, car->getTexture());
-		glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
-		glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, carTot.m);
-		DrawModel(car->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+			bookMark->draw(camMatrix, programObj, 1.0, Ry(0.0));
+
+			house->draw(camMatrix, programObj, 2.0, Ry(0.0)); // camMatrix, shader, scale, angle
+			cottage->draw(camMatrix, programObj, 1.0, Ry(M_PI));
+			cottage1->draw(camMatrix, programObj, 1.0, Ry(0.0));
+			cottage2->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+			elephant->draw(camMatrix, programObj, 1.0, Ry(M_PI/4));
+			elephantbby->draw(camMatrix, programObj, 0.3, Ry(7.5*M_PI/4));
+			tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
+			rosebush->draw(camMatrix, programObj, 1.0, Ry(0.0));
+			pile->draw(camMatrix, programObj, 1.0, Ry(0.0));
 	}
 
 	else if (book->getCurrentPage() == 3){
@@ -260,29 +264,14 @@ void Fundamentals::drawall(){
 				else{
 					fadeInObjects();
 				}
-			GLfloat coronaSimpleY = firstPage->getRealHeight(coronaSimple->getPosition().x, coronaSimple->getPosition().z);
-			mat4 modelViewCor1 = T(coronaSimple->getPosition().x, coronaSimpleY, coronaSimple->getPosition().z);
-			mat4 corTot1 = Mult(camMatrix, modelViewCor1);
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, coronaSimple->getTexture());
-			glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
-			glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, corTot1.m);
-			DrawModel(coronaSimple->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
-			mat4 modelViewCor2 = T(coronaBase->getPosition().x, coronaBase->getPosition().y, coronaBase->getPosition().z);
-			mat4 corTot2 = Mult(camMatrix, modelViewCor2);
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, coronaBase->getTexture());
-			glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
-			glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, corTot2.m);
-			DrawModel(coronaBase->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
-			//Truck
-			mat4 modelViewTruck = T(truck->getPosition().x, truck->getPosition().y, truck->getPosition().z);
-			mat4 truckTot = Mult(camMatrix, Mult(Mult(modelViewTruck, S(3,3,3)), Ry(M_PI/2)));
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, truck->getTexture());
-			glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
-			glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, truckTot.m);
-			DrawModel(truck->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+				velociraptor1->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+				velociraptor2->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+				velociraptor3->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+				velociraptor4->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+				velociraptor5->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+				trex->draw(camMatrix, programObj, 1.0, Ry(M_PI/4));
+				stegos->draw(camMatrix, programObj, 1.0, Ry(-M_PI/4));
+				tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
 	}
 }
 
@@ -302,22 +291,58 @@ void Fundamentals::initobjects(){
 	frame = new Object(initOrigin, frameModel, leatherTex, leatherTex, leatherTex);
 	firstPage = new Object(initFirst, firstModel, grassTex, snowTex, grassTex);
 	secondPage = new Object(initSecond, secondModel, grassTex, snowTex, grassTex);
-	pages = new Object(initOrigin,pagesModel, waterTex, grassTex, snowTex);
+	pages = new Object(initOrigin, pagesModel, waterTex, grassTex, snowTex);
 	book = new Book(toppage, firstPage, secondPage, frame, pages);
+	bookMark = new Object(vec3(-14.0f, 1.0f, 0.0f), bookMarkModel, leatherTex);
+
+	//page 2
+	house = new Object(vec3(-37.0f, 6.9f, 0.0f), houseModel, woodTex);
+	cottage = new Object(vec3(-20.0f, 4.7f, -15.0f), cottageModel, woodTex);
+	cottage1 = new Object(vec3(-26.0f, 4.7f, 13.0f), cottageModel, woodTex);
+	cottage2 = new Object(vec3(7.0f, 5.0f, 11.0f), cottageModel, wood2Tex);
+	elephant = new Object(vec3(-35.0f, 4.2f, 14.0f), elephantModel, leatherTex);
+	elephantbby = new Object(vec3(-33.3f, 3.2f, 13.0f), elephantModel, leatherTex);
+
+ 	pile = new Object(vec3(7.0f, 3.9f, -11.0f), pileModel, woodTex);
+	tree = new Object(vec3(-18.0f, 6.5f, 4.4f), treeModel, grassTex);
+	rosebush = new Object(vec3(7.0f, 4.8f, 4.4f), rosebushModel, bilTex);
+
+	//page 3
+	velociraptor1 = new Object(vec3(-40.0f, 3.8f, -4.0f), velociModel, leatherTex);
+	velociraptor2 = new Object(vec3(-37.6f, 3.85f, -5.2f), velociModel, leatherTex);
+	velociraptor3 = new Object(vec3(-37.3f, 3.8f, -3.3f), velociModel, leatherTex);
+	velociraptor4 = new Object(vec3(-34.0f, 3.78f, -4.9f), velociModel, leatherTex);
+	velociraptor5 = new Object(vec3(-35.0f, 3.8f, -3.0f), velociModel, leatherTex);
+	trex = new Object(vec3(4.0f, 5.3f, -4.0f), trexModel, leatherTex);
+	stegos = new Object(vec3(7.0f, 5.6f, -14.0f), stegosModel, leatherTex);
 }
 
 void Fundamentals::loadmodels(){
 	topModel = LoadModelPlus("../Modeller/booktopreal.obj");
-	firstModel =LoadModelPlus("../Modeller/pagefirst.obj");
+	firstModel = LoadModelPlus("../Modeller/pagefirst.obj");
 	secondModel =LoadModelPlus("../Modeller/pagesecond.obj");
 	frameModel = LoadModelPlus("../Modeller/bookstaticcover.obj");
 	pagesModel = LoadModelPlus("../Modeller/bookstaticpages.obj");
 	coronaModel1 = LoadModelPlus("../Modeller/coronaSimple.obj");
-	coronaModel2 =LoadModelPlus("../Modeller/coronaSimpleBase.obj");
+	coronaModel2 = LoadModelPlus("../Modeller/coronaSimpleBase.obj");
 	carModel = LoadModelPlus("../Modeller/bilskiss.obj");
 	truckModel = LoadModelPlus("../Modeller/LPTruck.obj");
 	boxModel = LoadModelPlus("../Modeller/box.obj");
 	lampModel = LoadModelPlus("../Modeller/box.obj");
+	bookMarkModel = LoadModelPlus("../Modeller/bookmark.obj");
+
+	//page 2
+	houseModel = LoadModelPlus("../Modeller/house3.obj");
+	cottageModel = LoadModelPlus("../Modeller/cottage.obj");
+	elephantModel = LoadModelPlus("../Modeller/elephant.obj");
+	treeModel = LoadModelPlus("../Modeller/tree.obj");
+	rosebushModel = LoadModelPlus("../Modeller/rosebush.obj");
+	pileModel = LoadModelPlus("../Modeller/pile.obj");
+
+	//page 3
+	velociModel = LoadModelPlus("../Modeller/velociraptor.obj");
+	trexModel = LoadModelPlus("../Modeller/trex.obj");
+	stegosModel = LoadModelPlus("../Modeller/stegosaurus.obj");
 }
 
 void Fundamentals::loadtextures(){
@@ -328,6 +353,8 @@ void Fundamentals::loadtextures(){
 	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
 	LoadTGATextureSimple("../textures/bilskissred.tga", &bilTex);
 	LoadTGATextureSimple("../textures/water.tga", &truckTex);
+	LoadTGATextureSimple("../textures/wood.tga", &woodTex);
+	LoadTGATextureSimple("../textures/wood2.tga", &wood2Tex);
 }
 
 void Fundamentals::initshaders(){
@@ -337,7 +364,6 @@ void Fundamentals::initshaders(){
 	mainProg = loadShaders("LightSource.vert", "LightSource.frag");
 	pageShader = loadShaders("pageShader.vert", "pageShader.frag");
 	programObj = loadShaders("obj.vert", "obj.frag");
-	fadeShade = loadShaders("fadeShade.vert", "fadeShade.frag");
 	printError("load shader");
 }
 

@@ -40,6 +40,8 @@ public:
     void updateBoundingBox(mat4 rotation, GLfloat scale);
     vec3 getSize();
 
+    void draw(mat4 camMatrix, GLuint shader, float scale, mat4 rot);
+
     GLfloat getCorrHeightInt(int x, int z);
     GLfloat getRealHeight(GLfloat x, GLfloat z);
 
