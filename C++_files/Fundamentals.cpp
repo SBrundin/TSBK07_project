@@ -275,6 +275,22 @@ void Fundamentals::drawall(){
 	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, backdropTot.m);
 	DrawModel(backdrop->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+	//sun
+	mat4 modelViewSun = T(sun->getPosition().x, sun->getPosition().y, sun->getPosition().z);
+	mat4 sunTot = Mult(camMatrix, modelViewSun);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, sun->getTexture());
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, sunTot.m);
+	DrawModel(sun->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+	//mountain
+	mat4 modelViewMountain = T(mountain->getPosition().x, mountain->getPosition().y, mountain->getPosition().z);
+	mat4 mountainTot = Mult(camMatrix, modelViewMountain);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mountain->getTexture());
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, mountainTot.m);
+	DrawModel(mountain->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 
 	//Car
 	if (book->getCurrentPage() == 2 ){
@@ -324,7 +340,9 @@ void Fundamentals::initobjects(){
 	truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, truckTex);
 	truck->updateBoundingBox(Ry(M_PI/2), 3.0);
 	toppage = new Object(initTop, topModel, leatherTex);
-	backdrop = new Object(vec3(0.0f, 3.0f, 20.0f), backdropModel, grassTex);
+	backdrop = new Object(vec3(-15.0f, 3.0f, -20.0f), backdropModel, grassTex);
+	sun = new Object(vec3(-2.0f, 18.0f, -19.7f), sunModel, sunTex);
+	mountain = new Object(vec3(-7.0f, 7.5f, -19.2f), mountainModel, mountainTex);
 
 	//MULTIPLE TEXTURE OBJECTS, Object(pos, model, tex, texside, texup)
 	frame = new Object(initOrigin, frameModel, leatherTex, leatherTex, leatherTex);
@@ -346,7 +364,9 @@ void Fundamentals::loadmodels(){
 	truckModel = LoadModelPlus("../Modeller/LPTruck.obj");
 	boxModel = LoadModelPlus("../Modeller/box.obj");
 	lampModel = LoadModelPlus("../Modeller/box.obj");
-	backdropModel = LoadModelPlus("../Modeller/octagon.obj");
+	backdropModel = LoadModelPlus("../Modeller/background.obj");
+	sunModel = LoadModelPlus("../Modeller/sun.obj");
+	mountainModel = LoadModelPlus("../Modeller/mountain.obj");
 }
 
 void Fundamentals::loadtextures(){
@@ -357,6 +377,8 @@ void Fundamentals::loadtextures(){
 	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
 	LoadTGATextureSimple("../textures/bilskissred.tga", &bilTex);
 	LoadTGATextureSimple("../textures/water.tga", &truckTex);
+	LoadTGATextureSimple("../textures/water.tga", &sunTex);
+	LoadTGATextureSimple("../textures/Leather2.tga", &mountainTex);
 }
 
 void Fundamentals::initshaders(){

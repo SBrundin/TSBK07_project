@@ -27,7 +27,7 @@ public:
 
 private:
 
-  Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel, *backdropModel;
+  Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel, *backdropModel, *sunModel, *mountainModel;
   Model *skybox[6];
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight;
@@ -35,7 +35,7 @@ private:
   mat4 projectionMatrix, camMatrix, camMat2;
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
   GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
-  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex, truckTex, backdropTex;
+  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex, truckTex, backdropTex, sunTex, mountainTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   vec3 v = {0.0, 1.0, 0.0};
@@ -61,6 +61,8 @@ private:
   Object* lamp;
   Object* box;
   Object* backdrop;
+  Object* sun;
+  Object* mountain;
 
 
 };
