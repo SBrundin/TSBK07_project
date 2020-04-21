@@ -25,4 +25,5 @@ else{
   color = texture(sideTex, ex_TexCoord)*vec4(shade, shade, shade, 1.0);
 }
 out_Color = color;
+out_Color.w = 1.0;
 }
