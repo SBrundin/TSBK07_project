@@ -21,10 +21,12 @@ public:
     void update();
     void loadskybox();
     void initobjects();
-    void drawall();
     mat4 rotate(Object* obj, GLfloat time);
     void fadeOutObjects();
     void fadeInObjects();
+    void drawFirstScene();
+    void drawSecondScene();
+    void drawSkybox();
 
     GLfloat getMyTimer(){
       return _myTime;
@@ -45,7 +47,7 @@ public:
 private:
 
   Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
-  Model *skybox[6];
+  Model *skybox[6], *bookMarkModel;
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight;
     LightHandler *pointLightVec;
@@ -53,6 +55,7 @@ private:
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
   GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
   GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex, truckTex;
+  GLuint woodTex, wood2Tex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   int pointLightIndex;
@@ -68,16 +71,41 @@ private:
   Object* frame;
   Object* firstPage;
   Object* secondPage;
+  Object* bookMark;
+  TextureData skytex[6*3];
+
+  //page 1
   Object* coronaSimple;
   Object* coronaBase;
   Object* truck;
   Book* book;
-  TextureData skytex[6*3];
   Object* lamp;
   Object* box;
-  GLfloat _myTime = 0.0f;  
+  GLfloat _myTime = 0.0f;
 
+  //page 2
+  Object* house;
+  Object* cottage;
+  Object* cottage1;
+  Object* cottage2;
+  Object* elephant;
+  Object* elephantbby;
+  Object* tree;
+  Object* rosebush;
+  Object* pile;
 
+  Model *houseModel, *cottageModel, *elephantModel, *treeModel, *rosebushModel, *pileModel;
+
+  //page 3
+  Object* velociraptor1;
+  Object* velociraptor2;
+  Object* velociraptor3;
+  Object* velociraptor4;
+  Object* velociraptor5;
+  Object* stegos;
+  Object* trex;
+
+  Model *velociModel, *stegosModel, *trexModel;
 };
 
 #endif
