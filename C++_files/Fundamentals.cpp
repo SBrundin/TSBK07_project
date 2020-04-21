@@ -156,7 +156,7 @@ void Fundamentals::loadfiles(){
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
 	glUseProgram(pageShader);
-	glUniformMatrix4fv(glGetUniformLocation(programObj, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+	glUniformMatrix4fv(glGetUniformLocation(pageShader, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 	glUniform1i(glGetUniformLocation(pageShader, "Tex"), 0); // Texture unit 0
 	glUniform1i(glGetUniformLocation(pageShader, "TexUp"), 1);
 	glUniform1i(glGetUniformLocation(pageShader, "sideTex"), 2);
