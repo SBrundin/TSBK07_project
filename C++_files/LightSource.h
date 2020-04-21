@@ -9,6 +9,7 @@ class LightSource
 public:
     LightSource(vec3 position, vec3 colour, float constant, float linear, float quadratic);
 
+
     vec3 getPosition();
     void setPosition(vec3 position);
 
@@ -47,6 +48,12 @@ public:
 
     GLfloat getOuterCutOff();
     void setOuterCutOff(GLfloat oCo);
+    void uploadDirLight(GLuint shader);
+    void updateDirection(GLuint shader, vec3 dir);
+
+
+
+
 
 private:
     vec3 position;

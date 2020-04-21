@@ -31,13 +31,14 @@ private:
   Model *skybox[6];
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight;
-  LightHandler *lightHandler;
+    LightHandler *pointLightVec;
   mat4 projectionMatrix, camMatrix, camMat2;
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
   GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
   GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex, truckTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
+  int pointLightIndex;
   vec3 v = {0.0, 1.0, 0.0};
   vec3 initOrigin = {0.0f, 0.0f, 0.0f};
   vec3 initFirst = {0.0f, 3.0f, 0.0f};

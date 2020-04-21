@@ -8,27 +8,59 @@
 LightHandler::LightHandler()
 {
   amount_of_lights = 0;
-  positionArray = (vec3*)malloc(amount_of_lights*sizeof(vec3));
-  ambientArray = (vec3*)malloc(amount_of_lights*sizeof(vec3));
-  specularArray = (vec3*)malloc(amount_of_lights*sizeof(vec3));
-  diffuseArray = (vec3*)malloc(amount_of_lights*sizeof(vec3));
-  colourArray = (vec3*)malloc(amount_of_lights*sizeof(vec3));
-  constantArray = (int*)malloc(amount_of_lights*sizeof(int));
-  quadraticArray = (int*)malloc(amount_of_lights*sizeof(int));
-  linearArray = (int*)malloc(amount_of_lights*sizeof(int));
 }
 
-int LightHandler::addLight(LightSource *light)
+int LightHandler::addLight(vec3 lightPos,vec3 lightColour,GLfloat constant, GLfloat linear,GLfloat quadratic)
 {
-  amount_of_lights ++;
-  int index = amount_of_lights;
-  vec3 lightColour = light->getColour();
-  colourArray = (vec3*)realloc(colourArray, amount_of_lights*sizeof(vec3));
-  colourArray[index] = lightColour;
+  lightVec.push_back(LightSource(lightPos, lightColour, constant, linear, quadratic));
+  int index = lightVec.size();
+  amount_of_lights = index;
   return index;
 }
 
-vec3 LightHandler::getColourArray()
+/*getColourByIndex(int index, vec3 col)
 {
-  return *colourArray;
+  lightVec.at(index).setColour(col);
+}
+*/
+
+void LightHandler::uploadPointLights(GLuint shader){
+
+  glUniform1f(glGetUniformLocation(shader, "number_of_point_lights"), amount_of_lights);
+
+  for (std::size_t i = 0, max = lightVec.size(); i < max; i ++){
+    //Creates all the strings to shader
+    std::string posString = "pointLight[" + std::to_string(i) + "].position";
+    std::string colString = "pointLight[" + std::to_string(i) + "].colour";
+    std::string ambString = "pointLight[" + std::to_string(i) + "].ambient";
+    std::string diffString = "pointLight[" + std::to_string(i) + "].diffuse";
+    std::string specString = "pointLight[" + std::to_string(i) + "].specular";
+    std::string constString = "pointLight[" + std::to_string(i) + "].constant";
+    std::string linString = "pointLight[" + std::to_string(i) + "].linear";
+    std::string quaString = "pointLight[" + std::to_string(i) + "].quadratic";
+    //Create all variables that shuld go to shader
+    vec3 position = lightVec.at(i).getPosition();
+    vec3 colour = lightVec.at(i).getColour();
+    vec3 ambient = lightVec.at(i).getAmbient();
+    vec3 diffuse = lightVec.at(i).getDiffuse();
+    vec3 specular = lightVec.at(i).getSpecular();
+    GLfloat constant = lightVec.at(i).getConstant();
+    GLfloat linear = lightVec.at(i).getLinear();
+    GLfloat quadratic = lightVec.at(i).getQuadratic();
+    //Sending all the stuff to shader
+    glUniform3fv(glGetUniformLocation(shader, posString.c_str()), 1, &position.x);
+    glUniform3fv(glGetUniformLocation(shader, colString.c_str()), 1, &colour.x);
+    glUniform3fv(glGetUniformLocation(shader, ambString.c_str()), 1, &ambient.x);
+    glUniform3fv(glGetUniformLocation(shader, diffString.c_str()), 1, &diffuse.x);
+    glUniform3fv(glGetUniformLocation(shader, specString.c_str()), 1, &specular.x);
+    glUniform1f(glGetUniformLocation(shader, constString.c_str()), constant);
+    glUniform1f(glGetUniformLocation(shader, linString.c_str()), linear);
+    glUniform1f(glGetUniformLocation(shader, quaString.c_str()), quadratic);
+
+  }
+}
+
+void LightHandler::setPosition(int index, vec3 pos)
+{
+  lightVec.at(index).setPosition(pos);
 }

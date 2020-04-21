@@ -160,6 +160,6 @@ void main(void)
   vec3 dirLights = CalcDirLight(dirLight, norm, viewDirection);
   vec3 spotLights = calcSpotLight(spotLight, norm, fragPos, viewDirection);
 
-  vec3 result = (spotLights)  * vec3( texture( boxTex, exTexCoord ) );
+  vec3 result = (spotLights + dirLights)  * vec3( texture( boxTex, exTexCoord ) );
   colour = vec4(result, 1.0f);//*vec3( texture( boxTex, exTexCoord ) );
 }
