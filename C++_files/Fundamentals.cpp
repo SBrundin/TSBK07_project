@@ -96,7 +96,7 @@ void Fundamentals::loadfiles(){
 
 	///////////////////7Light////////////////////7
 	//lightHandler
-	lightHandler = new LightHandler();
+	pointLightVec = new LightHandler();
 
 	//pointlight
 	lightPos = {1.0f, 3.0f, 0.0f};
@@ -106,10 +106,11 @@ void Fundamentals::loadfiles(){
 	GLfloat quadratic = 0.012;
 	vec3 lightColour = {1.0f, 0.0f, 0.0f};
 	lightSource = new LightSource(lightPos, lightColour, constant, linear, quadratic);
-	int index = lightHandler -> addLight(lightSource);
-	vec3 colourArray = lightHandler->getColourArray();
+	//light_ptr = ;
+	//int index = lightHandler -> addLight(std::make_unique<LightSource>(lightPos, lightColour, constant, linear, quadratic));
+	//vec3 colourArray = lightHandler->getColourArray();
 	//printf(std::to_string(index).c_str());
-	std::cout << index << std::endl;
+	//std::cout << index << std::endl;
 	vec3 ambient = lightSource->getAmbient();
 	vec3 diffuse = lightSource->getDiffuse();
 	vec3 specular = lightSource->getSpecular();
@@ -131,16 +132,8 @@ void Fundamentals::loadfiles(){
 	dirrLight -> setDiffuse({0.4f, 0.4f, 0.4f});
 	dirrLight -> setSpecular({0.5f, 0.5f, 0.5f});
 	dirrLight -> setColour({1.0f, 1.0f, 1.0f});
-	vec3 dirrAmb = dirrLight->getAmbient();
-	vec3 dirrDif = dirrLight->getDiffuse();
-	vec3 dirrSpec = dirrLight->getSpecular();
-	vec3 dirrDirr = dirrLight->getDirection();
-	vec3 dirrColour = dirrLight->getColour();
-	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.ambient"), 1, &dirrAmb.x);
-	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.diffuse"), 1, &dirrDif.x);
-	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.specular"), 1, &dirrSpec.x);
-	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.direction"), 1, &dirrDirr.x);
-	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.colour"), 1, &dirrColour.x);
+	dirrLight -> uploadDirLight(mainProg);
+	dirrLight -> updateDirection(mainProg, {1.0f, 0.5f, 0.5f});
 
 	//spotLight
 	spotLight = new LightSource(lightPos, lightColour, constant, linear, quadratic);
@@ -285,7 +278,7 @@ void Fundamentals::update(){
 
 
 	//draw scene
-	glUseProgram(programObj);
+
 
 
 	//Car
@@ -296,7 +289,10 @@ void Fundamentals::update(){
 	glBindTexture(GL_TEXTURE_2D, car->getTexture());
 	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, carTot.m);
+	glUniformMatrix4fv(glGetUniformLocation(mainProg, "model"), 1, GL_TRUE, modelViewCar.m);
 	DrawModel(car->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
+	glUseProgram(programObj);
 
 	GLfloat coronaSimpleY = pageBent->getRealHeight(coronaSimple->getPosition().x, coronaSimple->getPosition().z);
 
