@@ -15,12 +15,20 @@ public:
     void makeRotation(GLfloat timer, GLuint page, mat4 camMatrix, GLuint shader, char button);
     mat4 generateRotationMat(vec3 rotationAxis, GLfloat time);
 
-    void setBool(){
-      _bool = !_bool;
+    void setRotationBool(){
+      _rotationBool = !_rotationBool;
     }
 
-    bool getBool(){
-      return _bool;
+    bool getRotationBool(){
+      return _rotationBool;
+    }
+
+    void setFadeBool(){
+      _fadeBool = !_fadeBool;
+    }
+
+    bool getFadeBool(){
+      return _fadeBool;
     }
 
     GLuint getCurrentPage(){
@@ -36,6 +44,19 @@ public:
       return _timer;
     }
 
+    void setTimer(GLfloat t){
+      _timer = t;
+    }
+
+    void increaseTimer(GLfloat t){
+      _timer += t;
+    }
+
+    void decreaseTimer(GLfloat t){
+      _timer -= t;
+    }
+
+
 
 private:
     Object* _frame;
@@ -50,7 +71,8 @@ private:
     vec3 _rotationAxis = {-15.0f, -0.25f, 0.0f};
     GLuint _currentPage;
     GLuint _pageNbr;
-    bool _bool;
+    bool _rotationBool;
+    bool _fadeBool;
     GLfloat _timer = 0;
     char _buttonPressed;
 };

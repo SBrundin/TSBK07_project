@@ -23,6 +23,25 @@ public:
     void initobjects();
     void drawall();
     mat4 rotate(Object* obj, GLfloat time);
+    void fadeOutObjects();
+    void fadeInObjects();
+
+    GLfloat getMyTimer(){
+      return _myTime;
+    }
+
+    void setMyTimer(GLfloat t){
+      _myTime = t;
+    }
+
+    void increaseMyTimer(GLfloat t){
+      _myTime += t;
+    }
+
+    void decreaseMyTimer(GLfloat t){
+      _myTime -= t;
+    }
+
 
 
 private:
@@ -60,6 +79,7 @@ private:
   TextureData skytex[6*3];
   Object* lamp;
   Object* box;
+  GLfloat _myTime;
 
 
 };

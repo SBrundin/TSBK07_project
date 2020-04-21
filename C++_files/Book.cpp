@@ -15,7 +15,9 @@ Book::Book(Object* top, Object* firstPage, Object* secondPage, Object* frame, Ob
   _secondPage = secondPage;
   _pages = pages;
   _currentPage = 1;
-  _bool = false;
+  _rotationBool = false;
+  _fadeBool = false;
+  _timer = 0;
 }
 
 void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
@@ -42,19 +44,21 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   }
 
 
-  if (glutKeyIsDown('n') && getBool() == false && _currentPage != 3)
+  if (glutKeyIsDown('n') && getRotationBool() == false && _currentPage != 3)
     {
-      _timer = 0;
-      setBool();
+      //_timer = 0;
+      setRotationBool();
+      setFadeBool();
       _buttonPressed = 'l';
     }
-  if (glutKeyIsDown('m') && getBool() == false && _currentPage != 1)
+  if (glutKeyIsDown('m') && getRotationBool() == false && _currentPage != 1)
       {
-        _timer = 0;
-        setBool();
+        //_timer = 0;
+        setRotationBool();
+        setFadeBool();
         _buttonPressed = 'r';
       }
-  if (getBool() == true) {
+  if ((getRotationBool() == true) && !getFadeBool()) {
 
       //EXECUTES THE ROTATION
       makeRotation(_timer, _currentPage, camMatrix, shader, _buttonPressed);
@@ -173,7 +177,7 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
   }
   else if(timer > 3.13 && currentPage == 1 && button == 'l'){
     _top->setPosition(_topPosOpen);
-    setBool();
+    setRotationBool();
     _currentPage++;
     _timer = 0;
   }
@@ -187,7 +191,7 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
 
   else if (timer > 3.13 && currentPage == 2 && button == 'r'){
     _top->setPosition(_topPos);
-    setBool();
+    setRotationBool();
     _currentPage--;
     _timer = 0;
   }
@@ -200,7 +204,7 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
   }
   else if(timer > 2.5 && currentPage == 2 && button == 'l' ){
     _firstPage->setPosition(_firstOpen);
-    setBool();
+    setRotationBool();
     _currentPage++;
     _timer = 0;
   }
@@ -216,7 +220,7 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
 
   else if (timer > 3.13 && currentPage == 3 && button == 'r'){
     _firstPage->setPosition(_firstPos);
-    setBool();
+    setRotationBool();
     _currentPage--;
     _timer = 0;
   }

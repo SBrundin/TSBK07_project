@@ -28,6 +28,7 @@ void Fundamentals::loadfiles(){
 	//init matrices
 	camMatrix = camera->getCamMatrix();
 	projectionMatrix = camera->getProj_matrix();
+	setMyTimer(0.0);
 	//init shaders
 	initshaders();
 	//Load textures
@@ -36,36 +37,6 @@ void Fundamentals::loadfiles(){
 	loadmodels();
 	//Create Objects
 	initobjects();
-	// topModel = LoadModelPlus("../Modeller/booktopreal.obj");
-	// firstModel =LoadModelPlus("../Modeller/pagefirst.obj");
-	// secondModel =LoadModelPlus("../Modeller/pagesecond.obj");
-	// frameModel = LoadModelPlus("../Modeller/bookstaticcover.obj");
-	// pagesModel = LoadModelPlus("../Modeller/bookstaticpages.obj");
-	// coronaModel1 = LoadModelPlus("../Modeller/coronaSimple.obj");
-	// coronaModel2 =LoadModelPlus("../Modeller/coronaSimpleBase.obj");
-	// carModel = LoadModelPlus("../Modeller/bilskiss.obj");
-	// truckModel = LoadModelPlus("../Modeller/LPTruck.obj");
-	// boxModel = LoadModelPlus("../Modeller/box.obj");
-	// lampModel = LoadModelPlus("../Modeller/box.obj");
-
-	// //SIMPLE OBJECTS
-	// box = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, grassTex);
-	// lamp = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, snowTex);
-	// car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
-	// coronaSimple = new Object(vec3(0.0f, 4.0f, 5.0f), coronaModel1, snowTex);
-	// coronaBase = new Object(vec3(5.0f, 4.0f, 0.0f), coronaModel2, grassTex);
-	// car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
-	// truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, truckTex);
-	// truck->updateBoundingBox(Ry(M_PI/2), 3.0);
-	// toppage = new Object(initTop, topModel, leatherTex);
-	//
-	// //MULTIPLE TEXTURE OBJECTS, Object(pos, model, tex, texside, texup)
-	// frame = new Object(initOrigin, frameModel, leatherTex, leatherTex, leatherTex);
-	// firstPage = new Object(initFirst, firstModel, grassTex, snowTex, grassTex);
-	// secondPage = new Object(initSecond, secondModel, grassTex, snowTex, grassTex);
-	// pages = new Object(initOrigin,pagesModel, waterTex, grassTex, snowTex);
-	// book = new Book(toppage, firstPage, secondPage, frame, pages);
-
 	//lamp
 	lampLight = new Lamp(lamp);
 	lampLight -> setColour(vec3 {1.0f, 1.0f, 1.0f});
@@ -266,9 +237,20 @@ void Fundamentals::drawall(){
 	book->draw(camMatrix, pageShader, t);
 	//draw scene
 	glUseProgram(programObj);
+	//glUniform1f(glGetUniformLocation(programObj, "timer"), 1-getMyTimer());
 
 	//Car
-	if (book->getCurrentPage() == 2 ){
+	if (book->getCurrentPage() == 1 && book->getFadeBool()){
+				book->setFadeBool();
+			}
+
+	if (book->getCurrentPage() == 2){
+		if (book->getFadeBool()){
+				fadeOutObjects();
+			}
+			else{
+				fadeInObjects();
+			}
 		mat4 modelViewCar = T(car->getPosition().x, car->getPosition().y, car->getPosition().z);
 		mat4 carTot = Mult(camMatrix, modelViewCar);
 		glActiveTexture(GL_TEXTURE0);
@@ -276,30 +258,38 @@ void Fundamentals::drawall(){
 		glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
 		glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, carTot.m);
 		DrawModel(car->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
-		GLfloat coronaSimpleY = firstPage->getRealHeight(coronaSimple->getPosition().x, coronaSimple->getPosition().z);
-		//std::cout << coronaSimpleY << '\n';
-		mat4 modelViewCor1 = T(coronaSimple->getPosition().x, coronaSimpleY, coronaSimple->getPosition().z);
-		mat4 corTot1 = Mult(camMatrix, modelViewCor1);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, coronaSimple->getTexture());
-		glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
-		glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, corTot1.m);
-		DrawModel(coronaSimple->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
-		mat4 modelViewCor2 = T(coronaBase->getPosition().x, coronaBase->getPosition().y, coronaBase->getPosition().z);
-		mat4 corTot2 = Mult(camMatrix, modelViewCor2);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, coronaBase->getTexture());
-		glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
-		glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, corTot2.m);
-		DrawModel(coronaBase->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
-		//Truck
-		mat4 modelViewTruck = T(truck->getPosition().x, truck->getPosition().y, truck->getPosition().z);
-		mat4 truckTot = Mult(camMatrix, Mult(Mult(modelViewTruck, S(3,3,3)), Ry(M_PI/2)));
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, truck->getTexture());
-		glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
-		glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, truckTot.m);
-		DrawModel(truck->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+	}
+
+	else if (book->getCurrentPage() == 3){
+		if (book->getFadeBool()){
+					fadeOutObjects();
+				}
+				else{
+					fadeInObjects();
+				}
+			GLfloat coronaSimpleY = firstPage->getRealHeight(coronaSimple->getPosition().x, coronaSimple->getPosition().z);
+			mat4 modelViewCor1 = T(coronaSimple->getPosition().x, coronaSimpleY, coronaSimple->getPosition().z);
+			mat4 corTot1 = Mult(camMatrix, modelViewCor1);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, coronaSimple->getTexture());
+			glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+			glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, corTot1.m);
+			DrawModel(coronaSimple->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+			mat4 modelViewCor2 = T(coronaBase->getPosition().x, coronaBase->getPosition().y, coronaBase->getPosition().z);
+			mat4 corTot2 = Mult(camMatrix, modelViewCor2);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, coronaBase->getTexture());
+			glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+			glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, corTot2.m);
+			DrawModel(coronaBase->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+			//Truck
+			mat4 modelViewTruck = T(truck->getPosition().x, truck->getPosition().y, truck->getPosition().z);
+			mat4 truckTot = Mult(camMatrix, Mult(Mult(modelViewTruck, S(3,3,3)), Ry(M_PI/2)));
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, truck->getTexture());
+			glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+			glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, truckTot.m);
+			DrawModel(truck->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 	}
 }
 
@@ -354,8 +344,37 @@ void Fundamentals::initshaders(){
 	mainProg = loadShaders("LightSource.vert", "LightSource.frag");
 	pageShader = loadShaders("pageShader.vert", "pageShader.frag");
 	programObj = loadShaders("obj.vert", "obj.frag");
+	fadeShade = loadShaders("fadeShade.vert", "fadeShade.frag");
 	printError("load shader");
 }
+
+void Fundamentals::fadeOutObjects(){
+
+	GLfloat timer = getMyTimer();
+	glUniform1f(glGetUniformLocation(programObj, "timer"), timer);
+	decreaseMyTimer(0.01);
+
+	if (timer <= 0){
+		book -> setFadeBool();
+	}
+
+}
+
+void Fundamentals::fadeInObjects(){
+	if (!book->getRotationBool()){
+		GLfloat timer = getMyTimer();
+		timer = timer;
+		glUniform1f(glGetUniformLocation(programObj, "timer"), timer);
+
+		if (timer <= 1){
+			increaseMyTimer(0.01);
+		}
+	}
+	else {
+		setMyTimer(0.0);
+	}
+}
+
 
 void Fundamentals::loadskybox(){
 	//glActiveTexture(GL_TEXTURE0);
