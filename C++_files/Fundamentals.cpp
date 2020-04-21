@@ -77,7 +77,7 @@ void Fundamentals::loadfiles(){
 
 	///////////////////7Light////////////////////7
 	//lightHandler
-	lightHandler = new LightHandler();
+	pointLightVec = new LightHandler();
 
 	//pointlight
 	lightPos = {1.0f, 3.0f, 0.0f};
@@ -87,10 +87,11 @@ void Fundamentals::loadfiles(){
 	GLfloat quadratic = 0.012;
 	vec3 lightColour = {1.0f, 0.0f, 0.0f};
 	lightSource = new LightSource(lightPos, lightColour, constant, linear, quadratic);
-	int index = lightHandler -> addLight(lightSource);
-	vec3 colourArray = lightHandler->getColourArray();
+	//light_ptr = ;
+	//int index = lightHandler -> addLight(std::make_unique<LightSource>(lightPos, lightColour, constant, linear, quadratic));
+	//vec3 colourArray = lightHandler->getColourArray();
 	//printf(std::to_string(index).c_str());
-	std::cout << index << std::endl;
+	//std::cout << index << std::endl;
 	vec3 ambient = lightSource->getAmbient();
 	vec3 diffuse = lightSource->getDiffuse();
 	vec3 specular = lightSource->getSpecular();
@@ -112,16 +113,8 @@ void Fundamentals::loadfiles(){
 	dirrLight -> setDiffuse({0.4f, 0.4f, 0.4f});
 	dirrLight -> setSpecular({0.5f, 0.5f, 0.5f});
 	dirrLight -> setColour({1.0f, 1.0f, 1.0f});
-	vec3 dirrAmb = dirrLight->getAmbient();
-	vec3 dirrDif = dirrLight->getDiffuse();
-	vec3 dirrSpec = dirrLight->getSpecular();
-	vec3 dirrDirr = dirrLight->getDirection();
-	vec3 dirrColour = dirrLight->getColour();
-	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.ambient"), 1, &dirrAmb.x);
-	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.diffuse"), 1, &dirrDif.x);
-	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.specular"), 1, &dirrSpec.x);
-	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.direction"), 1, &dirrDirr.x);
-	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.colour"), 1, &dirrColour.x);
+	dirrLight -> uploadDirLight(mainProg);
+	dirrLight -> updateDirection(mainProg, {1.0f, 0.5f, 0.5f});
 
 	//spotLight
 	spotLight = new LightSource(lightPos, lightColour, constant, linear, quadratic);
@@ -156,7 +149,7 @@ void Fundamentals::loadfiles(){
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
 	glUseProgram(pageShader);
-	glUniformMatrix4fv(glGetUniformLocation(programObj, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+	glUniformMatrix4fv(glGetUniformLocation(pageShader, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 	glUniform1i(glGetUniformLocation(pageShader, "Tex"), 0); // Texture unit 0
 	glUniform1i(glGetUniformLocation(pageShader, "TexUp"), 1);
 	glUniform1i(glGetUniformLocation(pageShader, "sideTex"), 2);
@@ -265,10 +258,12 @@ void Fundamentals::drawall(){
 	//Draw complete book
 	book->draw(camMatrix, pageShader, t);
 	//draw scene
-	glUseProgram(programObj);
+
 
 	//Car
+	glUseProgram(programObj);
 	if (book->getCurrentPage() == 2 ){
+
 		mat4 modelViewCar = T(car->getPosition().x, car->getPosition().y, car->getPosition().z);
 		mat4 carTot = Mult(camMatrix, modelViewCar);
 		glActiveTexture(GL_TEXTURE0);
@@ -400,6 +395,7 @@ void Fundamentals::loadskybox(){
 		LoadTGATexture(skytextures[i].c_str(), &skytex[i]);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 	};
 
 	for (unsigned int i = 0; i < 6; i++)

@@ -6,8 +6,8 @@
 
 LightSource::LightSource(vec3 position, vec3 col, GLfloat constant, GLfloat linear, GLfloat quadratic)
 {
-    ambient = {0.2f, 0.2f, 0.2f};//This is also where you set the colour
-    diffuse = {0.5f, 0.5f, 0.5f}; //This is where you set the colour
+    ambient = {0.2f, 0.2f, 0.2f};
+    diffuse = {0.5f, 0.5f, 0.5f}; 
     specular = {1.0f, 1.0f, 1.0f};
     direction = {-0.2f, -1.0f, -0.3f};
     colour = col;
@@ -144,4 +144,20 @@ void LightSource::setOuterCutOff(GLfloat oCo)
 GLfloat LightSource::getOuterCutOff()
 {
   return outerCutOff;
+}
+
+void LightSource::uploadDirLight(GLuint shader)
+{
+  glUniform3fv(glGetUniformLocation(shader, "dirLight.ambient"), 1, &ambient.x);
+  glUniform3fv(glGetUniformLocation(shader, "dirLight.diffuse"), 1, &diffuse.x);
+  glUniform3fv(glGetUniformLocation(shader, "dirLight.specular"), 1, &specular.x);
+  glUniform3fv(glGetUniformLocation(shader, "dirLight.direction"), 1, &direction.x);
+  glUniform3fv(glGetUniformLocation(shader, "dirLight.colour"), 1, &colour.x);
+}
+
+void LightSource::updateDirection(GLuint shader, vec3 dir)
+{
+  direction = dir;
+  glUniform3fv(glGetUniformLocation(shader, "dirLight.direction"), 1, &direction.x);
+
 }
