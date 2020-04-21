@@ -42,8 +42,6 @@ public:
       _myTime -= t;
     }
 
-
-
 private:
 
   Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
@@ -59,9 +57,6 @@ private:
   GLfloat viewY = 0.5;
   int pointLightIndex;
   vec3 v = {0.0, 1.0, 0.0};
-  vec3 initOrigin = {0.0f, 0.0f, 0.0f};
-  vec3 initFirst = {0.21f, 3.133f, 0.0f};
-  vec3 initSecond = {0.06f, 2.78f, 0.0f};
   vec3 initTop = {0.435f, 3.625f, 0.0f};
   vec3 rotationAxis = {-14.565f, 0.0f, 0.0f};
   bool cameraCollisionFlag = false;
@@ -80,7 +75,7 @@ private:
   TextureData skytex[6*3];
   Object* lamp;
   Object* box;
-  GLfloat _myTime;
+  GLfloat _myTime = 0.0f;  
 
 
 };

@@ -68,6 +68,7 @@ private:
     vec3 _topPos = {0.435f, 3.625f, 0.0f};
     vec3 _topPosOpen = {-29.565f, 2.375f, 0.0f};
     vec3 _firstOpen = {-29.065f, 2.768f, 0.0f};
+    vec3 _secondPos = {0.06f, 2.78f, 0.0f};
     vec3 _rotationAxis = {-14.565f, -0.25f, 0.0f};
     GLuint _currentPage;
     GLuint _pageNbr;

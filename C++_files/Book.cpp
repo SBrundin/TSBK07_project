@@ -18,6 +18,9 @@ Book::Book(Object* top, Object* firstPage, Object* secondPage, Object* frame, Ob
   _rotationBool = false;
   _fadeBool = false;
   _timer = 0;
+  _top->setPosition(_topPos);
+  _firstPage->setPosition(_firstPos);
+  _secondPage->setPosition(_secondPos);
 }
 
 void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
@@ -43,21 +46,20 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());
   }
 
-
   if (glutKeyIsDown('n') && getRotationBool() == false && _currentPage != 3)
     {
-      //_timer = 0;
       setRotationBool();
       setFadeBool();
       _buttonPressed = 'l';
     }
+
   if (glutKeyIsDown('m') && getRotationBool() == false && _currentPage != 1)
       {
-        //_timer = 0;
         setRotationBool();
         setFadeBool();
         _buttonPressed = 'r';
       }
+
   if ((getRotationBool() == true) && !getFadeBool()) {
 
       //EXECUTES THE ROTATION

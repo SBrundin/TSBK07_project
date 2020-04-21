@@ -28,7 +28,6 @@ void Fundamentals::loadfiles(){
 	//init matrices
 	camMatrix = camera->getCamMatrix();
 	projectionMatrix = camera->getProj_matrix();
-	setMyTimer(0.0);
 	//init shaders
 	initshaders();
 	//Load textures
@@ -145,7 +144,7 @@ void Fundamentals::cameraCollision(){
 }
 
 void Fundamentals::update(){
-	Fundamentals::cameraCollision();
+	cameraCollision();
 	camMatrix = camera->getCamMatrix();
   t = (GLfloat)glutGet(GLUT_ELAPSED_TIME);
   t = t/1000;
@@ -296,13 +295,13 @@ void Fundamentals::initobjects(){
 	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
 	truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, truckTex);
 	truck->updateBoundingBox(Ry(M_PI/2), 3.0);
-	toppage = new Object(initTop, topModel, leatherTex);
+	toppage = new Object(topModel, leatherTex);
 
 	//MULTIPLE TEXTURE OBJECTS, Object(pos, model, tex, texside, texup)
-	frame = new Object(initOrigin, frameModel, leatherTex, leatherTex, leatherTex);
-	firstPage = new Object(initFirst, firstModel, grassTex, snowTex, grassTex);
-	secondPage = new Object(initSecond, secondModel, grassTex, snowTex, grassTex);
-	pages = new Object(initOrigin,pagesModel, waterTex, grassTex, snowTex);
+	frame = new Object(frameModel, leatherTex, leatherTex, leatherTex);
+	firstPage = new Object(firstModel, grassTex, snowTex, grassTex);
+	secondPage = new Object(secondModel, grassTex, snowTex, grassTex);
+	pages = new Object(pagesModel, waterTex, grassTex, snowTex);
 	book = new Book(toppage, firstPage, secondPage, frame, pages);
 }
 
