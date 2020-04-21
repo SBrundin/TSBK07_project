@@ -27,7 +27,7 @@ public:
 
 private:
 
-  Model *bottomModel, *backModel, *topModel, *straightPageModel, *bentPageModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel, *bookModel;
+  Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
   Model *skybox[6];
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight;
@@ -39,23 +39,20 @@ private:
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   vec3 v = {0.0, 1.0, 0.0};
-  vec3 nullVec = {0.0f, 0.0f, 0.0f};
-  vec3 backPos = {-15.17f, 2.5f, 0.0f};
-  vec3 bentPos = {0.0f, 5.0f, 0.0f};
-  vec3 straightPos = {0.0f, 4.3f, 0.0f};
-  vec3 topPos = {0.0f, 5.3f, 0.0f};
+  vec3 initOrigin = {0.0f, 0.0f, 0.0f};
+  vec3 initFirst = {0.0f, 3.0f, 0.0f};
+  vec3 initSecond = {0.0f, 2.6f, 0.0f};
+  vec3 initTop = {0.4f, 3.6f, 0.0f};
   vec3 rotationAxis = {-15.0f, 0.0f, 0.0f};
-  vec3 p1 = {-15.0f, 5.3f, -10.0f};
-  vec3 p2 = {-15.0f, 5.3f, 10.0f};
   bool cameraCollisionFlag = false;
   GLfloat t;
   Camera* camera;
   Object* car;
-  Object* bookback;
   Object* toppage;
-  Object* bottompage;
-  Object* pageStraight;
-  Object* pageBent;
+  Object* pages;
+  Object* frame;
+  Object* firstPage;
+  Object* secondPage;
   Object* coronaSimple;
   Object* coronaBase;
   Object* truck;
@@ -63,7 +60,7 @@ private:
   TextureData skytex[6*3];
   Object* lamp;
   Object* box;
-  Object* staticBook;
+
 
 };
 
