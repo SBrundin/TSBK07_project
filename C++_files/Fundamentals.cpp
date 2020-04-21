@@ -84,11 +84,11 @@ void Fundamentals::loadfiles(){
 	lightPos = lamp->getPosition();
 	GLfloat constant = 1.0f;//liten betyder starkt
 	GLfloat linear = 0.09;
-	GLfloat quadratic = 0.012;
-	vec3 lightColour = {1.0f, 0.0f, 0.0f};
+	GLfloat quadratic = 0.022;
+	vec3 lightColour = {0.4f, 0.9f, 0.5f};
 	lightSource = new LightSource(lightPos, lightColour, constant, linear, quadratic);
 	//light_ptr = ;
-	//int index = lightHandler -> addLight(std::make_unique<LightSource>(lightPos, lightColour, constant, linear, quadratic));
+	pointLightIndex = pointLightVec -> addLight(lightPos, lightColour, constant, linear, quadratic);
 	//vec3 colourArray = lightHandler->getColourArray();
 	//printf(std::to_string(index).c_str());
 	//std::cout << index << std::endl;
@@ -105,6 +105,15 @@ void Fundamentals::loadfiles(){
 	glUniform1f(glGetUniformLocation(mainProg, "pointLight.constant" ), constant);
 	glUniform1f(glGetUniformLocation(mainProg, "pointLight.lineart" ), linear);
 	glUniform1f(glGetUniformLocation(mainProg, "pointLight.quadratic" ), quadratic);
+	/*
+	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[0].colour"), 1, &lightColour.x);
+	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[0].ambient"), 1, &ambient.x);
+	glUniform3fv(glGetUniformLocation(mainProg,  "pointLightz[0].diffuse"), 1, &diffuse.x);
+	glUniform3fv(glGetUniformLocation(mainProg,  "pointLightz[0].specular"), 1, &specular.x);
+	glUniform1f(glGetUniformLocation(mainProg,  "pointLightz[0].constant"), constant);
+	glUniform1f(glGetUniformLocation(mainProg, "pointLightz[0].linear"), linear);
+	glUniform1f(glGetUniformLocation(mainProg, "pointLightz[0].quadratic"), quadratic);*/
+	//pointLightVec -> uploadPointLights(mainProg);
 	printError("init shader5");
 
 	//directional lightDi
@@ -194,21 +203,24 @@ void Fundamentals::update(){
 	//vec3 newPos = {4.0f, 4.0f, 4.0f};
 	//lamp->setPosition(newPos);
 	mat4 scale = S(5,5,5);
-	lamp->setPosition(initTop*3*sin(t));
+	lamp->setPosition(v*3*sin(t));
 	mat4 lampTot = T(lamp->getPosition().x, lamp->getPosition().y, lamp->getPosition().z );
 	lampTot = Mult(camMatrix, Mult(scale, lampTot));
 	glUniformMatrix4fv(glGetUniformLocation(lampProg, "mdlMatrix"), 1, GL_TRUE, lampTot.m);
 	DrawModel(lamp->getModel(), lampProg, "inPosition", NULL, NULL);
 	//object
 	glUseProgram(mainProg);
+	glUniformMatrix4fv(glGetUniformLocation(mainProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 	scale = S(6,6,6);
 	//pointLight
 	vec3 viewPos = {camera-> getPosition().x, camera-> getPosition().y, camera-> getPosition().z};
-	spotLight->setPosition(initTop*3*sin(t));
+	spotLight->setPosition(v*10*sin(t));
+	//pointLightVec -> setPosition(pointLightIndex, v*10*sin(t));
+	pointLightVec -> uploadPointLights(mainProg);
+	lightSource->setPosition(v*10*sin(t));
 	lightPos = spotLight-> getPosition();
-	//lightSource->setColour({0.2f, 0.8f*sin(t*5), 0.4f});
-	//vec3 pointColour = lightSource->getColour();
-	//glUniform3fv(glGetUniformLocation(mainProg, "pointLight.colour"), 1, &pointColour.x);
+	vec3 lightPosPoint = lightSource-> getPosition();
+	glUniform3fv(glGetUniformLocation(mainProg, "pointLight.position"), 1, &lightPosPoint.x);
 	//dirLight
 	dirrLight->setDirection( {-0.5f, -0.5f, -0.5});
 	vec3 dirrDirr = dirrLight->getDirection();

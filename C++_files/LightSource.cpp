@@ -6,8 +6,8 @@
 
 LightSource::LightSource(vec3 position, vec3 col, GLfloat constant, GLfloat linear, GLfloat quadratic)
 {
-    ambient = {0.2f, 0.2f, 0.2f};
-    diffuse = {0.5f, 0.5f, 0.5f}; 
+    ambient = {0.5f, 0.5f, 0.5f};
+    diffuse = {1.0f, 1.0f, 1.0f};
     specular = {1.0f, 1.0f, 1.0f};
     direction = {-0.2f, -1.0f, -0.3f};
     colour = col;

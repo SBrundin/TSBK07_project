@@ -1,5 +1,6 @@
 #version 150
 
+#define NUMBER_OF_POINT_LIGHTS 1
 struct PointLight
 {
    vec3 position;
@@ -50,7 +51,9 @@ in vec3 fragPos;
 
 // Uniform
 uniform vec3 viewPos;
+uniform int number_of_point_lights;
 uniform PointLight pointLight;
+uniform PointLight pointLightz[NUMBER_OF_POINT_LIGHTS];
 uniform DirLight dirLight;
 uniform SpotLight spotLight;
 uniform sampler2D boxTex;
@@ -155,11 +158,15 @@ void main(void)
 {
   vec3 norm = normalize(normal);
   vec3 viewDirection = normalize(viewPos - fragPos);
+  vec3 res = vec3(0.0f,0.0f,0.0f);
+  for ( int i= 0; i < number_of_point_lights; i++){
+     res = calcPointLight(pointLightz[i], norm, fragPos, viewDirection);
+  }
 
   vec3 pointLights = calcPointLight(pointLight, norm, fragPos, viewDirection);//*lightColour;
   vec3 dirLights = CalcDirLight(dirLight, norm, viewDirection);
   vec3 spotLights = calcSpotLight(spotLight, norm, fragPos, viewDirection);
 
-  vec3 result = (spotLights + dirLights)  * vec3( texture( boxTex, exTexCoord ) );
+  vec3 result = ( res )  * vec3( texture( boxTex, exTexCoord ) );
   colour = vec4(result, 1.0f);//*vec3( texture( boxTex, exTexCoord ) );
 }
