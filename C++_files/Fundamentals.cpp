@@ -292,6 +292,14 @@ void Fundamentals::drawall(){
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, mountainTot.m);
 	DrawModel(mountain->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 
+	mat4 modelViewCloud = T(cloud->getPosition().x, cloud->getPosition().y, cloud->getPosition().z);
+	mat4 cloudTot = Mult(camMatrix, modelViewCloud);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, cloud->getTexture());
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, cloudTot.m);
+	DrawModel(cloud->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
 	//Car
 	if (book->getCurrentPage() == 2 ){
 		mat4 modelViewCar = T(car->getPosition().x, car->getPosition().y, car->getPosition().z);
@@ -343,6 +351,7 @@ void Fundamentals::initobjects(){
 	backdrop = new Object(vec3(-15.0f, 3.0f, -20.0f), backdropModel, grassTex);
 	sun = new Object(vec3(-2.0f, 18.0f, -19.7f), sunModel, sunTex);
 	mountain = new Object(vec3(-7.0f, 7.5f, -19.2f), mountainModel, mountainTex);
+	cloud = new Object(vec3(-27.0f, 15.0f, -19.2f), cloudModel, cloudTex);
 
 	//MULTIPLE TEXTURE OBJECTS, Object(pos, model, tex, texside, texup)
 	frame = new Object(initOrigin, frameModel, leatherTex, leatherTex, leatherTex);
@@ -367,6 +376,7 @@ void Fundamentals::loadmodels(){
 	backdropModel = LoadModelPlus("../Modeller/background.obj");
 	sunModel = LoadModelPlus("../Modeller/sun.obj");
 	mountainModel = LoadModelPlus("../Modeller/mountain.obj");
+	cloudModel = LoadModelPlus("../Modeller/cloud.obj");
 }
 
 void Fundamentals::loadtextures(){
@@ -379,6 +389,7 @@ void Fundamentals::loadtextures(){
 	LoadTGATextureSimple("../textures/water.tga", &truckTex);
 	LoadTGATextureSimple("../textures/water.tga", &sunTex);
 	LoadTGATextureSimple("../textures/Leather2.tga", &mountainTex);
+	LoadTGATextureSimple("../textures/water.tga", &cloudTex);
 }
 
 void Fundamentals::initshaders(){
