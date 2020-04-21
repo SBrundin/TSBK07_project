@@ -30,16 +30,10 @@ void Fundamentals::loadfiles(){
 	camMatrix = camera->getCamMatrix();
 	projectionMatrix = camera->getProj_matrix();
 
-	//INIT SHADERS
+	//INIT
 	initshaders();
-
-	//LOAD TEXTURES
 	loadtextures();
-
-	//LOAD MODELS
 	loadmodels();
-
-	//CREATE OBJECTS
 	initobjects();
 
 	glUseProgram(program);
@@ -229,7 +223,6 @@ void Fundamentals::fadeOutObjects(){
 	if (timer <= 0){
 		book -> setFadeBool();
 	}
-
 }
 
 void Fundamentals::fadeInObjects(){
