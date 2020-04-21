@@ -43,11 +43,11 @@ private:
     Object* _firstPage;
     Object* _secondPage;
     Object* _pages;
-    vec3 _firstPos = {0.0f, 3.0f, 0.0f};
-    vec3 _topPos = {0.4f, 3.6f, 0.0f};
-    vec3 _topPosOpen = {-29.4f, 2.8f, 0.0f};
-    vec3 _firstOpen = {-29.2f, 3.0f, 0.0f};
-    vec3 _rotationAxis = {-15.0f, -0.25f, 0.0f};
+    vec3 _firstPos = {0.21f, 3.133f, 0.0f};
+    vec3 _topPos = {0.435f, 3.625f, 0.0f};
+    vec3 _topPosOpen = {-29.565f, 2.375f, 0.0f};
+    vec3 _firstOpen = {-29.065f, 2.768f, 0.0f};
+    vec3 _rotationAxis = {-14.565f, -0.25f, 0.0f};
     GLuint _currentPage;
     GLuint _pageNbr;
     bool _bool;

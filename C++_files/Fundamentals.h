@@ -41,10 +41,10 @@ private:
   int pointLightIndex;
   vec3 v = {0.0, 1.0, 0.0};
   vec3 initOrigin = {0.0f, 0.0f, 0.0f};
-  vec3 initFirst = {0.0f, 3.0f, 0.0f};
-  vec3 initSecond = {0.0f, 2.6f, 0.0f};
-  vec3 initTop = {0.4f, 3.6f, 0.0f};
-  vec3 rotationAxis = {-15.0f, 0.0f, 0.0f};
+  vec3 initFirst = {0.21f, 3.133f, 0.0f};
+  vec3 initSecond = {0.06f, 2.78f, 0.0f};
+  vec3 initTop = {0.435f, 3.625f, 0.0f};
+  vec3 rotationAxis = {-14.565f, 0.0f, 0.0f};
   bool cameraCollisionFlag = false;
   GLfloat t;
   Camera* camera;
