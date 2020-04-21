@@ -267,6 +267,15 @@ void Fundamentals::drawall(){
 	//draw scene
 	glUseProgram(programObj);
 
+	//Backdrop
+	mat4 modelViewBackdrop = T(backdrop->getPosition().x, backdrop->getPosition().y, backdrop->getPosition().z);
+	mat4 backdropTot = Mult(camMatrix, modelViewBackdrop);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, backdrop->getTexture());
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, backdropTot.m);
+	DrawModel(backdrop->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
 	//Car
 	if (book->getCurrentPage() == 2 ){
 		mat4 modelViewCar = T(car->getPosition().x, car->getPosition().y, car->getPosition().z);
@@ -300,6 +309,7 @@ void Fundamentals::drawall(){
 		glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
 		glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, truckTot.m);
 		DrawModel(truck->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
 	}
 }
 
@@ -314,6 +324,7 @@ void Fundamentals::initobjects(){
 	truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, truckTex);
 	truck->updateBoundingBox(Ry(M_PI/2), 3.0);
 	toppage = new Object(initTop, topModel, leatherTex);
+	backdrop = new Object(vec3(0.0f, 3.0f, 20.0f), backdropModel, grassTex);
 
 	//MULTIPLE TEXTURE OBJECTS, Object(pos, model, tex, texside, texup)
 	frame = new Object(initOrigin, frameModel, leatherTex, leatherTex, leatherTex);
@@ -335,12 +346,13 @@ void Fundamentals::loadmodels(){
 	truckModel = LoadModelPlus("../Modeller/LPTruck.obj");
 	boxModel = LoadModelPlus("../Modeller/box.obj");
 	lampModel = LoadModelPlus("../Modeller/box.obj");
+	backdropModel = LoadModelPlus("../Modeller/octagon.obj");
 }
 
 void Fundamentals::loadtextures(){
 	LoadTGATextureSimple("../textures/grass.tga", &grassTex);
 	LoadTGATextureSimple("../textures/snow.tga", &snowTex);
-	//sLoadTGATextureSimple("../textures/Paper.tga", &paperTex);
+	LoadTGATextureSimple("../textures/SkyBox512.tga", &backdropTex);
 	loadskybox();
 	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
 	LoadTGATextureSimple("../textures/bilskissred.tga", &bilTex);
