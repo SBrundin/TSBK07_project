@@ -87,11 +87,8 @@ void Fundamentals::loadfiles(){
 	GLfloat quadratic = 0.022;
 	vec3 lightColour = {0.4f, 0.9f, 0.5f};
 	lightSource = new LightSource(lightPos, lightColour, constant, linear, quadratic);
-	//light_ptr = ;
 	pointLightIndex = pointLightVec -> addLight(lightPos, lightColour, constant, linear, quadratic);
-	//vec3 colourArray = lightHandler->getColourArray();
-	//printf(std::to_string(index).c_str());
-	//std::cout << index << std::endl;
+
 	vec3 ambient = lightSource->getAmbient();
 	vec3 diffuse = lightSource->getDiffuse();
 	vec3 specular = lightSource->getSpecular();
