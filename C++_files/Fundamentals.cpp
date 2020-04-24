@@ -137,17 +137,18 @@ void Fundamentals::cameraCollision(){
 
 void Fundamentals::initobjects(){
 	//SIMPLE OBJECTS
-	box = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, grassTex);
-	lamp = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, snowTex);
-	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
-	coronaSimple = new Object(vec3(0.0f, 4.0f, 5.0f), coronaModel1, snowTex);
-	coronaBase = new Object(vec3(5.0f, 4.0f, 0.0f), coronaModel2, grassTex);
-	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
-	truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, waterTex);
-	truck->updateBoundingBox(Ry(M_PI/2), 3.0);
-	toppage = new Object(topModel, leatherTex);
+	// box = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, grassTex);
+	// lamp = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, snowTex);
+	// car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
+	// coronaSimple = new Object(vec3(0.0f, 4.0f, 5.0f), coronaModel1, snowTex);
+	// coronaBase = new Object(vec3(5.0f, 4.0f, 0.0f), coronaModel2, grassTex);
+	// car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
+	// truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, waterTex);
+	// truck->updateBoundingBox(Ry(M_PI/2), 3.0);
+
 
 	//MULTIPLE TEXTURE OBJECTS, Object(pos, model, tex, texside, texup)
+	toppage = new Object(topModel, leatherTex);
 	frame = new Object(frameModel, leatherTex, leatherTex, leatherTex);
 	firstPage = new Object(firstModel, grassTex, snowTex, grassTex);
 	secondPage = new Object(secondModel, grassTex, snowTex, grassTex);
@@ -162,15 +163,23 @@ void Fundamentals::initobjects(){
 
 	//OBJECTS FOR SCENE 1 obj->updateBoundingBox(Ry(angle), scale);
 	house = new Object(vec3(-37.0f, 6.9f, 0.0f), houseModel, woodTex);
+	house->updateBoundingBox(Ry(0), 2.0);
 	cottage = new Object(vec3(-20.0f, 4.7f, -15.0f), cottageModel, woodTex);
+	cottage->updateBoundingBox(Ry(M_PI), 1.0);
 	cottage1 = new Object(vec3(-26.0f, 4.7f, 13.0f), cottageModel, wood2Tex);
 	cottage2 = new Object(vec3(7.0f, 5.0f, 11.0f), cottageModel, cottageTex);
+	cottage2->updateBoundingBox(Ry(M_PI/2), 1.0);
 	elephant = new Object(vec3(-35.0f, 4.2f, 14.0f), elephantModel, leatherTex);
+	elephant->updateBoundingBox(Ry(M_PI/4), 1.0);
 	elephantbby = new Object(vec3(-33.3f, 3.2f, 13.0f), elephantModel, leatherTex);
+	elephantbby->updateBoundingBox(Ry(7.5*M_PI/4), 0.3);
  	pile = new Object(vec3(7.0f, 3.9f, -11.0f), pileModel, woodTex);
 	tree = new Object(vec3(-18.0f, 6.5f, 4.4f), treeModel, grassTex);
+	tree->updateBoundingBox(Ry(0.0), 2.0);
 	rosebush1 = new Object(vec3(7.0f, 4.8f, 4.4f), rosebushModel, bilTex);
+	rosebush1->updateBoundingBox(Ry(0.0), 2.2);
 	rosebush2 = new Object(vec3(-30.0f, 4.6f, -16.0f), rosebushModel, bilTex);
+	rosebush2->updateBoundingBox(Ry(0.0), 1.5);
 	rosebush3 = new Object(vec3(10.0f, 4.8f, -4.4f), rosebushModel, bilTex);
 	bird = new Object(vec3(10.0f, 15.0f, -4.4f), birdModel, waterTex);
 	bird2 = new Object(vec3(15.0f, 15.0f, -10.4f), birdModel, waterTex);
@@ -202,6 +211,18 @@ void Fundamentals::initobjects(){
 	stegos1 = new Object(vec3(-2.0f, 4.6f, -10.0f), stegosModel, leatherTex);
 	stegos2 = new Object(vec3(-5.0f, 4.6f, -16.0f), stegosModel, leatherTex);
 	stegos3 = new Object(vec3(-10.0f, 4.6f, -4.0f), stegosModel, leatherTex);
+
+	velociraptor1->updateBoundingBox(Ry(M_PI/2), 1.0);
+	velociraptor2->updateBoundingBox(Ry(M_PI/2), 1.0);
+	velociraptor3->updateBoundingBox(Ry(M_PI/2), 1.0);
+	velociraptor4->updateBoundingBox(Ry(M_PI/2), 1.0);
+	velociraptor5->updateBoundingBox(Ry(M_PI/2), 1.0);
+	velociraptor6->updateBoundingBox(Ry(2*M_PI/5), 1.0);
+	velociraptor7->updateBoundingBox(Ry(M_PI/3), 1.0);
+	trex->updateBoundingBox(Ry(-3*M_PI/4), 1.0);
+	stegos1->updateBoundingBox(Ry(M_PI/4), 1.0);
+	stegos1->updateBoundingBox(Ry(-M_PI/2), 1.0);
+	stegos1->updateBoundingBox(Ry(-M_PI/3), 1.0);
 
 	listOfObj_3.push_back(velociraptor1);
 	listOfObj_3.push_back(velociraptor2);
@@ -355,7 +376,7 @@ void Fundamentals::drawFirstScene(){
 	elephant->draw(camMatrix, programObj, 1.0, Ry(M_PI/4));
 	elephantbby->draw(camMatrix, programObj, 0.3, Ry(7.5*M_PI/4));
 	tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
-	rosebush1->draw(camMatrix, programObj, 1.2, Ry(0.0));
+	rosebush1->draw(camMatrix, programObj, 2.2, Ry(0.0));
 	rosebush2->draw(camMatrix, programObj, 1.5, Ry(0.0));
 	rosebush3->draw(camMatrix, programObj, 1.0, Ry(0.0));
 	pile->draw(camMatrix, programObj, 1.0, Ry(0.0));
@@ -404,7 +425,7 @@ stegos1->draw(camMatrix, programObj, 1.0, Ry(M_PI/4));
 stegos2->draw(camMatrix, programObj, 1.0, Ry(-M_PI/2));
 stegos3->draw(camMatrix, programObj, 1.0, Ry(-M_PI/3));
 tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
-rosebush1->draw(camMatrix, programObj, 1.2, Ry(0.0));
+rosebush1->draw(camMatrix, programObj, 2.2, Ry(0.0));
 rosebush2->draw(camMatrix, programObj, 1.5, Ry(0.0));
 rosebush3->draw(camMatrix, programObj, 1.0, Ry(0.0));
 }
