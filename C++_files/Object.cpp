@@ -158,6 +158,11 @@ void Object::updateBoundingBox(mat4 rotation, GLfloat scale)
   //std::cout << _size.x << ' ' << _size.y << ' ' << _size.z << '\n';
 }
 
+void Object::drawOn(mat4 camMatrix, GLuint shader, float scale, mat4 rot, Object* object){
+  _position.y = object->getRealHeight((_position.x - object->getPosition().x) , (_position.z - object->getPosition().z)) + object->getPosition().y + scale * _size.y/2;
+  draw(camMatrix, shader, scale, rot);
+}
+
 void Object::draw(mat4 camMatrix, GLuint shader, float scale, mat4 rot)
  {
    mat4 modelView = T(getPosition().x, getPosition().y, getPosition().z);
@@ -174,15 +179,20 @@ GLfloat Object::getCorrHeightInt(int x, int z){
 }
 
 GLfloat Object::getRealHeight(GLfloat x, GLfloat z){
-		GLfloat p1,p2,p3,p4,height,u,v,uPrim,vPrim;
-		p1 = getCorrHeightInt(floor(x), ceil(z));
-		p2 = getCorrHeightInt(ceil(x), ceil(z));
-		p3 = getCorrHeightInt(floor(x), floor(z));
-		p4 = getCorrHeightInt(ceil(x), floor(z));
-		u = x-floor(x);
-		uPrim = 1-u;
-		v = z-floor(z);
-		vPrim = 1-v;
-		height = _position.y + v*(uPrim*p1 + u*p2) + vPrim*(uPrim*p3 + u*p4);
-		return height;
-  }
+    GLfloat xx, zz, tempdist, height;
+    GLfloat dist = 1000000;
+    for (int i = 0; i < _model->numVertices; i++){
+      xx = _model->vertexArray[3 * i];
+      zz = _model->vertexArray[3 * i + 2];
+      tempdist = sqrt(pow((xx - x), 2) + pow((zz - z), 2));
+      if (tempdist < dist){
+        dist = tempdist;
+        height = _model->vertexArray[3 * i + 1];
+      }
+      else if ((tempdist == dist) && (_model->vertexArray[3 * i + 1] > height)){
+        dist = tempdist;
+        height = _model->vertexArray[3* i + 1];
+      }
+      }
+      return height;
+    }

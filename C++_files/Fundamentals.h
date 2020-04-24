@@ -46,7 +46,7 @@ public:
 
 private:
 
-  Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
+  Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel, *backgroundModel;
   Model *skybox[6], *bookMarkModel;
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight;
@@ -54,8 +54,8 @@ private:
   mat4 projectionMatrix, camMatrix, camMat2;
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
   GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
-  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex, truckTex;
-  GLuint woodTex, wood2Tex;
+  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex, truckTex, asphaltTex, backgroundTex, bricksTex, bricks2Tex;
+  GLuint woodTex, wood2Tex, cloudTex, crackedmudTex, crackedmud2Tex, crackedmud3Tex, pathTex, greenTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   int pointLightIndex;
@@ -93,6 +93,7 @@ private:
   Object* tree;
   Object* rosebush;
   Object* pile;
+  Object* background;
 
   Model *houseModel, *cottageModel, *elephantModel, *treeModel, *rosebushModel, *pileModel;
 
