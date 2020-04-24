@@ -8,6 +8,8 @@
 #include "Lamp.h"
 #include "LightSource.h"
 #include "LightHandler.h"
+#include <list>
+#include <iostream>
 
 class Fundamentals
 {
@@ -45,17 +47,17 @@ public:
     }
 
 private:
-
+  std::list<Object*> listOfObj;
   Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
   Model *skybox[6], *bookMarkModel;
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight;
-    LightHandler *pointLightVec;
+  LightHandler *pointLightVec;
   mat4 projectionMatrix, camMatrix, camMat2;
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
   GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
-  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex, truckTex;
-  GLuint woodTex, wood2Tex;
+  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex;
+  GLuint woodTex, wood2Tex, cottageTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   int pointLightIndex;
@@ -91,10 +93,13 @@ private:
   Object* elephant;
   Object* elephantbby;
   Object* tree;
-  Object* rosebush;
+  Object* rosebush1;
+  Object* rosebush2;
+  Object* rosebush3;
   Object* pile;
+  Object* bird;
 
-  Model *houseModel, *cottageModel, *elephantModel, *treeModel, *rosebushModel, *pileModel;
+  Model *houseModel, *cottageModel, *elephantModel, *treeModel, *rosebushModel, *pileModel, *birdModel;
 
   //page 3
   Object* velociraptor1;
@@ -102,8 +107,13 @@ private:
   Object* velociraptor3;
   Object* velociraptor4;
   Object* velociraptor5;
-  Object* stegos;
+  Object* velociraptor6;
+  Object* velociraptor7;
+  Object* stegos1;
+  Object* stegos2;
+  Object* stegos3;
   Object* trex;
+
 
   Model *velociModel, *stegosModel, *trexModel;
 };
