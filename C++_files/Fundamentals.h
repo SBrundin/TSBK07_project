@@ -50,7 +50,7 @@ private:
   Model *skybox[6], *bookMarkModel;
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight;
-    LightHandler *pointLightVec;
+  LightHandler *pointLightVec;
   mat4 projectionMatrix, camMatrix, camMat2;
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
   GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
@@ -60,7 +60,6 @@ private:
   GLfloat viewY = 0.5;
   int pointLightIndex;
   vec3 v = {0.0, 1.0, 0.0};
-  vec3 initTop = {0.435f, 3.625f, 0.0f};
   vec3 rotationAxis = {-14.565f, 0.0f, 0.0f};
   bool cameraCollisionFlag = false;
   GLfloat t;

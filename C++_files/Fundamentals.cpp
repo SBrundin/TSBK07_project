@@ -140,8 +140,8 @@ void Fundamentals::initobjects(){
 	//MULTIPLE TEXTURE OBJECTS, Object(pos, model, tex, texside, texup)
 	frame = new Object(frameModel, leatherTex, leatherTex, leatherTex);
 	firstPage = new Object(firstModel, grassTex, snowTex, grassTex);
-	secondPage = new Object(secondModel, grassTex, snowTex, grassTex);
-	pages = new Object(pagesModel, waterTex, grassTex, snowTex);
+	secondPage = new Object(secondModel, snowTex, snowTex, snowTex);
+	pages = new Object(pagesModel, waterTex, snowTex, snowTex);
 	book = new Book(toppage, firstPage, secondPage, frame, pages);
 	bookMark = new Object(vec3(-14.0f, 1.0f, 0.0f), bookMarkModel, leatherTex);
 
@@ -294,7 +294,6 @@ void Fundamentals::loadskybox(){
 
 void Fundamentals::drawFirstScene(){
 	bookMark->draw(camMatrix, programObj, 1.0, Ry(0.0));
-
 	house->draw(camMatrix, programObj, 2.0, Ry(0.0)); // camMatrix, shader, scale, angle
 	cottage->draw(camMatrix, programObj, 1.0, Ry(M_PI));
 	cottage1->draw(camMatrix, programObj, 1.0, Ry(0.0));
@@ -308,14 +307,14 @@ void Fundamentals::drawFirstScene(){
 }
 
 void Fundamentals::drawSecondScene(){
-velociraptor1->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor2->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor3->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor4->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor5->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-trex->draw(camMatrix, programObj, 1.0, Ry(M_PI/4));
-stegos->draw(camMatrix, programObj, 1.0, Ry(-M_PI/4));
-tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
+	velociraptor1->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+	velociraptor2->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+	velociraptor3->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+	velociraptor4->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+	velociraptor5->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+	trex->draw(camMatrix, programObj, 1.0, Ry(M_PI/4));
+	stegos->draw(camMatrix, programObj, 1.0, Ry(-M_PI/4));
+	tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
 }
 
 

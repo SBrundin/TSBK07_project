@@ -56,8 +56,6 @@ public:
       _timer -= t;
     }
 
-
-
 private:
     Object* _frame;
     Object* _top;

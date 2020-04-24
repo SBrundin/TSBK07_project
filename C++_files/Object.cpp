@@ -42,7 +42,6 @@ Object::Object(vec3 pos, Model* model, GLuint tex, GLuint texSide, GLuint texUp)
     _size = vec3(0.0f, 0.0f, 0.0f);
     _textureSide = texSide;
     _textureUp = texUp;
-
     setBoundingBox();
 }
 

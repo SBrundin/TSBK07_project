@@ -197,7 +197,7 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
     _currentPage--;
     _timer = 0;
   }
-  //first PAGE ROTATION FORWARD
+  //FIRST PAGE ROTATION FORWARD
   else if (timer <= 3.13 && currentPage == 2 && button == 'l')
   {
     _pageNbr = 2;
@@ -211,7 +211,7 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
     _timer = 0;
   }
 
-  //first PAGE ROTATION BACKWARD
+  //FIRST PAGE ROTATION BACKWARD
   else if (timer <= 3.13 && currentPage == 3 && button == 'r')
   {
     _pageNbr = 2;
