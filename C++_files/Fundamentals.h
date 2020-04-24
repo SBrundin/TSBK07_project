@@ -8,7 +8,7 @@
 #include "Lamp.h"
 #include "LightSource.h"
 #include "LightHandler.h"
-#include <list>
+#include <vector>
 #include <iostream>
 
 class Fundamentals
@@ -47,7 +47,9 @@ public:
     }
 
 private:
-  std::list<Object*> listOfObj;
+  std::vector<Object*> listOfObj_1;
+  std::vector<Object*> listOfObj_2;
+  std::vector<Object*> listOfObj_3;
   Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
   Model *skybox[6], *bookMarkModel;
   Lamp* lampLight;
