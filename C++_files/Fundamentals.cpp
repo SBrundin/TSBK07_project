@@ -16,6 +16,7 @@
 #include "LightSource.h"
 #include "Book.h"
 #include <iostream>
+#include <vector>
 using namespace std;
 
 Fundamentals::Fundamentals(Camera* cam){
@@ -88,7 +89,8 @@ void Fundamentals::loadfiles(){
 	vec3 lightColour = {0.4f, 0.9f, 0.5f};
 	lightSource = new LightSource(lightPos, lightColour, constant, linear, quadratic);
 	//light_ptr = ;
-	pointLightIndex = pointLightVec -> addLight(lightPos, lightColour, constant, linear, quadratic);
+
+
 	//vec3 colourArray = lightHandler->getColourArray();
 	//printf(std::to_string(index).c_str());
 	//std::cout << index << std::endl;
@@ -105,6 +107,29 @@ void Fundamentals::loadfiles(){
 	glUniform1f(glGetUniformLocation(mainProg, "pointLight.constant" ), constant);
 	glUniform1f(glGetUniformLocation(mainProg, "pointLight.lineart" ), linear);
 	glUniform1f(glGetUniformLocation(mainProg, "pointLight.quadratic" ), quadratic);
+
+  //glUniform3fv(originsLoc, origins.size(), reinterpret_cast<GLfloat *>(trackObstacle->obstaclesPopupNormals.data()))
+
+	pointLightIndex = pointLightVec -> addLight(lightPos, lightColour, constant, linear, quadratic);
+	std::vector<vec3> pointPosVec = pointLightVec -> getPosVec();
+	std::vector<vec3> pointColVec = pointLightVec -> getColVec();
+	std::vector<vec3> pointAmbVec = pointLightVec -> getAmbVec();
+	std::vector<vec3> pointDifVec = pointLightVec -> getDiffVec();
+	std::vector<vec3> pointSpecVec = pointLightVec -> getSpecVec();
+	std::vector<GLfloat> pointConstVec = pointLightVec -> getConstVec();
+	std::vector<GLfloat> pointLinVec = pointLightVec -> getLinVec();
+	std::vector<GLfloat> pointQuadVec = pointLightVec -> getQuatVec();
+	int amount_of_lights = pointLinVec.size();
+	glUniform1i(glGetUniformLocation(mainProg, "number_of_point_lights"), amount_of_lights);
+  glUniform3fv(glGetUniformLocation(mainProg, "pointLightPos"), pointPosVec.size(), reinterpret_cast<GLfloat *>(&pointPosVec));
+  glUniform3fv(glGetUniformLocation(mainProg, "pointLightCol"), pointColVec.size(), reinterpret_cast<GLfloat *>(&pointColVec));
+  glUniform3fv(glGetUniformLocation(mainProg, "pointLightAmb"), pointAmbVec.size(), reinterpret_cast<GLfloat *>(&pointAmbVec));
+  glUniform3fv(glGetUniformLocation(mainProg, "pointLightDif"), pointDifVec.size(), reinterpret_cast<GLfloat *>(&pointDifVec));
+  glUniform3fv(glGetUniformLocation(mainProg, "pointLightSpec"), pointSpecVec.size(), reinterpret_cast<GLfloat *>(&pointSpecVec));
+  glUniform1fv(glGetUniformLocation(mainProg, "pointLightLin"), pointLinVec.size(), &pointLinVec[0]);
+	//mainProg.setUniform1fv("just_array", &pointConstVec[0], 1);
+  glUniform1fv(glGetUniformLocation(mainProg, "pointLightConst"), pointConstVec.size(), &pointConstVec[0]);
+  glUniform1fv(glGetUniformLocation(mainProg, "pointLightQuad"),  pointQuadVec.size(), &pointQuadVec[0]);
 
 	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[0].colour"), 1, &lightColour.x);
 	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[0].ambient"), 1, &ambient.x);

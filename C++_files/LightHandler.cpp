@@ -12,22 +12,82 @@ LightHandler::LightHandler()
 
 int LightHandler::addLight(vec3 lightPos,vec3 lightColour,GLfloat constant, GLfloat linear,GLfloat quadratic)
 {
-  lightVec.push_back(LightSource(lightPos, lightColour, constant, linear, quadratic));
+  lightVec.push_back(new LightSource(lightPos, lightColour, constant, linear, quadratic));
   amount_of_lights = lightVec.size();
-  //std::cout << amount_of_lights << std::endl;
   int index = amount_of_lights-1;
+
+  positionVec.push_back(lightVec.at(index)->getPosition());
+  colourVec.push_back(lightVec.at(index)->getColour());
+  ambientVec.push_back(lightVec.at(index)->getAmbient());
+  diffuseVec.push_back(lightVec.at(index)->getDiffuse());
+  specularVec.push_back(lightVec.at(index)->getSpecular());
+  constantVec.push_back(lightVec.at(index)->getConstant());
+  linearVec.push_back(lightVec.at(index)->getLinear());
+  quadraticVec.push_back(lightVec.at(index)->getQuadratic());
+  directionVec.push_back(lightVec.at(index)->getDirection());
+  cutOffVec.push_back(lightVec.at(index)->getCutOff());
+  outerCutOffVec.push_back(lightVec.at(index)->getOuterCutOff());
   return index;
 }
 
-/*getColourByIndex(int index, vec3 col)
-{
-  lightVec.at(index).setColour(col);
+std::vector<vec3> LightHandler::getPosVec(){
+
+  return positionVec;
 }
-*/
+
+std::vector<vec3> LightHandler::getColVec(){
+
+  return colourVec;
+}
+
+std::vector<vec3> LightHandler::getAmbVec(){
+
+  return ambientVec;
+}
+
+std::vector<vec3> LightHandler::getDiffVec(){
+
+  return diffuseVec;
+}
+
+std::vector<vec3> LightHandler::getSpecVec(){
+
+  return specularVec;
+}
+
+std::vector<vec3> LightHandler::getDirVec(){
+
+  return directionVec;
+}
+
+std::vector<GLfloat> LightHandler::getConstVec(){
+
+  return constantVec;
+}
+
+std::vector<GLfloat> LightHandler::getLinVec(){
+
+  return linearVec;
+}
+
+std::vector<GLfloat> LightHandler::getQuatVec(){
+
+  return quadraticVec;
+}
+
+std::vector<GLfloat> LightHandler::getCutOffVec(){
+
+  return cutOffVec;
+}
+
+std::vector<GLfloat> LightHandler::getOuterCutOffVec(){
+
+  return outerCutOffVec;
+}
 
 void LightHandler::uploadPointLights(GLuint shader){
 
-  glUniform1i(glGetUniformLocation(shader, "number_of_point_lights"), amount_of_lights);
+   glUniform1i(glGetUniformLocation(shader, "number_of_point_lights"), amount_of_lights);
 
 //  for (std::size_t i = 0, max = lightVec.size(); i < max; i ++){
     //Creates all the strings to shader
@@ -44,16 +104,16 @@ void LightHandler::uploadPointLights(GLuint shader){
 
     //Sending all the stuff to shader
 
-  /*  vec3 *position = &lightVec.at(0).getPosition();
+    //vec3 *position = &lightVec.at(0)->getPosition();
     //glUniform3fv(glGetUniformLocation(shader, posString.c_str()), 1, &position.x);
-    vec3 *colour = &lightVec.at(0).getColour();
-    vec3 *ambient = &lightVec.at(0).getAmbient();
-    vec3 *diffuse = &lightVec.at(0).getDiffuse();
-    vec3 *specular = &lightVec.at(0).getSpecular();
-    GLfloat constant = lightVec.at(0).getConstant();
-    GLfloat linear = lightVec.at(0).getLinear();
-    GLfloat quadratic = lightVec.at(0).getQuadratic();
-    glUniform3fv(glGetUniformLocation(shader, "pointLightz[0].position"), 1, &(*position).x);
+  /*  vec3 *colour = &lightVec.at(0)->getColour();
+    vec3 *ambient = &lightVec.at(0)->getAmbient();
+    vec3 *diffuse = &lightVec.at(0)->getDiffuse();
+    vec3 *specular = &lightVec.at(0)->getSpecular();
+    GLfloat constant = lightVec.at(0)->getConstant();
+    GLfloat linear = lightVec.at(0)->getLinear();
+    GLfloat quadratic = lightVec.at(0)->getQuadratic();
+    glUniform3fv(glGetUniformLocation(shader, "pointLightz[0].position"), 1, &lightVec.at(0)->getPosition().x);
     glUniform3fv(glGetUniformLocation(shader, "pointLightz[0].colour"), 1, &(*colour).x);
     glUniform3fv(glGetUniformLocation(shader, "pointLightz[0].ambient"), 1, &(*ambient).x);
     glUniform3fv(glGetUniformLocation(shader,  "pointLightz[0].diffuse"), 1, &(*diffuse).x);
@@ -70,5 +130,5 @@ void LightHandler::uploadPointLights(GLuint shader){
 
 void LightHandler::setPosition(int index, vec3 pos)
 {
-  lightVec.at(index).setPosition(pos);
+  //lightVec.at(index).setPosition(pos);
 }
