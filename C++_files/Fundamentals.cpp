@@ -148,7 +148,7 @@ void Fundamentals::initobjects(){
 	//OBJECTS FOR SCENE 1
 	house = new Object(vec3(-37.0f, 6.9f, 0.0f), houseModel, woodTex);
 	cottage = new Object(vec3(-20.0f, 4.7f, -15.0f), cottageModel, woodTex);
-	cottage1 = new Object(vec3(-26.0f, 4.7f, 13.0f), cottageModel, woodTex);
+	cottage1 = new Object(vec3(-26.0f, 4.7f, 13.0f), cottageModel, greenTex);
 	cottage2 = new Object(vec3(7.0f, 5.0f, 11.0f), cottageModel, wood2Tex);
 	elephant = new Object(vec3(-35.0f, 4.2f, 14.0f), elephantModel, leatherTex);
 	elephantbby = new Object(vec3(-33.3f, 3.2f, 13.0f), elephantModel, leatherTex);
@@ -203,6 +203,7 @@ void Fundamentals::loadtextures(){
 	LoadTGATextureSimple("../textures/water.tga", &truckTex);
 	LoadTGATextureSimple("../textures/wood.tga", &woodTex);
 	LoadTGATextureSimple("../textures/wood2.tga", &wood2Tex);
+	LoadTGATextureSimple("../textures/PStoTGA.tga", &greenTex);
 }
 
 void Fundamentals::initshaders(){
