@@ -25,6 +25,7 @@ public:
 
     vec3 getDirection();
     void setDirection(vec3 direction);
+    void setY(GLfloat y);
 
     Model* getModel();
     void setModel(Model* model);
@@ -39,6 +40,8 @@ public:
     void setBoundingBox();
     void updateBoundingBox(mat4 rotation, GLfloat scale);
     vec3 getSize();
+
+    void draw(mat4 camMatrix, GLuint shader, float scale, mat4 rot);
 
     GLfloat getCorrHeightInt(int x, int z);
     GLfloat getRealHeight(GLfloat x, GLfloat z);

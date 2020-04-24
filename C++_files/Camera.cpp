@@ -9,7 +9,7 @@ using namespace std;
 
 
 void Camera::initate(){
-    position = SetVector(15, 5, 30);
+    position = SetVector(15, 15, 30);
     lookAtPoint = SetVector(1,0,1);
     up = SetVector(0,1,0);
     proj_matrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 5000.0);

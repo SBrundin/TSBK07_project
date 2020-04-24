@@ -42,7 +42,6 @@ Object::Object(vec3 pos, Model* model, GLuint tex, GLuint texSide, GLuint texUp)
     _size = vec3(0.0f, 0.0f, 0.0f);
     _textureSide = texSide;
     _textureUp = texUp;
-
     setBoundingBox();
 }
 
@@ -58,6 +57,9 @@ Object::Object(Model* model, GLuint tex, GLuint texSide, GLuint texUp)
     setBoundingBox();
 }
 
+void Object::setY(GLfloat y){
+  _position.y = y;
+}
 
 vec3 Object::getPosition()
 {
@@ -159,6 +161,16 @@ void Object::updateBoundingBox(mat4 rotation, GLfloat scale)
   //std::cout << _size.x << ' ' << _size.y << ' ' << _size.z << '\n';
 }
 
+void Object::draw(mat4 camMatrix, GLuint shader, float scale, mat4 rot)
+ {
+   mat4 modelView = T(getPosition().x, getPosition().y, getPosition().z);
+   mat4 Tot = Mult(camMatrix, Mult(Mult(modelView, S(scale,scale,scale)), rot));
+   glActiveTexture(GL_TEXTURE0);
+   glBindTexture(GL_TEXTURE_2D, getTexture());
+   glUniform1i(glGetUniformLocation(shader, "Tex"), 0); // Texture unit 0
+   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, Tot.m);
+   DrawModel(getModel(), shader, "inPosition", "inNormal", "inTexCoord");
+ }
 
 GLfloat Object::getCorrHeightInt(int x, int z){
 	return _model->vertexArray[(x + z)*3 + 1];

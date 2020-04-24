@@ -15,12 +15,20 @@ public:
     void makeRotation(GLfloat timer, GLuint page, mat4 camMatrix, GLuint shader, char button);
     mat4 generateRotationMat(vec3 rotationAxis, GLfloat time);
 
-    void setBool(){
-      _bool = !_bool;
+    void setRotationBool(){
+      _rotationBool = !_rotationBool;
     }
 
-    bool getBool(){
-      return _bool;
+    bool getRotationBool(){
+      return _rotationBool;
+    }
+
+    void setFadeBool(){
+      _fadeBool = !_fadeBool;
+    }
+
+    bool getFadeBool(){
+      return _fadeBool;
     }
 
     GLuint getCurrentPage(){
@@ -36,6 +44,17 @@ public:
       return _timer;
     }
 
+    void setTimer(GLfloat t){
+      _timer = t;
+    }
+
+    void increaseTimer(GLfloat t){
+      _timer += t;
+    }
+
+    void decreaseTimer(GLfloat t){
+      _timer -= t;
+    }
 
 private:
     Object* _frame;
@@ -43,14 +62,16 @@ private:
     Object* _firstPage;
     Object* _secondPage;
     Object* _pages;
-    vec3 _firstPos = {0.0f, 3.0f, 0.0f};
-    vec3 _topPos = {0.4f, 3.6f, 0.0f};
-    vec3 _topPosOpen = {-29.4f, 2.8f, 0.0f};
-    vec3 _firstOpen = {-29.2f, 3.0f, 0.0f};
-    vec3 _rotationAxis = {-15.0f, -0.25f, 0.0f};
+    vec3 _firstPos = {0.21f, 3.133f, 0.0f};
+    vec3 _topPos = {0.435f, 3.625f, 0.0f};
+    vec3 _topPosOpen = {-29.565f, 2.375f, 0.0f};
+    vec3 _firstOpen = {-29.065f, 2.768f, 0.0f};
+    vec3 _secondPos = {0.06f, 2.78f, 0.0f};
+    vec3 _rotationAxis = {-14.565f, -0.25f, 0.0f};
     GLuint _currentPage;
     GLuint _pageNbr;
-    bool _bool;
+    bool _rotationBool;
+    bool _fadeBool;
     GLfloat _timer = 0;
     char _buttonPressed;
 };

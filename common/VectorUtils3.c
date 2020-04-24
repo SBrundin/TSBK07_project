@@ -275,17 +275,17 @@ char transposed = 0;
 		return m;
 	}
 
-  mat4 Rx2(GLfloat a)
+  mat4 Rz2(GLfloat a)
 	{
 		mat4 m;
 		m = IdentityMatrix();
-		m.m[5] = (GLfloat)cos(a);
+		m.m[0] = abs((GLfloat)cos(a));
 		if (transposed)
-			m.m[9] = (GLfloat)-sin(a)*2;
+			m.m[4] = abs((GLfloat)-sin(a));
 		else
-			m.m[9] = (GLfloat)sin(a)*2;
-		m.m[6] = -m.m[9]; //sin(a);
-		m.m[10] = m.m[5]; //cos(a);
+			m.m[4] = abs((GLfloat)sin(a));
+		m.m[1] = -m.m[4]; //sin(a);
+		m.m[5] = m.m[0]; //cos(a);
 		return m;
 	}
 
