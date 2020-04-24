@@ -25,6 +25,7 @@ public:
 
     vec3 getDirection();
     void setDirection(vec3 direction);
+    void setY(GLfloat y);
 
     Model* getModel();
     void setModel(Model* model);

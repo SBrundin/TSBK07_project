@@ -174,7 +174,8 @@ void Fundamentals::initobjects(){
 	rosebush2 = new Object(vec3(-30.0f, 4.6f, -16.0f), rosebushModel, bilTex);
 	rosebush3 = new Object(vec3(10.0f, 4.8f, -4.4f), rosebushModel, bilTex);
 
-	bird = new Object(vec3(10.0f, 20.0f, -4.4f), birdModel, waterTex);
+	bird = new Object(vec3(10.0f, 15.0f, -4.4f), birdModel, waterTex);
+	bird2 = new Object(vec3(15.0f, 15.0f, -10.4f), birdModel, waterTex);
 
 	//OBJECTS FOR SCENE 2
 	velociraptor1 = new Object(vec3(-40.0f, 3.8f, -4.0f), velociModel, leatherTex);
@@ -336,13 +337,23 @@ void Fundamentals::drawFirstScene(){
 	rosebush3->draw(camMatrix, programObj, 1.0, Ry(0.0));
 	pile->draw(camMatrix, programObj, 1.0, Ry(0.0));
 
-	mat4 modelViewbird = T(bird->getPosition().x+5*sin(t), bird->getPosition().y, bird->getPosition().z+5*cos(t));
-	mat4 Totbird = Mult(camMatrix, Mult(modelViewbird, Ry(t)));
+	mat4 modelViewbird = T(bird->getPosition().x*sin(-t), bird->getPosition().y+0.3*sin(5*t), bird->getPosition().z*cos(-t));
+	mat4 Totbird = Mult(camMatrix, Mult(modelViewbird, Mult(Ry(t+4.71), Rz(3.14/3*(sin(t))))));
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, bird->getTexture());
 	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, Totbird.m);
 	DrawModel(bird->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
+	mat4 modelViewbird2 = T(bird2->getPosition().x*sin(-t), bird2->getPosition().y+0.3*sin(5*t), bird2->getPosition().z*cos(-t));
+	mat4 Totbird2 = Mult(camMatrix, Mult(modelViewbird2, Mult(Ry(t+4.71), Rz(3.14/3*(sin(t))))));
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, bird2->getTexture());
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, Totbird2.m);
+	DrawModel(bird2->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
+
 }
 
 void Fundamentals::drawSecondScene(){
