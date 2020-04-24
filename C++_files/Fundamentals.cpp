@@ -16,6 +16,7 @@
 #include "LightSource.h"
 #include "Book.h"
 #include <iostream>
+#include <list>
 using namespace std;
 
 Fundamentals::Fundamentals(Camera* cam){
@@ -114,26 +115,27 @@ void Fundamentals::update(){
 
 void Fundamentals::cameraCollision(){
 	// Book
-	// cameraCollisionFlag = camera->CheckCollision(pages, cameraCollisionFlag);
-	// cameraCollisionFlag = camera->CheckCollision(frame, cameraCollisionFlag);
-	// cameraCollisionFlag = camera->CheckCollision(toppage, cameraCollisionFlag);
-	// cameraCollisionFlag = camera->CheckCollision(firstPage, cameraCollisionFlag);
-	// cameraCollisionFlag = camera->CheckCollision(secondPage, cameraCollisionFlag);
-	//for(auto const& it : listOfObj){
-	// std::list<Object>::const_iterator it;
-	// for (it = listOfObj.begin(); it != listOfObj.end(); ++it){
-  //   // do whatever you wish but don't modify the list elements
-  // 	cameraCollisionFlag = camera->CheckCollision(*it, cameraCollisionFlag);
-	// 	std::cout << it->getPosition().x << "\n";
-	// }
-	//object
+	int list_size = listOfObj_1.size();
+	for(int i = 0; i < list_size; i++){
+			cameraCollisionFlag = camera->CheckCollision(listOfObj_1[i], cameraCollisionFlag);
+	}
+	if (book->getCurrentPage() == 2){
+		int list_size = listOfObj_2.size();
+		for(int i = 0; i < list_size; i++){
+			cameraCollisionFlag = camera->CheckCollision(listOfObj_2[i], cameraCollisionFlag);
+		}
+	}
+	else if (book->getCurrentPage() == 3){
+		int list_size = listOfObj_3.size();
+		for(int i = 0; i < list_size; i++){
+			cameraCollisionFlag = camera->CheckCollision(listOfObj_3[i], cameraCollisionFlag);
+		}
+	}
 	camera->checkFlag(cameraCollisionFlag);
 	cameraCollisionFlag = false;
 }
 
 void Fundamentals::initobjects(){
-	std::list<Object*> listOfObj;
-
 	//SIMPLE OBJECTS
 	box = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, grassTex);
 	lamp = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, snowTex);
@@ -147,25 +149,22 @@ void Fundamentals::initobjects(){
 
 	//MULTIPLE TEXTURE OBJECTS, Object(pos, model, tex, texside, texup)
 	frame = new Object(frameModel, leatherTex, leatherTex, leatherTex);
-	listOfObj.push_back(frame);
 	firstPage = new Object(firstModel, grassTex, snowTex, grassTex);
-	listOfObj.push_back(firstPage);
 	secondPage = new Object(secondModel, grassTex, snowTex, grassTex);
-	listOfObj.push_back(secondPage);
 	pages = new Object(pagesModel, grassTex, snowTex, grassTex);
-	listOfObj.push_back(pages);
 	book = new Book(toppage, firstPage, secondPage, frame, pages);
 	bookMark = new Object(vec3(-14.0f, 1.0f, 0.0f), bookMarkModel, leatherTex);
 
-	//OBJECTS FOR SCENE 1
+	listOfObj_1.push_back(frame);
+	listOfObj_1.push_back(firstPage);
+	listOfObj_1.push_back(secondPage);
+	listOfObj_1.push_back(pages);
+
+	//OBJECTS FOR SCENE 1 obj->updateBoundingBox(Ry(angle), scale);
 	house = new Object(vec3(-37.0f, 6.9f, 0.0f), houseModel, woodTex);
-	listOfObj.push_back(house);
 	cottage = new Object(vec3(-20.0f, 4.7f, -15.0f), cottageModel, woodTex);
-	listOfObj.push_back(cottage);
 	cottage1 = new Object(vec3(-26.0f, 4.7f, 13.0f), cottageModel, wood2Tex);
-	listOfObj.push_back(cottage1);
 	cottage2 = new Object(vec3(7.0f, 5.0f, 11.0f), cottageModel, cottageTex);
-	listOfObj.push_back(cottage2);
 	elephant = new Object(vec3(-35.0f, 4.2f, 14.0f), elephantModel, leatherTex);
 	elephantbby = new Object(vec3(-33.3f, 3.2f, 13.0f), elephantModel, leatherTex);
  	pile = new Object(vec3(7.0f, 3.9f, -11.0f), pileModel, woodTex);
@@ -173,8 +172,20 @@ void Fundamentals::initobjects(){
 	rosebush1 = new Object(vec3(7.0f, 4.8f, 4.4f), rosebushModel, bilTex);
 	rosebush2 = new Object(vec3(-30.0f, 4.6f, -16.0f), rosebushModel, bilTex);
 	rosebush3 = new Object(vec3(10.0f, 4.8f, -4.4f), rosebushModel, bilTex);
-
 	bird = new Object(vec3(10.0f, 20.0f, -4.4f), birdModel, waterTex);
+
+	listOfObj_2.push_back(house);
+	listOfObj_2.push_back(cottage);
+	listOfObj_2.push_back(cottage1);
+	listOfObj_2.push_back(cottage2);
+	listOfObj_2.push_back(elephant);
+	listOfObj_2.push_back(elephantbby);
+	listOfObj_2.push_back(pile);
+	listOfObj_2.push_back(tree);
+	listOfObj_2.push_back(rosebush1);
+	listOfObj_2.push_back(rosebush2);
+	listOfObj_2.push_back(rosebush3);
+	listOfObj_2.push_back(bird);
 
 	//OBJECTS FOR SCENE 2
 	velociraptor1 = new Object(vec3(-40.0f, 3.8f, -4.0f), velociModel, leatherTex);
@@ -184,12 +195,22 @@ void Fundamentals::initobjects(){
 	velociraptor5 = new Object(vec3(-35.0f, 3.8f, -2.0f), velociModel, leatherTex);
 	velociraptor6 = new Object(vec3(-37.0f, 3.8f, -12.0f), velociModel, leatherTex);
 	velociraptor7 = new Object(vec3(-40.0f, 3.8f, -8.0f), velociModel, leatherTex);
-
 	trex = new Object(vec3(11.0f, 5.3f, 12.0f), trexModel, leatherTex);
-
 	stegos1 = new Object(vec3(-2.0f, 4.6f, -10.0f), stegosModel, leatherTex);
 	stegos2 = new Object(vec3(-5.0f, 4.6f, -16.0f), stegosModel, leatherTex);
 	stegos3 = new Object(vec3(-10.0f, 4.6f, -4.0f), stegosModel, leatherTex);
+
+	listOfObj_3.push_back(velociraptor1);
+	listOfObj_3.push_back(velociraptor2);
+	listOfObj_3.push_back(velociraptor3);
+	listOfObj_3.push_back(velociraptor4);
+	listOfObj_3.push_back(velociraptor5);
+	listOfObj_3.push_back(velociraptor6);
+	listOfObj_3.push_back(velociraptor7);
+	listOfObj_3.push_back(trex);
+	listOfObj_3.push_back(stegos1);
+	listOfObj_3.push_back(stegos2);
+	listOfObj_3.push_back(stegos3);
 }
 
 void Fundamentals::loadmodels(){
