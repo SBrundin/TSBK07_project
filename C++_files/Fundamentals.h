@@ -101,6 +101,7 @@ private:
   Object* pile;
   Object* bird;
   Object* bird2;
+  Object* bird3;
 
   Model *houseModel, *cottageModel, *elephantModel, *treeModel, *rosebushModel, *pileModel, *birdModel;
 

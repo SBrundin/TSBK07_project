@@ -174,6 +174,7 @@ void Fundamentals::initobjects(){
 	rosebush3 = new Object(vec3(10.0f, 4.8f, -4.4f), rosebushModel, bilTex);
 	bird = new Object(vec3(10.0f, 15.0f, -4.4f), birdModel, waterTex);
 	bird2 = new Object(vec3(15.0f, 15.0f, -10.4f), birdModel, waterTex);
+	bird3 = new Object(vec3(-20.0f, 15.0f, 10.4f), birdModel, waterTex);
 
 
 	listOfObj_2.push_back(house);
@@ -367,13 +368,25 @@ void Fundamentals::drawFirstScene(){
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, Totbird.m);
 	DrawModel(bird->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 
-	mat4 modelViewbird2 = T(bird2->getPosition().x*sin(-t), bird2->getPosition().y+0.3*sin(5*t), bird2->getPosition().z*cos(-t));
-	mat4 Totbird2 = Mult(camMatrix, Mult(modelViewbird2, Mult(Ry(t+4.71), Rz(3.14/3*(sin(t))))));
+	mat4 mdlRotAxis = T(-15.0f, 0.0f, -10.0f);
+	mat4 modelViewbird2 = T(bird2->getPosition().x*sin(-2*t), bird2->getPosition().y+0.3*sin(5*t), bird2->getPosition().z*cos(-2*t));
+	mat4 rotBird2 =  Mult(mdlRotAxis, Mult(Ry(2*t+4.71), Rz(3.14/3*(sin(2*t)))));
+	mat4 Totbird2 = Mult(camMatrix, Mult(modelViewbird2, rotBird2));
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, bird2->getTexture());
 	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, Totbird2.m);
 	DrawModel(bird2->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
+	mat4 mdlRotAxis3 = T(-20.0f, 0.0f, 10.10f);
+	mat4 modelViewbird3 = T(bird3->getPosition().x*sin(t), bird3->getPosition().y+2*sin(t), bird3->getPosition().z*cos(t));
+	mat4 rotBird3 =  Mult(mdlRotAxis3, Mult(Ry(t+4.71), Rz(3.14/3*(sin(t)))));
+	mat4 Totbird3 = Mult(camMatrix, Mult(modelViewbird3, rotBird3));
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, bird3->getTexture());
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, Totbird3.m);
+	DrawModel(bird3->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 
 
 }
