@@ -105,15 +105,15 @@ void Fundamentals::loadfiles(){
 	glUniform1f(glGetUniformLocation(mainProg, "pointLight.constant" ), constant);
 	glUniform1f(glGetUniformLocation(mainProg, "pointLight.lineart" ), linear);
 	glUniform1f(glGetUniformLocation(mainProg, "pointLight.quadratic" ), quadratic);
-	/*
+
 	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[0].colour"), 1, &lightColour.x);
 	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[0].ambient"), 1, &ambient.x);
 	glUniform3fv(glGetUniformLocation(mainProg,  "pointLightz[0].diffuse"), 1, &diffuse.x);
 	glUniform3fv(glGetUniformLocation(mainProg,  "pointLightz[0].specular"), 1, &specular.x);
 	glUniform1f(glGetUniformLocation(mainProg,  "pointLightz[0].constant"), constant);
 	glUniform1f(glGetUniformLocation(mainProg, "pointLightz[0].linear"), linear);
-	glUniform1f(glGetUniformLocation(mainProg, "pointLightz[0].quadratic"), quadratic);*/
-	//pointLightVec -> uploadPointLights(mainProg);
+	glUniform1f(glGetUniformLocation(mainProg, "pointLightz[0].quadratic"), quadratic);
+	pointLightVec -> uploadPointLights(mainProg);
 	printError("init shader5");
 
 	//directional lightDi
@@ -216,7 +216,7 @@ void Fundamentals::update(){
 	vec3 viewPos = {camera-> getPosition().x, camera-> getPosition().y, camera-> getPosition().z};
 	spotLight->setPosition(v*10*sin(t));
 	//pointLightVec -> setPosition(pointLightIndex, v*10*sin(t));
-	pointLightVec -> uploadPointLights(mainProg);
+	//pointLightVec -> uploadPointLights(mainProg);
 	lightSource->setPosition(v*10*sin(t));
 	lightPos = spotLight-> getPosition();
 	vec3 lightPosPoint = lightSource-> getPosition();
