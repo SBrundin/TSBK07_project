@@ -97,7 +97,7 @@ extern "C" {
 
 	mat4 IdentityMatrix();
 	mat4 Rx(GLfloat a);
-	mat4 Rx2(GLfloat a);
+	mat4 Rz2(GLfloat a);
 	mat4 Ry(GLfloat a);
 	mat4 Rz(GLfloat a);
 	mat4 T(GLfloat tx, GLfloat ty, GLfloat tz);
