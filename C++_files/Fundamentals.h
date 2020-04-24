@@ -100,6 +100,7 @@ private:
   Object* rosebush3;
   Object* pile;
   Object* bird;
+  Object* bird2;
 
   Model *houseModel, *cottageModel, *elephantModel, *treeModel, *rosebushModel, *pileModel, *birdModel;
 

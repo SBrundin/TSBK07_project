@@ -58,6 +58,10 @@ Object::Object(Model* model, GLuint tex, GLuint texSide, GLuint texUp)
     setBoundingBox();
 }
 
+void Object::setY(GLfloat y){
+  _position.y = y;
+}
+
 vec3 Object::getPosition()
 {
     return _position;
