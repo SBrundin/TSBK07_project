@@ -158,6 +158,10 @@ void Fundamentals::initobjects(){
 	background = new Object(vec3(-15.0f, 1.0f, -19.25f), backgroundModel, backgroundTex);
 	sun = new Object(vec3(-15.0f, 17.0f, -18.9f), sunModel, sunTex);
 	moon = new Object(vec3(-15.0f, -20.0f, -18.9f), moonModel, moonTex);
+	mountain = new Object(vec3(-7.0f, 7.5f, -18.5f), mountainModel, stoneTex);
+	mountain2 = new Object(vec3(-13.0f, 6.2f, -18.7f), mountainModel, stoneTex);
+ 	cloud = new Object(vec3(-27.0f, 20.0f, -18.85f), cloudModel, cloudTex);
+	//rainbow = new Object(vec3(-17.0f, 8.0f, -18.85f), rainbowModel, rainbowTex);
 
 	//OBJECTS FOR SCENE 2
 	velociraptor1 = new Object(vec3(-34.0f, 3.8f, -4.9f), velociModel, leatherTex);
@@ -193,6 +197,9 @@ void Fundamentals::loadmodels(){
 	backgroundModel = LoadModelPlus("../Modeller/background.obj");
 	sunModel = LoadModelPlus("../Modeller/sun.obj");
 	moonModel = LoadModelPlus("../Modeller/moon.obj");
+	mountainModel = LoadModelPlus("../Modeller/mountain.obj");
+	cloudModel = LoadModelPlus("../Modeller/cloud.obj");
+	//rainbowModel = LoadModelPlus("../Modeller/rainbow.obj");
 
 	//MODELS FOR SCENE2
 	velociModel = LoadModelPlus("../Modeller/velociraptor.obj");
@@ -221,6 +228,8 @@ void Fundamentals::loadtextures(){
 	LoadTGATextureSimple("../textures/Green.tga", &greenTex);
 	LoadTGATextureSimple("../textures/Sun.tga", &sunTex);
 	LoadTGATextureSimple("../textures/Moon.tga", &moonTex);
+	LoadTGATextureSimple("../textures/Stone.tga", &stoneTex);
+	//LoadTGATextureSimple("../textures/Rosepedal.tga", &rainbowTex);
 }
 
 void Fundamentals::initshaders(){
@@ -326,8 +335,9 @@ void Fundamentals::drawFirstScene(){
 	sun->drawOver(camMatrix, programObj, 1.0, sunrot, background->getPosition().y - sun->getPosition().y);
 	moon->drawOver(camMatrix, programObj, 1.0, moonrot, background->getPosition().y - moon->getPosition().y);
 	mountain->drawOver(camMatrix, programObj, 1.0, Ry(0.0), background->getPosition().y - mountain->getPosition().y);
+	mountain2->drawOver(camMatrix, programObj, 0.7, Ry(0.0), background->getPosition().y - mountain2->getPosition().y);
 	cloud->drawOver(camMatrix, programObj, 1.0, Ry(0.0), background->getPosition().y - cloud->getPosition().y);
-	rainbow->drawOver(camMatrix, programObj, 1.0, Ry(0.0), background->getPosition().y - rainbow->getPosition().y);
+	//rainbow->drawOver(camMatrix, programObj, 1.0, Ry(0.0), background->getPosition().y - rainbow->getPosition().y);
 }
 
 void Fundamentals::drawSecondScene(){
