@@ -41,6 +41,7 @@ public:
     vec3 getSize();
 
     void draw(mat4 camMatrix, GLuint shader, float scale, mat4 rot);
+    void drawOver(mat4 camMatrix, GLuint shader, float scale, mat4 rot, GLfloat opac);
     void drawOn(mat4 camMatrix, GLuint shader, float scale, mat4 rot, Object* object);
 
     GLfloat getCorrHeightInt(int x, int z);

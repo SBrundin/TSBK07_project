@@ -155,7 +155,9 @@ void Fundamentals::initobjects(){
  	pile = new Object(vec3(7.0f, 3.9f, -11.0f), pileModel, woodTex);
 	tree = new Object(vec3(-18.0f, 6.5f, 4.4f), treeModel, grassTex);
 	rosebush = new Object(vec3(7.0f, 4.8f, 4.4f), rosebushModel, bilTex);
-	background = new Object(vec3(-15.0f, 3.0f, 19.25f), backgroundModel, backgroundTex);
+	background = new Object(vec3(-15.0f, 1.0f, -19.25f), backgroundModel, backgroundTex);
+	sun = new Object(vec3(-15.0f, 17.0f, -18.9f), sunModel, sunTex);
+	moon = new Object(vec3(-15.0f, -20.0f, -18.9f), moonModel, moonTex);
 
 	//OBJECTS FOR SCENE 2
 	velociraptor1 = new Object(vec3(-34.0f, 3.8f, -4.9f), velociModel, leatherTex);
@@ -189,6 +191,8 @@ void Fundamentals::loadmodels(){
 	rosebushModel = LoadModelPlus("../Modeller/rosebush.obj");
 	pileModel = LoadModelPlus("../Modeller/pile.obj");
 	backgroundModel = LoadModelPlus("../Modeller/background.obj");
+	sunModel = LoadModelPlus("../Modeller/sun.obj");
+	moonModel = LoadModelPlus("../Modeller/moon.obj");
 
 	//MODELS FOR SCENE2
 	velociModel = LoadModelPlus("../Modeller/velociraptor.obj");
@@ -215,6 +219,8 @@ void Fundamentals::loadtextures(){
 	LoadTGATextureSimple("../textures/CrackedMud3.tga", &crackedmud3Tex);
 	LoadTGATextureSimple("../textures/ForestPath.tga", &pathTex);
 	LoadTGATextureSimple("../textures/Green.tga", &greenTex);
+	LoadTGATextureSimple("../textures/Sun.tga", &sunTex);
+	LoadTGATextureSimple("../textures/Moon.tga", &moonTex);
 }
 
 void Fundamentals::initshaders(){
@@ -314,8 +320,14 @@ void Fundamentals::drawFirstScene(){
 	tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
 	rosebush->draw(camMatrix, programObj, 1.0, Ry(0.0));
 	pile->draw(camMatrix, programObj, 1.0, Ry(0.0));
-	background->draw(camMatrix, programObj, 1.0, Rz(t/100));
-
+	background->drawOver(camMatrix, programObj, 1.0, Rz(t/100), background->getPosition().y);
+	mat4 moonrot = Mult(T(0.0f, 21.0f, 0.0f), Mult(Rz(t/100 + 3 * M_PI/16), T(-15.0f, -20.0f, 0.0f)));
+	mat4 sunrot = Mult(T(0.0f, -16.0f, 0.0f), Mult(Rz(t/100 - 3 * M_PI/16), T(-15.0f, 17.0f, 0.0f)));
+	sun->drawOver(camMatrix, programObj, 1.0, sunrot, background->getPosition().y - sun->getPosition().y);
+	moon->drawOver(camMatrix, programObj, 1.0, moonrot, background->getPosition().y - moon->getPosition().y);
+	mountain->drawOver(camMatrix, programObj, 1.0, Ry(0.0), background->getPosition().y - mountain->getPosition().y);
+	cloud->drawOver(camMatrix, programObj, 1.0, Ry(0.0), background->getPosition().y - cloud->getPosition().y);
+	rainbow->drawOver(camMatrix, programObj, 1.0, Ry(0.0), background->getPosition().y - rainbow->getPosition().y);
 }
 
 void Fundamentals::drawSecondScene(){

@@ -19,5 +19,6 @@ void main(void)
 	gl_Position = projMatrix * mdlMatrix * vec4(inPosition, 1.0);
 	ex_Normal = mat3(mdlMatrix) * inNormal;
 	ex_TexCoord = inTexCoord;
-	height = inPosition.y;
+	vec4 temp = myRotZ * vec4(inPosition, 1.0);
+	height = temp.y;
 }
