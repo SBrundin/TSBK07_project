@@ -215,12 +215,19 @@ GLfloat Object::getCorrHeightInt(int x, int z){
 
 GLfloat Object::getRealHeight(GLfloat x, GLfloat z){
     GLfloat xx, zz, tempdist, height;
+    GLfloat yy = 0.0f;
     GLfloat dist = 1000000;
+    for (int i = 0; i < _model->numVertices; i++){
+      yy += _model->vertexArray[3 * i + 1];
+    }
+    yy = yy/_model->numVertices;
+    height = yy;
+
     for (int i = 0; i < _model->numVertices; i++){
       xx = _model->vertexArray[3 * i];
       zz = _model->vertexArray[3 * i + 2];
       tempdist = sqrt(pow((xx - x), 2) + pow((zz - z), 2));
-      if (tempdist < dist){
+      if ((tempdist < dist) && (_model->vertexArray[3 * i + 1] >= yy)){
         dist = tempdist;
         height = _model->vertexArray[3 * i + 1];
       }
