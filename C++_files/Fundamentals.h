@@ -51,7 +51,7 @@ private:
   std::vector<Object*> listOfObj_2;
   std::vector<Object*> listOfObj_3;
   Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
-  Model *skybox[6], *bookMarkModel, *sunModel, *moonModel, *mountainModel, *cloudModel, *rainbowModel, *backgroundModel;
+  Model *skybox[6], *bookMarkModel, *sunModel, *moonModel, *mountainModel, *cloudModel, *rainbowModel, *backgroundModel, *stopModel, *trafficModel, *streetLightModel;
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight;
   LightHandler *pointLightVec;
@@ -124,6 +124,10 @@ private:
   Object* stegos2;
   Object* stegos3;
   Object* trex;
+  Object* stopSign;
+  Object* streetLight;
+  Object* trafficLight;
+  
 
 
   Model *velociModel, *stegosModel, *trexModel;

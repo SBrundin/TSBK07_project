@@ -154,7 +154,7 @@ void Fundamentals::initobjects(){
 	frame = new Object(frameModel, leatherTex, leather2Tex, leatherTex);
 	firstPage = new Object(firstModel, grassTex, snowTex, grass1Tex, grass2Tex, grass3Tex);
 	secondPage = new Object(secondModel, grassTex, snowTex, grass1Tex, grass2Tex, grass3Tex);
-	pages = new Object(pagesModel, grassTex, snowTex, grass1Tex, grass2Tex, grass3Tex);
+	pages = new Object(pagesModel, snowTex, snowTex, snowTex, snowTex, snowTex);
 	book = new Book(toppage, firstPage, secondPage, frame, pages);
 	bookMark = new Object(vec3(-14.0f, 1.0f, 0.0f), bookMarkModel, leatherTex);
 
@@ -165,26 +165,18 @@ void Fundamentals::initobjects(){
 
 	//OBJECTS FOR SCENE 1 obj->updateBoundingBox(Ry(angle), scale);
 	house = new Object(vec3(-37.0f, 6.9f, 0.0f), houseModel, woodTex);
-	house->updateBoundingBox(Ry(0), 2.0);
 	cottage = new Object(vec3(-20.0f, 4.7f, -15.0f), cottageModel, woodTex);
-	cottage->updateBoundingBox(Ry(M_PI), 1.0);
 	cottage1 = new Object(vec3(-26.0f, 4.7f, 13.0f), cottageModel, wood2Tex);
 	cottage2 = new Object(vec3(7.0f, 5.0f, 11.0f), cottageModel, cottageTex);
-	cottage2->updateBoundingBox(Ry(M_PI/2), 1.0);
 	elephant = new Object(vec3(-35.0f, 4.2f, 14.0f), elephantModel, leatherTex);
-	elephant->updateBoundingBox(Ry(M_PI/4), 1.0);
 	elephantbby = new Object(vec3(-33.3f, 3.2f, 13.0f), elephantModel, leatherTex);
-	elephantbby->updateBoundingBox(Ry(7.5*M_PI/4), 0.3);
  	pile = new Object(vec3(7.0f, 3.9f, -11.0f), pileModel, woodTex);
 	tree = new Object(vec3(-18.0f, 6.5f, 4.4f), treeModel, grassTex);
-	tree->updateBoundingBox(Ry(0.0), 2.0);
 	rosebush1 = new Object(vec3(7.0f, 4.8f, 4.4f), rosebushModel, bilTex);
-	rosebush1->updateBoundingBox(Ry(0.0), 2.2);
 	rosebush2 = new Object(vec3(-30.0f, 4.6f, -16.0f), rosebushModel, bilTex);
-	rosebush2->updateBoundingBox(Ry(0.0), 1.5);
 	rosebush3 = new Object(vec3(10.0f, 4.8f, -4.4f), rosebushModel, bilTex);
 	bird = new Object(vec3(10.0f, 15.0f, -4.4f), birdModel, waterTex);
-	bird2 = new Object(vec3(15.0f, 15.0f, -10.4f), birdModel, waterTex);
+	bird2 = new Object(vec3(10.0f, 15.0f, -10.4f), birdModel, waterTex);
 	bird3 = new Object(vec3(-20.0f, 15.0f, 10.4f), birdModel, waterTex);
 	background = new Object(vec3(-15.0f, 1.0f, -19.25f), backgroundModel, backgroundTex);
 	sun = new Object(vec3(-15.0f, 17.0f, -18.9f), sunModel, sunTex);
@@ -192,6 +184,15 @@ void Fundamentals::initobjects(){
 	mountain = new Object(vec3(-7.0f, 7.5f, -18.5f), mountainModel, stoneTex);
 	mountain2 = new Object(vec3(-13.0f, 6.2f, -18.7f), mountainModel, stoneTex);
  	cloud = new Object(vec3(-27.0f, 20.0f, -18.85f), cloudModel, cloudTex);
+
+	house->updateBoundingBox(Ry(0), 2.0);
+	cottage->updateBoundingBox(Ry(M_PI), 1.0);
+	cottage2->updateBoundingBox(Ry(M_PI/2), 1.0);
+	elephant->updateBoundingBox(Ry(M_PI/4), 1.0);
+	elephantbby->updateBoundingBox(Ry(7.5*M_PI/4), 0.3);
+	tree->updateBoundingBox(Ry(0.0), 2.0);
+	rosebush1->updateBoundingBox(Ry(0.0), 2.2);
+	rosebush2->updateBoundingBox(Ry(0.0), 1.5);
 
 	listOfObj_2.push_back(house);
 	listOfObj_2.push_back(cottage);
@@ -205,6 +206,13 @@ void Fundamentals::initobjects(){
 	listOfObj_2.push_back(rosebush2);
 	listOfObj_2.push_back(rosebush3);
 	listOfObj_2.push_back(bird);
+	listOfObj_2.push_back(bird2);
+	listOfObj_2.push_back(bird3);
+	listOfObj_2.push_back(sun);
+	listOfObj_2.push_back(moon);
+	listOfObj_2.push_back(mountain);
+	listOfObj_2.push_back(mountain2);
+	listOfObj_2.push_back(cloud);
 
 	//OBJECTS FOR SCENE 2
 	velociraptor1 = new Object(vec3(-40.0f, 3.8f, -4.0f), velociModel, leatherTex);
@@ -218,6 +226,10 @@ void Fundamentals::initobjects(){
 	stegos1 = new Object(vec3(-2.0f, 4.6f, -10.0f), stegosModel, leatherTex);
 	stegos2 = new Object(vec3(-5.0f, 4.6f, -16.0f), stegosModel, leatherTex);
 	stegos3 = new Object(vec3(-10.0f, 4.6f, -4.0f), stegosModel, leatherTex);
+	coronaSimple = new Object(vec3(-15.0f, 6.3f, 0.0f), coronaModel1, grassTex);
+	stopSign = new Object(vec3(0.0f, 6.3f, 2.0f), stopModel, leatherTex);
+	trafficLight = new Object(vec3(0.0f, 6.3f, 6.0f), trafficModel, leatherTex);
+	streetLight = new Object(vec3(0.0f, 6.3f, -17.0f), streetLightModel, leatherTex);
 
 	velociraptor1->updateBoundingBox(Ry(M_PI/2), 1.0);
 	velociraptor2->updateBoundingBox(Ry(M_PI/2), 1.0);
@@ -242,6 +254,7 @@ void Fundamentals::initobjects(){
 	listOfObj_3.push_back(stegos1);
 	listOfObj_3.push_back(stegos2);
 	listOfObj_3.push_back(stegos3);
+	listOfObj_3.push_back(coronaSimple);
 }
 
 void Fundamentals::loadmodels(){
@@ -278,6 +291,9 @@ void Fundamentals::loadmodels(){
 	velociModel = LoadModelPlus("../Modeller/velociraptor.obj");
 	trexModel = LoadModelPlus("../Modeller/trex.obj");
 	stegosModel = LoadModelPlus("../Modeller/stegosaurus.obj");
+	stopModel = LoadModelPlus("../Modeller/stopsign.obj");
+	trafficModel = LoadModelPlus("../Modeller/man.obj");
+	streetLightModel = LoadModelPlus("../Modeller/streetlamp.obj");
 }
 
 void Fundamentals::loadtextures(){
@@ -400,19 +416,22 @@ void Fundamentals::loadskybox(){
 }
 
 void Fundamentals::drawFirstScene(){
-	bookMark->draw(camMatrix, programObj, 1.0, Ry(0.0));
 
+	//Objects on toppage
+	bookMark->draw(camMatrix, programObj, 1.0, Ry(0.0));
 	house->drawOn(camMatrix, programObj, 2.0, Ry(0.0), toppage); // camMatrix, shader, scale, angle
-	cottage->draw(camMatrix, programObj, 1.0, Ry(M_PI));
-	cottage1->draw(camMatrix, programObj, 1.0, Ry(0.0));
-	cottage2->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+	cottage->drawOn(camMatrix, programObj, 1.0, Ry(M_PI), toppage);
+	cottage1->drawOn(camMatrix, programObj, 1.0, Ry(0.0), toppage);
+	rosebush2->drawOn(camMatrix, programObj, 1.5, Ry(0.0), toppage);
 	elephant->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/4), toppage);
 	elephantbby->drawOn(camMatrix, programObj, 0.3, Ry(7.5*M_PI/4), toppage);
-	tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
-	rosebush1->draw(camMatrix, programObj, 2.2, Ry(0.0));
-	rosebush2->draw(camMatrix, programObj, 1.5, Ry(0.0));
-	rosebush3->draw(camMatrix, programObj, 1.0, Ry(0.0));
-	pile->draw(camMatrix, programObj, 1.0, Ry(0.0));
+	tree->drawOn(camMatrix, programObj, 2.0, Ry(0.0), toppage);
+	rosebush1->drawOn(camMatrix, programObj, 2.2, Ry(0.0), firstPage);
+
+	//Objects on firstpage
+	cottage2->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	rosebush3->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
+	pile->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
 	background->drawOver(camMatrix, programObj, 1.0, Rz(t/100), background->getPosition().y);
 	mat4 moonrot = Mult(T(0.0f, 21.0f, 0.0f), Mult(Rz(t/100 + 3 * M_PI/16), T(-15.0f, -20.0f, 0.0f)));
 	mat4 sunrot = Mult(T(0.0f, -16.0f, 0.0f), Mult(Rz(t/100 - 3 * M_PI/16), T(-15.0f, 17.0f, 0.0f)));
@@ -421,6 +440,7 @@ void Fundamentals::drawFirstScene(){
 	mountain->drawOver(camMatrix, programObj, 1.0, Ry(0.0), background->getPosition().y - mountain->getPosition().y);
 	mountain2->drawOver(camMatrix, programObj, 0.7, Ry(0.0), background->getPosition().y - mountain2->getPosition().y);
 	cloud->drawOver(camMatrix, programObj, 1.0, Ry(0.0), background->getPosition().y - cloud->getPosition().y);
+
 	mat4 modelViewbird = T(bird->getPosition().x*sin(-t), bird->getPosition().y+0.3*sin(5*t), bird->getPosition().z*cos(-t));
 	mat4 Totbird = Mult(camMatrix, Mult(modelViewbird, Mult(Ry(t+4.71), Rz(3.14/3*(sin(t))))));
 	glActiveTexture(GL_TEXTURE0);
@@ -429,7 +449,7 @@ void Fundamentals::drawFirstScene(){
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, Totbird.m);
 	DrawModel(bird->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 
-	mat4 mdlRotAxis = T(-15.0f, 0.0f, -10.0f);
+	mat4 mdlRotAxis = T(0.0f, 0.0f, 10.4f);
 	mat4 modelViewbird2 = T(bird2->getPosition().x*sin(-2*t), bird2->getPosition().y+0.3*sin(5*t), bird2->getPosition().z*cos(-2*t));
 	mat4 rotBird2 =  Mult(mdlRotAxis, Mult(Ry(2*t+4.71), Rz(3.14/3*(sin(2*t)))));
 	mat4 Totbird2 = Mult(camMatrix, Mult(modelViewbird2, rotBird2));
@@ -441,7 +461,7 @@ void Fundamentals::drawFirstScene(){
 
 	mat4 mdlRotAxis3 = T(-20.0f, 0.0f, 10.10f);
 	mat4 modelViewbird3 = T(bird3->getPosition().x*sin(t), bird3->getPosition().y+2*sin(t), bird3->getPosition().z*cos(t));
-	mat4 rotBird3 =  Mult(mdlRotAxis3, Mult(Ry(t+4.71), Rz(3.14/3*(sin(t)))));
+	mat4 rotBird3 =  Mult(mdlRotAxis3, Mult(Ry(t+4.71), (Rz(3.14/3* sin(t)))));
 	mat4 Totbird3 = Mult(camMatrix, Mult(modelViewbird3, rotBird3));
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, bird3->getTexture());
@@ -454,21 +474,46 @@ void Fundamentals::drawFirstScene(){
 
 void Fundamentals::drawSecondScene(){
 
-velociraptor1->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor2->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor3->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor4->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor5->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor6->draw(camMatrix, programObj, 1.0, Ry(2*M_PI/5));
-velociraptor7->draw(camMatrix, programObj, 1.0, Ry(M_PI/3));
-trex->draw(camMatrix, programObj, 1.0, Ry(-3*M_PI/4));
-stegos1->draw(camMatrix, programObj, 1.0, Ry(M_PI/4));
-stegos2->draw(camMatrix, programObj, 1.0, Ry(-M_PI/2));
-stegos3->draw(camMatrix, programObj, 1.0, Ry(-M_PI/3));
-tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
-rosebush1->draw(camMatrix, programObj, 2.2, Ry(0.0));
-rosebush2->draw(camMatrix, programObj, 1.5, Ry(0.0));
-rosebush3->draw(camMatrix, programObj, 1.0, Ry(0.0));
+	//First page objects
+velociraptor1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+velociraptor2->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+velociraptor3->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+velociraptor4->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+velociraptor5->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+velociraptor6->drawOn(camMatrix, programObj, 1.0, Ry(2*M_PI/5), firstPage);
+velociraptor7->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/3), firstPage);
+tree->drawOn(camMatrix, programObj, 2.0, Ry(0.0), firstPage);
+
+//Second page objects
+trex->drawOn(camMatrix, programObj, 1.0, Ry(-3*M_PI/4), secondPage);
+stegos1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/4),secondPage);
+stegos2->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/2),secondPage);
+stegos3->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/3), secondPage);
+
+rosebush1->drawOn(camMatrix, programObj, 2.2, Ry(0.0), secondPage);
+rosebush2->drawOn(camMatrix, programObj, 1.5, Ry(0.0), secondPage);
+rosebush3->drawOn(camMatrix, programObj, 1.0, Ry(0.0), secondPage);
+
+for (int i =0; i<7;i++){
+mat4 mdlLight = T(streetLight->getPosition().x, streetLight->getPosition().y, streetLight->getPosition().z+7*i);
+mat4 totLight = Mult(camMatrix, mdlLight);
+DrawModel(streetLight->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, totLight.m);
+}
+trafficLight->drawOn(camMatrix, programObj, 1.0, Ry(0.0), secondPage);
+stopSign->drawOn(camMatrix, programObj, 1.0, Ry(0.0), secondPage);
+//coronaSimple->draw(camMatrix, programObj, 1.0, Ry(0.0));
+
+mat4 modelViewCor = T(coronaSimple->getPosition().x+15*sin(t), coronaSimple->getPosition().y+sin(t*5), coronaSimple->getPosition().z);
+
+//mat4 rotBird2 =  Mult(mdlRotAxisCor, Mult(Ry(2*t+4.71), Rz(3.14/3*(sin(2*t)))));
+mat4 totCor = Mult(camMatrix, Mult(modelViewCor, Rz(t/2)));
+glActiveTexture(GL_TEXTURE0);
+glBindTexture(GL_TEXTURE_2D, coronaSimple->getTexture());
+glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, totCor.m);
+DrawModel(coronaSimple->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
 
 }
 
