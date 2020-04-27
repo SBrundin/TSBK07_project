@@ -172,7 +172,14 @@ void Object::updateBoundingBox(mat4 rotation, GLfloat scale)
 }
 
 void Object::drawOn(mat4 camMatrix, GLuint shader, float scale, mat4 rot, Object* object){
-  _position.y = object->getRealHeight((object->getPosition().x + _position.x) , (object->getPosition().z + _position.z)) + object->getPosition().y + scale * _size.y/2;
+  GLfloat x = _position.x - object->getPosition().x;
+  GLfloat z = _position.z - object->getPosition().z;
+  if(_position.x < 0){
+    _position.y = object->getRealHeight(-x, z) + object->getPosition().y + scale * _size.y/2;
+  }
+  else{
+    _position.y = object->getRealHeight(x, z) + object->getPosition().y + scale * _size.y/2;
+  }
   draw(camMatrix, shader, scale, rot);
 }
 

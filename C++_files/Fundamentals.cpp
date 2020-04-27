@@ -136,13 +136,13 @@ void Fundamentals::initobjects(){
 	car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
 	truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, truckTex);
 	truck->updateBoundingBox(Ry(M_PI/2), 3.0);
-	toppage = new Object(topModel, leatherTex);
+	toppage = new Object(topModel, leatherTex, leatherTex, leatherTex,  leatherTex, leather2Tex);
 
 	//MULTIPLE TEXTURE OBJECTS, Object(pos, model, tex, texside, texup)
-	frame = new Object(frameModel, leatherTex, leatherTex, leatherTex);
-	firstPage = new Object(firstModel, grassTex, snowTex, grass1Tex, grass2Tex, grass3Tex);
-	secondPage = new Object(secondModel, grassTex, snowTex, grass1Tex, grass2Tex, grass3Tex);
-	pages = new Object(pagesModel, grassTex, snowTex, grass1Tex, grass2Tex, grass3Tex);
+	frame = new Object(frameModel, leatherTex, leatherTex, leatherTex,  leatherTex, leather2Tex);
+	firstPage = new Object(firstModel, paperTex, paperTex, grass1Tex, grass2Tex, grass3Tex);
+	secondPage = new Object(secondModel, paperTex, paperTex, grass1Tex, grass2Tex, grass3Tex);
+	pages = new Object(pagesModel, paperTex, paperTex, grass1Tex, grass2Tex, grass3Tex);
 	book = new Book(toppage, firstPage, secondPage, frame, pages);
 	bookMark = new Object(vec3(-14.0f, 1.0f, 0.0f), bookMarkModel, leatherTex);
 
@@ -236,7 +236,8 @@ void Fundamentals::loadtextures(){
 	LoadTGATextureSimple("../textures/Green.tga", &greenTex);
 	LoadTGATextureSimple("../textures/Sun.tga", &sunTex);
 	LoadTGATextureSimple("../textures/Moon.tga", &moonTex);
-	LoadTGATextureSimple("../textures/Stone.tga", &stoneTex);
+	LoadTGATextureSimple("../textures/rock_02_dif.tga", &stoneTex);
+	LoadTGATextureSimple("../textures/Paper.tga", &paperTex);
 	//LoadTGATextureSimple("../textures/Rosepedal.tga", &rainbowTex);
 }
 
@@ -329,14 +330,14 @@ void Fundamentals::drawFirstScene(){
 	bookMark->draw(camMatrix, programObj, 1.0, Ry(0.0));
 
 	house->drawOn(camMatrix, programObj, 2.0, Ry(0.0), toppage); // camMatrix, shader, scale, angle
-	cottage->draw(camMatrix, programObj, 1.0, Ry(M_PI));
-	cottage1->draw(camMatrix, programObj, 1.0, Ry(0.0));
-	cottage2->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+	cottage->drawOn(camMatrix, programObj, 1.0, Ry(M_PI), toppage);
+	cottage1->drawOn(camMatrix, programObj, 1.0, Ry(0.0), toppage);
+	cottage2->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
 	elephant->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/4), toppage);
 	elephantbby->drawOn(camMatrix, programObj, 0.3, Ry(7.5*M_PI/4), toppage);
-	tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
-	rosebush->draw(camMatrix, programObj, 1.0, Ry(0.0));
-	pile->draw(camMatrix, programObj, 1.0, Ry(0.0));
+	tree->drawOn(camMatrix, programObj, 2.0, Ry(0.0), toppage);
+	rosebush->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
+	pile->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
 	background->drawOver(camMatrix, programObj, 1.0, Rz(t/100), background->getPosition().y);
 	mat4 moonrot = Mult(T(0.0f, 21.0f, 0.0f), Mult(Rz(t/100 + 3 * M_PI/16), T(-15.0f, -20.0f, 0.0f)));
 	mat4 sunrot = Mult(T(0.0f, -16.0f, 0.0f), Mult(Rz(t/100 - 3 * M_PI/16), T(-15.0f, 17.0f, 0.0f)));

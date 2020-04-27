@@ -24,10 +24,10 @@ if ( in_Normal.y > 0.0){
   color = color0 + color1 + color2;
 }
 else if ( in_Normal.y < 0.0){
-  color = texture(Tex, 20*ex_TexCoord)*vec4(shade, shade, shade, 1.0);
+  color = texture(Tex, 1.0*ex_TexCoord)*vec4(shade, shade, shade, 1.0);
 }
 else{
-  color = texture(sideTex, ex_TexCoord)*vec4(shade, shade, shade, 1.0);
+  color = texture(1.0 * sideTex, ex_TexCoord)*vec4(shade, shade, shade, 1.0);
 }
 out_Color = color;
 out_Color.w = 1.0;
