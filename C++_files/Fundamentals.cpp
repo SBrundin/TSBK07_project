@@ -51,11 +51,11 @@ void Fundamentals::loadfiles(){
 	pointLightVec = new LightHandler();
 
 	//pointlight
-	lightPos = {1.0f, 3.0f, 0.0f};
+	/*lightPos = {1.0f, 3.0f, 0.0f};
 	GLfloat constant = 1.0f;//liten betyder starkt
 	GLfloat linear = 0.09;
 	GLfloat quadratic = 0.022;
-	vec3 lightColour = {0.4f, 0.9f, 0.5f};
+	vec3 lightColour = {0.4f, 0.9f, 0.5f};*/
 /*	//lightSource = new LightSource(lightPos, lightColour, constant, linear, quadratic);
 	pointLightIndex = pointLightVec -> addLight(lightPos, lightColour, constant, linear, quadratic);
 
@@ -176,6 +176,7 @@ void Fundamentals::update(){
 	vec3 viewPos = {camera-> getPosition().x, camera-> getPosition().y, camera-> getPosition().z};
 	glUniform3fv(glGetUniformLocation(mainProg, "viewPos"), 1, &viewPos.x);
 	glUniform1i(glGetUniformLocation(mainProg, "number_of_point_lights"), 1);
+	//pointLight1-> setPosition(vec3(0.0f, 10*sin(t), 0.0f));
 	vec3 lightPos = pointLight1->getPosition();
 	vec3 colour = pointLight1-> getColour();
 	vec3 ambient = pointLight1-> getAmbient();
@@ -187,23 +188,14 @@ void Fundamentals::update(){
 
 	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[0].position"), 1, &(lightPos).x);
 	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[0].colour"), 1, &(colour).x);
-	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[0].ambient"), 1, &(ambient).x);
-	glUniform3fv(glGetUniformLocation(mainProg,  "pointLightz[0].diffuse"), 1, &(diffuse).x);
-	glUniform3fv(glGetUniformLocation(mainProg,  "pointLightz[0].specular"), 1, &(specular).x);
+	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[0].amb"), 1, &(ambient).x);
+	glUniform3fv(glGetUniformLocation(mainProg,  "pointLightz[0].diffu"), 1, &(diffuse).x);
+	glUniform3fv(glGetUniformLocation(mainProg,  "pointLightz[0].specu"), 1, &(specular).x);
 	glUniform1f(glGetUniformLocation(mainProg,  "pointLightz[0].constant"), constant);
 	glUniform1f(glGetUniformLocation(mainProg, "pointLightz[0].linear"), linear);
 	glUniform1f(glGetUniformLocation(mainProg, "pointLightz[0].quadratic"), quadratic);
 
-	mat4 modelView = T(box->getPosition().x, box->getPosition().y, box->getPosition().z);
-	mat4 Tot = Mult(camMatrix, Mult(Mult(modelView, S(1.0f,1.0f,1.0f)), Ry(0.0)));
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, box->getTexture());
-	glUniform1i(glGetUniformLocation(mainProg, "Tex"), 0); // Texture unit 0
-	glUniformMatrix4fv(glGetUniformLocation(mainProg, "mdlMatrix"), 1, GL_TRUE, Tot.m);
-	glUniformMatrix4fv(glGetUniformLocation(mainProg, "model"), 1, GL_TRUE, modelView.m);
-	DrawModel(boxModel, mainProg, "inPosition", "inNormal", "inTexCoord");
-
-//	box->draw(camMatrix, mainProg, 1.0, Ry(0.0));
+  box->draw(camMatrix, mainProg, 1.0, Ry(0.0));
 
 
 
