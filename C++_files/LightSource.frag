@@ -1,6 +1,6 @@
 #version 150
 
-#define NUMBER_OF_POINT_LIGHTS 1
+#define NUMBER_OF_POINT_LIGHTS 2
 struct PointLight
 {
    vec3 position;
@@ -81,34 +81,31 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDirectio
 
 /////////////////////////////////PointLight
 
-vec3 calcPointLight(vec3 pos, vec3 col, vec3 amb, vec3 dFuse, vec3 in_spec,
-                    float lin, float constant, float quad,
-                    vec3 normal, vec3 fragPos, vec3 viewDir)
+vec3 calcPointLight( PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir )
 {
-    vec3 lightDir = normalize( pos - fragPos );
+    vec3 lightDir = normalize( light.position - fragPos );
 
     // Diffuse shading
     float diff = max( dot( normal, lightDir ), 0.0 );
 
     // Specular shading
     vec3 reflectDir = reflect( -lightDir, normal );
-    float spec = pow( max( dot( viewDir, reflectDir ), 0.0 ), 36);//lägg till material.shinieness
+    float spec = pow( max( dot( viewDir, reflectDir ), 0.0 ), 200 );
 
     // Attenuation
-    float distance = length( pos - fragPos );
-    //float attenuation = 1.0f / ( constant + lin * distance + quad * ( distance * distance ) );
+    float distance = length( light.position - fragPos );
+    float attenuation = 1.0f / ( light.constant + light.linear * distance + light.quadratic * ( distance * distance ) );
 
-    // Combine results Lägg till texture koordinater här sen
-    vec3 ambient = amb * col;
-    vec3 diffuse = dFuse * diff * col; //vec3( texture( material.diffuse, TexCoords ) );
-    vec3 specular = in_spec * spec * col; //vec3( texture( material.specular, TexCoords ) );
+    // Combine results
+    vec3 ambient = light.ambient * light.colour;//vec3( texture( material.diffuse, TexCoords ) );
+    vec3 diffuse = light.diffuse * diff *light.colour;// vec3( texture( material.diffuse, TexCoords ) );
+    vec3 specular = light.specular * spec *light.colour; //vec3( texture( material.specular, TexCoords ) );
 
-  //  ambient *= attenuation;
-  //  diffuse *= attenuation;
-  //  specular *= attenuation;
+    ambient *= attenuation;
+    diffuse *= attenuation;
+    specular *= attenuation;
 
     return ( ambient + diffuse + specular );
-
 }
 
 /////////////////////////69///////Directional Lighting
@@ -172,19 +169,16 @@ void main(void)
   vec3 norm = normalize(normal);
   vec3 viewDirection = normalize(viewPos - fragPos);
   vec3 res = vec3(0.0f,0.0f,0.0f);
-  for ( int i= 0; i < number_of_point_lights; i++){
-    // res = calcPointLight(pointLightPos[i], pointLightCol[i], pointLightAmb[i],
-      //                    pointLightDif[i], pointLightSpec[i], pointLightLin[i],
-        //                  pointLightConst[i], pointLightQuad[i],
-          //                norm, fragPos, viewDirection);
+  for ( int i= 0; i < 2; i++){
+     res += calcPointLight(pointLightz[i], norm, fragPos, viewDirection);
   }
 
 
 
-  //vec3 pointLights = calcPointLight(pointLight, norm, fragPos, viewDirection);//*lightColour;
+  vec3 pointLights = calcPointLight(pointLightz[0], norm, fragPos, viewDirection);//*lightColour;
   vec3 dirLights = CalcDirLight(dirLight, norm, viewDirection);
   vec3 spotLights = calcSpotLight(spotLight, norm, fragPos, viewDirection);
 
-  vec3 result = ( pointLightCol[0] )  * vec3( texture( boxTex, exTexCoord ) );
+  vec3 result = ( res )  * vec3( texture( boxTex, exTexCoord ) );
   colour = vec4(result, 1.0f);//*vec3( texture( boxTex, exTexCoord ) );
 }

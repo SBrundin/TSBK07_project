@@ -11,6 +11,7 @@ LightSource::LightSource(vec3 position, vec3 col, GLfloat constant, GLfloat line
     specular = {1.0f, 1.0f, 1.0f};
     direction = {-0.2f, -1.0f, -0.3f};
     colour = col;
+    position = position;
     specular = specular;
     constant = constant;
     linear = linear;

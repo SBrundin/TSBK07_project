@@ -120,7 +120,7 @@ void Fundamentals::loadfiles(){
 	std::vector<GLfloat> pointLinVec = pointLightVec -> getLinVec();
 	std::vector<GLfloat> pointQuadVec = pointLightVec -> getQuatVec();
 	int amount_of_lights = pointLinVec.size();
-	glUniform1i(glGetUniformLocation(mainProg, "number_of_point_lights"), amount_of_lights);
+	glUniform1i(glGetUniformLocation(mainProg, "number_of_point_lights"), 2);
   glUniform3fv(glGetUniformLocation(mainProg, "pointLightPos"), pointPosVec.size(), reinterpret_cast<GLfloat *>(&pointPosVec));
   glUniform3fv(glGetUniformLocation(mainProg, "pointLightCol"), pointColVec.size(), reinterpret_cast<GLfloat *>(&pointColVec));
   glUniform3fv(glGetUniformLocation(mainProg, "pointLightAmb"), pointAmbVec.size(), reinterpret_cast<GLfloat *>(&pointAmbVec));
@@ -138,6 +138,14 @@ void Fundamentals::loadfiles(){
 	glUniform1f(glGetUniformLocation(mainProg,  "pointLightz[0].constant"), constant);
 	glUniform1f(glGetUniformLocation(mainProg, "pointLightz[0].linear"), linear);
 	glUniform1f(glGetUniformLocation(mainProg, "pointLightz[0].quadratic"), quadratic);
+
+	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[1].colour"), 1, &lightColour.x);
+	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[1].ambient"), 1, &ambient.x);
+	glUniform3fv(glGetUniformLocation(mainProg,  "pointLightz[1].diffuse"), 1, &diffuse.x);
+	glUniform3fv(glGetUniformLocation(mainProg,  "pointLightz[1].specular"), 1, &specular.x);
+	glUniform1f(glGetUniformLocation(mainProg,  "pointLightz[1].constant"), constant);
+	glUniform1f(glGetUniformLocation(mainProg, "pointLightz[1].linear"), linear);
+	glUniform1f(glGetUniformLocation(mainProg, "pointLightz[1].quadratic"), quadratic);
 	pointLightVec -> uploadPointLights(mainProg);
 	printError("init shader5");
 
@@ -244,8 +252,16 @@ void Fundamentals::update(){
 	//pointLightVec -> uploadPointLights(mainProg);
 	lightSource->setPosition(v*10*sin(t));
 	lightPos = spotLight-> getPosition();
+
 	vec3 lightPosPoint = lightSource-> getPosition();
-	glUniform3fv(glGetUniformLocation(mainProg, "pointLight.position"), 1, &lightPosPoint.x);
+	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[0].position"), 1, &lightPosPoint.x);
+
+	lightSource->setPosition(v*10*cos(t));
+	lightPosPoint = lightSource-> getPosition();
+	vec3 colll = {1.0f, 0.0f, 0.0f};
+	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[1].colour"), 1, &colll.x);
+	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[1].position"), 1, &lightPosPoint.x);
+
 	//dirLight
 	dirrLight->setDirection( {-0.5f, -0.5f, -0.5});
 	vec3 dirrDirr = dirrLight->getDirection();
