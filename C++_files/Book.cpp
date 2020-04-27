@@ -33,8 +33,12 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureUp());
+  glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureUp().x);
   glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureUp().y);
+  glActiveTexture(GL_TEXTURE3);
+  glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureUp().z);
+  glActiveTexture(GL_TEXTURE4);
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());
   }
   else {
@@ -43,6 +47,10 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());
   glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, _top->getTexture());
+  glActiveTexture(GL_TEXTURE3);
+  glBindTexture(GL_TEXTURE_2D, _top->getTexture());
+  glActiveTexture(GL_TEXTURE4);
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());
   }
 
@@ -78,8 +86,12 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, _firstPage->getTexture());
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, _firstPage->getTexture());
+  glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureUp().x);
   glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureUp().y);
+  glActiveTexture(GL_TEXTURE3);
+  glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureUp().z);
+  glActiveTexture(GL_TEXTURE4);
   glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureSide());
   mat4 modelViewfirst = T(_firstPage->getPosition().x, _firstPage->getPosition().y, _firstPage->getPosition().z );
   mat4 totalfirst = Mult(camMatrix, modelViewfirst);
@@ -93,8 +105,12 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, _pages->getTexture());
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, _pages->getTextureUp());
+  glBindTexture(GL_TEXTURE_2D, _pages->getTextureUp().x);
   glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, _pages->getTextureUp().y);
+  glActiveTexture(GL_TEXTURE3);
+  glBindTexture(GL_TEXTURE_2D, _pages->getTextureUp().z);
+  glActiveTexture(GL_TEXTURE4);
   glBindTexture(GL_TEXTURE_2D, _pages->getTextureSide());
   mat4 modelViewPages = T(_pages->getPosition().x, _pages->getPosition().y ,_pages->getPosition().z);
   mat4 totalPages = Mult(camMatrix, modelViewPages);
