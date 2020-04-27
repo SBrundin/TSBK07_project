@@ -151,10 +151,10 @@ void Fundamentals::initobjects(){
 
 	//MULTIPLE TEXTURE OBJECTS, Object(pos, model, tex, texside, texup)
 	toppage = new Object(topModel, leatherTex, leatherTex, leatherTex, leatherTex, leatherTex);
-	frame = new Object(frameModel, leatherTex, leather2Tex, leatherTex, leatherTex, leatherTex);
+	frame = new Object(frameModel, leatherTex, leatherTex, leatherTex, leatherTex, leatherTex);
 	firstPage = new Object(firstModel, paperTex, paperTex, grass1Tex, grass2Tex, grass3Tex);
-	secondPage = new Object(secondModel, paperTex, paperTex, grass1Tex, grass2Tex, grass3Tex);
-	pages = new Object(pagesModel, paperTex, paperTex, grass1Tex, grass2Tex, grass3Tex);
+	secondPage = new Object(secondModel, paperTex, paperTex, crackedmud2Tex, crackedmud3Tex, lavaTex);
+	pages = new Object(pagesModel, paperTex, paperTex, paperTex, paperTex, paperTex);
 	book = new Book(toppage, firstPage, secondPage, frame, pages);
 	bookMark = new Object(vec3(-14.0f, 1.0f, 0.0f), bookMarkModel, leatherTex);
 
@@ -312,6 +312,10 @@ void Fundamentals::loadtextures(){
 	LoadTGATextureSimple("../textures/Moon.tga", &moonTex);
 	LoadTGATextureSimple("../textures/Stone.tga", &stoneTex);
 	LoadTGATextureSimple("../textures/Paper.tga", &paperTex);
+	LoadTGATextureSimple("../textures/Sand2.tga", &sandTex);
+	LoadTGATextureSimple("../textures/Sand3.tga", &sand1Tex);
+	LoadTGATextureSimple("../textures/Sand5.tga", &sand2Tex);
+	LoadTGATextureSimple("../textures/HardeningLava.tga", &lavaTex);
 	//LoadTGATextureSimple("../textures/Rosepedal.tga", &rainbowTex);
 }
 

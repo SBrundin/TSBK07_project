@@ -60,7 +60,7 @@ private:
   GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
   GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, leather2Tex, bilTex, paperTex, truckTex, asphaltTex, backgroundTex, bricksTex, bricks2Tex;
   GLuint woodTex, wood2Tex, cloudTex, crackedmudTex, crackedmud2Tex, crackedmud3Tex, pathTex, greenTex, moonTex, sunTex, stoneTex, rainbowTex;
-  GLuint grass1Tex, grass2Tex, grass3Tex, grass4Tex, grass5Tex, grass6Tex, cottageTex;
+  GLuint grass1Tex, grass2Tex, grass3Tex, grass4Tex, grass5Tex, grass6Tex, cottageTex, sandTex, sand1Tex, sand2Tex, lavaTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   int pointLightIndex;
