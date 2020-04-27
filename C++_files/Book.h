@@ -67,13 +67,16 @@ private:
     vec3 _topPosOpen = {-29.565f, 2.375f, 0.0f};
     vec3 _firstOpen = {-29.065f, 2.768f, 0.0f};
     vec3 _secondPos = {0.06f, 2.78f, 0.0f};
-    vec3 _rotationAxis = {-14.565f, -0.25f, 0.0f};
+    vec3 _rotationAxistop = {-15.0f, -0.625f, 0.0f};
+    vec3 _rotationAxisp1 = {-15.0f, 0.029f, 0.0f};
+    vec3 _pagesPos = {-0.315f, 0.173f, 0.0f};
     GLuint _currentPage;
     GLuint _pageNbr;
     bool _rotationBool;
     bool _fadeBool;
     GLfloat _timer = 0;
     char _buttonPressed;
+    mat4 _openRot = Rz(0);
 };
 
 #endif

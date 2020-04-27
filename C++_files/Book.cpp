@@ -21,6 +21,7 @@ Book::Book(Object* top, Object* firstPage, Object* secondPage, Object* frame, Ob
   _top->setPosition(_topPos);
   _firstPage->setPosition(_firstPos);
   _secondPage->setPosition(_secondPos);
+  _pages->setPosition(_pagesPos);
 }
 
 void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
@@ -91,7 +92,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, _top->getTextureSide());
     mat4 modelViewTop = T(_top->getPosition().x, _top->getPosition().y ,_top->getPosition().z);
-    mat4 totalTop = Mult(camMatrix, modelViewTop);
+    mat4 totalTop = Mult(camMatrix, Mult(modelViewTop, Rz(M_PI)));
     glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
     DrawModel(_top->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
     //First page
@@ -129,11 +130,11 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, _top->getTextureSide());
     mat4 modelViewTop = T(_top->getPosition().x, _top->getPosition().y ,_top->getPosition().z);
-    mat4 totalTop = Mult(camMatrix, modelViewTop);
+    mat4 totalTop = Mult(camMatrix, Mult(modelViewTop, Rz(M_PI)));
     glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
     DrawModel(_top->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
     //First page
-    glUniform1i(glGetUniformLocation(shader, "ID"), 1);
+    glUniform1i(glGetUniformLocation(shader, "ID"), 2);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _firstPage->getTexture());
     glActiveTexture(GL_TEXTURE1);
@@ -145,7 +146,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureSide());
     mat4 modelViewfirst = T(_firstPage->getPosition().x, _firstPage->getPosition().y, _firstPage->getPosition().z );
-    mat4 totalfirst = Mult(camMatrix, modelViewfirst);
+    mat4 totalfirst = Mult(camMatrix, Mult(modelViewfirst, Rz(M_PI)));
     glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalfirst.m);
     DrawModel(_firstPage->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
     //Second pages
@@ -186,7 +187,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   glActiveTexture(GL_TEXTURE4);
   glBindTexture(GL_TEXTURE_2D, _frame->getTextureSide());
   mat4 modelViewFrame = T(_frame->getPosition().x, _frame->getPosition().y, _frame->getPosition().z );
- 	mat4 totalFrame= Mult(camMatrix, modelViewFrame);
+ 	mat4 totalFrame = Mult(camMatrix, modelViewFrame);
 	glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalFrame.m);
 	DrawModel(_frame->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
 }
@@ -201,28 +202,33 @@ mat4 Book::generateRotationMat(vec3 rotationAxis, GLfloat time){
 
 
 void Book::browse(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Object* firstPage, GLuint pageNbr, char button){
-  mat4 totRot;
+  mat4 totRottop;
+  mat4 totRotp1;
   mat4 totalSec;
   mat4 totalTop;
   mat4 modelViewTop = T(top->getPosition().x, top->getPosition().y ,top->getPosition().z);
   mat4 modelViewSec = T(firstPage->getPosition().x, firstPage->getPosition().y ,firstPage->getPosition().z);
 
   if(button == 'l'){
-    totRot = generateRotationMat(_rotationAxis, time);
+    totRottop = generateRotationMat(_rotationAxistop, time);
+    totRotp1 = generateRotationMat(_rotationAxisp1, time);
   }
   else{
-    totRot = generateRotationMat(ScalarMult(_rotationAxis, -1), -time);
+    totRottop = generateRotationMat(ScalarMult(_rotationAxistop, -1), -time);
+    totRottop = Mult(totRottop, Rz(M_PI));
+    totRotp1 = generateRotationMat(ScalarMult(_rotationAxisp1, -1), -time);
+    totRotp1 = Mult(totRotp1, Rz(M_PI));
   }
 
   if (pageNbr == 1){
-  	totRot = Mult(modelViewTop, totRot);
-    totalTop = Mult(camMatrix, totRot);
+  	totRottop = Mult(modelViewTop, totRottop);
+    totalTop = Mult(camMatrix, totRottop);
     totalSec = Mult(camMatrix, modelViewSec);
   }
   else{
-    totRot = Mult(modelViewSec, totRot);
-    totalSec = Mult(camMatrix, totRot);
-    totalTop = Mult(camMatrix, modelViewTop);
+    totRotp1 = Mult(modelViewSec, totRotp1);
+    totalSec = Mult(camMatrix, totRotp1);
+    totalTop = Mult(camMatrix, Mult(modelViewTop, Rz(M_PI)));
   }
 
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
@@ -238,6 +244,14 @@ void Book::browse(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Obje
   glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureSide());
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalSec.m);
   DrawModel(firstPage->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, _secondPage->getTexture());
+  glActiveTexture(GL_TEXTURE4);
+  glBindTexture(GL_TEXTURE_2D, _secondPage->getTextureSide());
+  mat4 modelViewSecond = T(_secondPage->getPosition().x, _secondPage->getPosition().y, _secondPage->getPosition().z );
+  mat4 totalSecond = Mult(camMatrix, modelViewSecond);
+  glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalSecond.m);
+  DrawModel(_secondPage->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
 }
 
 
@@ -255,6 +269,7 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
     setRotationBool();
     _currentPage++;
     _timer = 0;
+    _openRot = Rz(M_PI);
   }
   //TOP ROTATION BACKWARD
   else if (timer <= 3.13 && currentPage == 2 && button == 'r')
@@ -282,6 +297,7 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
     setRotationBool();
     _currentPage++;
     _timer = 0;
+    _openRot = Rz(M_PI);
   }
 
   //FIRST PAGE ROTATION BACKWARD
@@ -298,6 +314,7 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
     setRotationBool();
     _currentPage--;
     _timer = 0;
+    _openRot = Rz(0);
   }
 
 }
