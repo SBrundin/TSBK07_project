@@ -12,9 +12,15 @@ LightSource::LightSource(vec3 pos, vec3 col)
     direction = {-0.2f, -1.0f, -0.3f};
     position = position;
     colour = col;
+
+    //Dessa 3 floats kontrollerar hur långt ljuset når.
+    //Behövs tunas för att se vad som är en bra standard.
+    //attenation = 2.0/(constant + linear*(distans till ljus) + quadratic*(distans till ljus)^2)
     constant = 1.0f;//liten betyder starkt
-    linear = 0.09;
-    quadratic = 0.032;
+    linear = 0.9;
+    quadratic = 0.32;
+
+    //För spotLights och hur stor radie på "ficklampan de ska vara"
     cutOff = cos(  12.5f*2*M_PI/180  );
     outerCutOff = cos(  15.5f*2*M_PI/180 );
 }
