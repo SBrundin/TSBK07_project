@@ -85,7 +85,7 @@ void Fundamentals::update(){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//DRAWS THE BOOK
-	book->draw(camMatrix, pageShader, t);
+	book->draw(camMatrix, pageShader, roadShader, t);
 
 	//DRAWS THE SCENES
 	glUseProgram(programObj);
@@ -230,6 +230,8 @@ void Fundamentals::initobjects(){
 	stopSign = new Object(vec3(0.0f, 6.3f, 2.0f), stopModel, leatherTex);
 	trafficLight = new Object(vec3(0.0f, 6.3f, 6.0f), trafficModel, leatherTex);
 	streetLight = new Object(vec3(0.0f, 6.3f, -17.0f), streetLightModel, leatherTex);
+	man = new Object(vec3(-10.0f, 6.3f, -2.0f), manModel, grass6Tex);
+	trashcan = new Object(vec3(-10.0f, 6.3f, -2.0f), trashcanModel, grass4Tex);
 
 	velociraptor1->updateBoundingBox(Ry(M_PI/2), 1.0);
 	velociraptor2->updateBoundingBox(Ry(M_PI/2), 1.0);
@@ -292,8 +294,10 @@ void Fundamentals::loadmodels(){
 	trexModel = LoadModelPlus("../Modeller/trex.obj");
 	stegosModel = LoadModelPlus("../Modeller/stegosaurus.obj");
 	stopModel = LoadModelPlus("../Modeller/stopsign.obj");
-	trafficModel = LoadModelPlus("../Modeller/man.obj");
+	trafficModel = LoadModelPlus("../Modeller/trafficlight.obj");
 	streetLightModel = LoadModelPlus("../Modeller/streetlamp.obj");
+	manModel = LoadModelPlus("../Modeller/man.obj");
+	trashcanModel = LoadModelPlus("../Modeller/trashcan3.obj");
 }
 
 void Fundamentals::loadtextures(){
@@ -337,6 +341,7 @@ void Fundamentals::initshaders(){
 	mainProg = loadShaders("LightSource.vert", "LightSource.frag");
 	pageShader = loadShaders("pageShader.vert", "pageShader.frag");
 	programObj = loadShaders("obj.vert", "obj.frag");
+	roadShader = loadShaders("roadShader.vert", "roadShader.frag");
 	printError("load shader");
 }
 
@@ -469,7 +474,6 @@ void Fundamentals::drawFirstScene(){
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, Totbird3.m);
 	DrawModel(bird3->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 
-
 }
 
 void Fundamentals::drawSecondScene(){
@@ -494,14 +498,17 @@ rosebush1->drawOn(camMatrix, programObj, 2.2, Ry(0.0), secondPage);
 rosebush2->drawOn(camMatrix, programObj, 1.5, Ry(0.0), secondPage);
 rosebush3->drawOn(camMatrix, programObj, 1.0, Ry(0.0), secondPage);
 
+
 for (int i =0; i<7;i++){
-mat4 mdlLight = T(streetLight->getPosition().x, streetLight->getPosition().y, streetLight->getPosition().z+7*i);
-mat4 totLight = Mult(camMatrix, mdlLight);
-DrawModel(streetLight->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
-glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, totLight.m);
+	mat4 mdlLight = T(streetLight->getPosition().x, streetLight->getPosition().y, streetLight->getPosition().z+7*i);
+	mat4 totLight = Mult(camMatrix, mdlLight);
+	DrawModel(streetLight->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, totLight.m);
 }
 trafficLight->drawOn(camMatrix, programObj, 1.0, Ry(0.0), secondPage);
 stopSign->drawOn(camMatrix, programObj, 1.0, Ry(0.0), secondPage);
+man->drawOn(camMatrix, programObj, 2.0, Ry(0.0), secondPage);
+trashcan->drawOn(camMatrix, programObj, 1.0, Ry(0.0), secondPage);
 //coronaSimple->draw(camMatrix, programObj, 1.0, Ry(0.0));
 
 mat4 modelViewCor = T(coronaSimple->getPosition().x+15*sin(t), coronaSimple->getPosition().y+sin(t*5), coronaSimple->getPosition().z);

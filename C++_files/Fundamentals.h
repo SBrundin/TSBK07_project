@@ -52,12 +52,13 @@ private:
   std::vector<Object*> listOfObj_3;
   Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
   Model *skybox[6], *bookMarkModel, *sunModel, *moonModel, *mountainModel, *cloudModel, *rainbowModel, *backgroundModel, *stopModel, *trafficModel, *streetLightModel;
+  Model *manModel, *trashcanModel;
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight;
   LightHandler *pointLightVec;
   mat4 projectionMatrix, camMatrix, camMat2;
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
-  GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
+  GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, roadShader;
   GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, leather2Tex, bilTex, paperTex, truckTex, asphaltTex, backgroundTex, bricksTex, bricks2Tex;
   GLuint woodTex, wood2Tex, cloudTex, crackedmudTex, crackedmud2Tex, crackedmud3Tex, pathTex, greenTex, moonTex, sunTex, stoneTex, rainbowTex;
   GLuint grass1Tex, grass2Tex, grass3Tex, grass4Tex, grass5Tex, grass6Tex, cottageTex;
@@ -127,7 +128,9 @@ private:
   Object* stopSign;
   Object* streetLight;
   Object* trafficLight;
-  
+  Object* man;
+  Object* trashcan;
+
 
 
   Model *velociModel, *stegosModel, *trexModel;

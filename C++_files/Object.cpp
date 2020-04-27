@@ -170,6 +170,9 @@ void Object::updateBoundingBox(mat4 rotation, GLfloat scale)
   //std::cout << _size.x << ' ' << _size.y << ' ' << _size.z << '\n';
 }
 
+
+
+
 void Object::drawOn(mat4 camMatrix, GLuint shader, float scale, mat4 rot, Object* object){
   GLfloat x = _position.x - object->getPosition().x;
   GLfloat z = _position.z - object->getPosition().z;

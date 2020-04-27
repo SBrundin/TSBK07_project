@@ -10,9 +10,10 @@ class Book
 {
 public:
     Book(Object* top, Object* firstPage, Object* secondPage, Object* frame, Object* pages);
-    void draw(mat4 camMatrix, GLuint shader, GLfloat t);
+    void draw(mat4 camMatrix, GLuint shader, GLuint shader2,GLfloat t);
     void browse(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Object* firstPage, GLuint pageNbr, char button);
     void makeRotation(GLfloat timer, GLuint page, mat4 camMatrix, GLuint shader, char button);
+    void makeRotation(Object* obj, mat4 rotation);
     mat4 generateRotationMat(vec3 rotationAxis, GLfloat time);
 
     void setRotationBool(){
@@ -68,7 +69,8 @@ private:
     vec3 _firstOpen = {-29.065f, 2.768f, 0.0f};
     vec3 _secondPos = {0.06f, 2.78f, 0.0f};
     vec3 _rotationAxis = {-14.565f, -0.25f, 0.0f};
-    mat4 _openRot = Rz(0);
+    mat4 _topRot = Rz(0);
+    mat4 _firstRot = Rz(0);
     GLuint _currentPage;
     GLuint _pageNbr;
     bool _rotationBool;
