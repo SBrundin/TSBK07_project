@@ -42,6 +42,7 @@ Object::Object(vec3 pos, Model* model, GLuint tex, GLuint texSide, GLuint texUp)
     _size = vec3(0.0f, 0.0f, 0.0f);
     _textureSide = texSide;
     _textureUp = texUp;
+
     setBoundingBox();
 }
 
@@ -171,7 +172,7 @@ void Object::updateBoundingBox(mat4 rotation, GLfloat scale)
 }
 
 void Object::drawOn(mat4 camMatrix, GLuint shader, float scale, mat4 rot, Object* object){
-  _position.y = object->getRealHeight((_position.x - object->getPosition().x) , (_position.z - object->getPosition().z)) + object->getPosition().y + scale * _size.y/2;
+  _position.y = object->getRealHeight((object->getPosition().x + _position.x) , (object->getPosition().z + _position.z)) + object->getPosition().y + scale * _size.y/2;
   draw(camMatrix, shader, scale, rot);
 }
 
