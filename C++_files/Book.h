@@ -68,6 +68,7 @@ private:
     vec3 _firstOpen = {-29.065f, 2.768f, 0.0f};
     vec3 _secondPos = {0.06f, 2.78f, 0.0f};
     vec3 _rotationAxis = {-14.565f, -0.25f, 0.0f};
+    mat4 _openRot = Rz(0);
     GLuint _currentPage;
     GLuint _pageNbr;
     bool _rotationBool;

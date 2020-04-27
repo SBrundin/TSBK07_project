@@ -175,10 +175,10 @@ void Object::drawOn(mat4 camMatrix, GLuint shader, float scale, mat4 rot, Object
   GLfloat x = _position.x - object->getPosition().x;
   GLfloat z = _position.z - object->getPosition().z;
   if(_position.x < 0){
-    _position.y = object->getRealHeight(-x, z) + object->getPosition().y + scale * _size.y/2;
+    _position.y = object->getRealHeight(-x, z) + object->getPosition().y + _size.y/2;
   }
   else{
-    _position.y = object->getRealHeight(x, z) + object->getPosition().y + scale * _size.y/2;
+    _position.y = object->getRealHeight(x, z) + object->getPosition().y + _size.y/2;
   }
   draw(camMatrix, shader, scale, rot);
 }
@@ -217,11 +217,6 @@ GLfloat Object::getRealHeight(GLfloat x, GLfloat z){
     GLfloat xx, zz, tempdist, height;
     GLfloat yy = 0.0f;
     GLfloat dist = 1000000;
-    for (int i = 0; i < _model->numVertices; i++){
-      yy += _model->vertexArray[3 * i + 1];
-    }
-    yy = yy/_model->numVertices;
-    height = yy;
 
     for (int i = 0; i < _model->numVertices; i++){
       xx = _model->vertexArray[3 * i];

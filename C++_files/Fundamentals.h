@@ -45,9 +45,11 @@ public:
     }
 
 private:
-
-  Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel, *backgroundModel;
-  Model *skybox[6], *bookMarkModel, *sunModel, *moonModel, *mountainModel, *cloudModel, *rainbowModel;
+  std::vector<Object*> listOfObj_1;
+  std::vector<Object*> listOfObj_2;
+  std::vector<Object*> listOfObj_3;
+  Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
+  Model *skybox[6], *bookMarkModel, *sunModel, *moonModel, *mountainModel, *cloudModel, *rainbowModel, *backgroundModel, *stopModel, *trafficModel, *streetLightModel, *birdModel;
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight;
     LightHandler *pointLightVec;
@@ -93,6 +95,9 @@ private:
   Object* elephantbby;
   Object* tree;
   Object* rosebush;
+  Object* rosebush1;
+  Object* rosebush2;
+  Object* rosebush3;
   Object* pile;
   Object* background;
   Object* sun;
@@ -101,6 +106,9 @@ private:
   Object* mountain2;
   Object* cloud;
   Object* rainbow;
+  Object* bird;
+  Object* bird2;
+  Object* bird3;
 
   Model *houseModel, *cottageModel, *elephantModel, *treeModel, *rosebushModel, *pileModel;
 
@@ -110,8 +118,17 @@ private:
   Object* velociraptor3;
   Object* velociraptor4;
   Object* velociraptor5;
+  Object* velociraptor6;
+  Object* velociraptor7;
   Object* stegos;
+  Object* stegos1;
+  Object* stegos2;
+  Object* stegos3;
   Object* trex;
+  Object* stopSign;
+  Object* streetLight;
+  Object* trafficLight;
+
 
   Model *velociModel, *stegosModel, *trexModel;
 };
