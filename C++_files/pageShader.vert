@@ -6,6 +6,7 @@ in vec3 inNormal;
 in vec2 inTexCoord;
 out vec3 ex_Normal;
 out vec3 in_Normal;
+out vec3 position;
 out vec2 ex_TexCoord;
 uniform mat4 myRotX;
 uniform mat4 myRotY;
@@ -21,4 +22,5 @@ void main(void)
 	ex_Normal = mat3(mdlMatrix) * inNormal;
 	in_Normal = inNormal;
 	ex_TexCoord = inTexCoord;
+	position = inPosition;
 }

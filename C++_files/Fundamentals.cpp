@@ -45,8 +45,10 @@ void Fundamentals::loadfiles(){
 	glUseProgram(pageShader);
 	glUniformMatrix4fv(glGetUniformLocation(pageShader, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 	glUniform1i(glGetUniformLocation(pageShader, "Tex"), 0); // Texture unit 0
-	glUniform1i(glGetUniformLocation(pageShader, "TexUp"), 1);
-	glUniform1i(glGetUniformLocation(pageShader, "sideTex"), 2);
+	glUniform1i(glGetUniformLocation(pageShader, "TexUp0"), 1);
+	glUniform1i(glGetUniformLocation(pageShader, "TexUp1"), 2);
+	glUniform1i(glGetUniformLocation(pageShader, "TexUp2"), 3);
+	glUniform1i(glGetUniformLocation(pageShader, "sideTex"), 4);
 
 	glUseProgram(skyboxProg);
 	glUniform1i(glGetUniformLocation(skyboxProg, "tex0"), 0); // Texture unit 0
@@ -54,7 +56,6 @@ void Fundamentals::loadfiles(){
 	glUniform1i(glGetUniformLocation(skyboxProg, "tex2"), 2); // Texture unit 1
 	printError("init shader");
 }
-
 
 void Fundamentals::update(){
 	//CLEAR THE SCREEN
@@ -138,10 +139,10 @@ void Fundamentals::initobjects(){
 	toppage = new Object(topModel, leatherTex);
 
 	//MULTIPLE TEXTURE OBJECTS, Object(pos, model, tex, texside, texup)
-	frame = new Object(frameModel, leatherTex, leatherTex, leatherTex);
-	firstPage = new Object(firstModel, grassTex, snowTex, grassTex);
-	secondPage = new Object(secondModel, grassTex, snowTex, grassTex);
-	pages = new Object(pagesModel, waterTex, grassTex, snowTex);
+	frame = new Object(frameModel, leatherTex, leather2Tex, leatherTex);
+	firstPage = new Object(firstModel, grassTex, snowTex, grass1Tex, grass2Tex, grass3Tex);
+	secondPage = new Object(secondModel, grassTex, snowTex, grass1Tex, grass2Tex, grass3Tex);
+	pages = new Object(pagesModel, grassTex, snowTex, grass1Tex, grass2Tex, grass3Tex);
 	book = new Book(toppage, firstPage, secondPage, frame, pages);
 	bookMark = new Object(vec3(-14.0f, 1.0f, 0.0f), bookMarkModel, leatherTex);
 
@@ -209,9 +210,16 @@ void Fundamentals::loadmodels(){
 
 void Fundamentals::loadtextures(){
 	LoadTGATextureSimple("../textures/grass.tga", &grassTex);
+	LoadTGATextureSimple("../textures/grass2.tga", &grass1Tex);
+	LoadTGATextureSimple("../textures/dried_grass.tga", &grass2Tex);
+	LoadTGATextureSimple("../textures/dried_grass2.tga", &grass3Tex);
+	LoadTGATextureSimple("../textures/dried_grass3.tga", &grass4Tex);
+	LoadTGATextureSimple("../textures/dried_grass4.tga", &grass5Tex);
+	LoadTGATextureSimple("../textures/dried_grass5.tga", &grass6Tex);
 	LoadTGATextureSimple("../textures/snow.tga", &snowTex);
 	loadskybox();
 	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
+	LoadTGATextureSimple("../textures/LeatherBrown.tga", &leather2Tex);
 	LoadTGATextureSimple("../textures/bilskissred.tga", &bilTex);
 	LoadTGATextureSimple("../textures/water.tga", &truckTex);
 	LoadTGATextureSimple("../textures/wood.tga", &woodTex);
