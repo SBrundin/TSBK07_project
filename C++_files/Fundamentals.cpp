@@ -150,11 +150,11 @@ void Fundamentals::initobjects(){
 
 
 	//MULTIPLE TEXTURE OBJECTS, Object(pos, model, tex, texside, texup)
-	toppage = new Object(topModel, leatherTex);
-	frame = new Object(frameModel, leatherTex, leather2Tex, leatherTex);
-	firstPage = new Object(firstModel, grassTex, snowTex, grass1Tex, grass2Tex, grass3Tex);
-	secondPage = new Object(secondModel, grassTex, snowTex, grass1Tex, grass2Tex, grass3Tex);
-	pages = new Object(pagesModel, grassTex, snowTex, grass1Tex, grass2Tex, grass3Tex);
+	toppage = new Object(topModel, leatherTex, leatherTex, leatherTex, leatherTex, leatherTex);
+	frame = new Object(frameModel, leatherTex, leather2Tex, leatherTex, leatherTex, leatherTex);
+	firstPage = new Object(firstModel, paperTex, paperTex, grass1Tex, grass2Tex, grass3Tex);
+	secondPage = new Object(secondModel, paperTex, paperTex, grass1Tex, grass2Tex, grass3Tex);
+	pages = new Object(pagesModel, paperTex, paperTex, grass1Tex, grass2Tex, grass3Tex);
 	book = new Book(toppage, firstPage, secondPage, frame, pages);
 	bookMark = new Object(vec3(-14.0f, 1.0f, 0.0f), bookMarkModel, leatherTex);
 
@@ -311,6 +311,7 @@ void Fundamentals::loadtextures(){
 	LoadTGATextureSimple("../textures/Sun.tga", &sunTex);
 	LoadTGATextureSimple("../textures/Moon.tga", &moonTex);
 	LoadTGATextureSimple("../textures/Stone.tga", &stoneTex);
+	LoadTGATextureSimple("../textures/Paper.tga", &paperTex);
 	//LoadTGATextureSimple("../textures/Rosepedal.tga", &rainbowTex);
 }
 
@@ -454,21 +455,21 @@ void Fundamentals::drawFirstScene(){
 
 void Fundamentals::drawSecondScene(){
 
-velociraptor1->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor2->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor3->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor4->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor5->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor6->draw(camMatrix, programObj, 1.0, Ry(2*M_PI/5));
-velociraptor7->draw(camMatrix, programObj, 1.0, Ry(M_PI/3));
-trex->draw(camMatrix, programObj, 1.0, Ry(-3*M_PI/4));
-stegos1->draw(camMatrix, programObj, 1.0, Ry(M_PI/4));
-stegos2->draw(camMatrix, programObj, 1.0, Ry(-M_PI/2));
-stegos3->draw(camMatrix, programObj, 1.0, Ry(-M_PI/3));
-tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
-rosebush1->draw(camMatrix, programObj, 2.2, Ry(0.0));
-rosebush2->draw(camMatrix, programObj, 1.5, Ry(0.0));
-rosebush3->draw(camMatrix, programObj, 1.0, Ry(0.0));
+	velociraptor1->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+	velociraptor2->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+	velociraptor3->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+	velociraptor4->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+	velociraptor5->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+	velociraptor6->draw(camMatrix, programObj, 1.0, Ry(2*M_PI/5));
+	velociraptor7->draw(camMatrix, programObj, 1.0, Ry(M_PI/3));
+	trex->draw(camMatrix, programObj, 1.0, Ry(-3*M_PI/4));
+	stegos1->draw(camMatrix, programObj, 1.0, Ry(M_PI/4));
+	stegos2->draw(camMatrix, programObj, 1.0, Ry(-M_PI/2));
+	stegos3->draw(camMatrix, programObj, 1.0, Ry(-M_PI/3));
+	tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
+	rosebush1->draw(camMatrix, programObj, 2.2, Ry(0.0));
+	rosebush2->draw(camMatrix, programObj, 1.5, Ry(0.0));
+	rosebush3->draw(camMatrix, programObj, 1.0, Ry(0.0));
 
 }
 

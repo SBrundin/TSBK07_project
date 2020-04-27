@@ -45,11 +45,11 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, _top->getTexture());
+  glBindTexture(GL_TEXTURE_2D, _top->getTextureUp().x);
   glActiveTexture(GL_TEXTURE2);
-  glBindTexture(GL_TEXTURE_2D, _top->getTexture());
+  glBindTexture(GL_TEXTURE_2D, _top->getTextureUp().y);
   glActiveTexture(GL_TEXTURE3);
-  glBindTexture(GL_TEXTURE_2D, _top->getTexture());
+  glBindTexture(GL_TEXTURE_2D, _top->getTextureUp().z);
   glActiveTexture(GL_TEXTURE4);
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());
   }
@@ -126,8 +126,12 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, _frame->getTexture());
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, _frame->getTexture());
+  glBindTexture(GL_TEXTURE_2D, _frame->getTextureUp().x);
   glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, _frame->getTextureUp().y);
+  glActiveTexture(GL_TEXTURE3);
+  glBindTexture(GL_TEXTURE_2D, _frame->getTextureUp().z);
+  glActiveTexture(GL_TEXTURE4);
   glBindTexture(GL_TEXTURE_2D, _frame->getTextureSide());
   mat4 modelViewFrame = T(_frame->getPosition().x, _frame->getPosition().y, _frame->getPosition().z );
  	mat4 totalFrame= Mult(camMatrix, modelViewFrame);
@@ -172,12 +176,26 @@ void Book::browse(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Obje
   }
 
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, _top->getTexture());
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, _top->getTextureUp().x);
+  glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, _top->getTextureUp().y);
+  glActiveTexture(GL_TEXTURE3);
+  glBindTexture(GL_TEXTURE_2D, _top->getTextureUp().z);
+  glActiveTexture(GL_TEXTURE4);
+  glBindTexture(GL_TEXTURE_2D, _top->getTexture());
   DrawModel(top->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, _firstPage->getTexture());
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, _firstPage->getTexture());
+  glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureUp().x);
   glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureUp().y);
+  glActiveTexture(GL_TEXTURE3);
+  glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureUp().z);
+  glActiveTexture(GL_TEXTURE4);
   glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureSide());
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalSec.m);
   DrawModel(firstPage->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
