@@ -7,7 +7,7 @@
 class LightSource
 {
 public:
-    LightSource(vec3 position, vec3 colour, float constant, float linear, float quadratic);
+    LightSource(vec3 pos, vec3 col);
 
 
     vec3 getPosition();

@@ -72,6 +72,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   mat4 modelViewTop = T(_top->getPosition().x, _top->getPosition().y ,_top->getPosition().z);
   mat4 totalTop = Mult(camMatrix, modelViewTop);
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
+  glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelViewTop.m);
   DrawModel(_top->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
 
   //DRAWS first PAGE WHEN NOT ROTATING
@@ -84,6 +85,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
   mat4 modelViewfirst = T(_firstPage->getPosition().x, _firstPage->getPosition().y, _firstPage->getPosition().z );
   mat4 totalfirst = Mult(camMatrix, modelViewfirst);
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalfirst.m);
+  glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelViewfirst.m);
   DrawModel(_firstPage->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
   }
 

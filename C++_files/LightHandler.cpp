@@ -10,7 +10,7 @@ LightHandler::LightHandler()
   amount_of_lights = 0;
 }
 
-int LightHandler::addLight(vec3 lightPos,vec3 lightColour,GLfloat constant, GLfloat linear,GLfloat quadratic)
+/*int LightHandler::addLight(vec3 lightPos,vec3 lightColour,GLfloat constant, GLfloat linear,GLfloat quadratic)
 {
   lightVec.push_back(LightSource(lightPos, lightColour, constant, linear, quadratic));
   amount_of_lights = lightVec.size();

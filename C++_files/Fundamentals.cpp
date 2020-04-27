@@ -37,6 +37,7 @@ void Fundamentals::loadfiles(){
 	loadtextures();
 	loadmodels();
 	initobjects();
+	initLights();
 
 	//lamp
 
@@ -55,13 +56,13 @@ void Fundamentals::loadfiles(){
 	GLfloat linear = 0.09;
 	GLfloat quadratic = 0.022;
 	vec3 lightColour = {0.4f, 0.9f, 0.5f};
-	lightSource = new LightSource(lightPos, lightColour, constant, linear, quadratic);
+/*	//lightSource = new LightSource(lightPos, lightColour, constant, linear, quadratic);
 	pointLightIndex = pointLightVec -> addLight(lightPos, lightColour, constant, linear, quadratic);
 
 	vec3 ambient = lightSource->getAmbient();
 	vec3 diffuse = lightSource->getDiffuse();
 	vec3 specular = lightSource->getSpecular();
-	//lightColour =  colourArray;//lightSource->getColour();
+	//lightColour =  colourArray;//lightSource->getColour();*//*
 	glUseProgram(mainProg);
 	glUniformMatrix4fv(glGetUniformLocation(mainProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 	glUniform3fv(glGetUniformLocation(mainProg, "pointLight.colour"), 1, &lightColour.x);
@@ -115,13 +116,17 @@ void Fundamentals::loadfiles(){
 	glUniform1f(glGetUniformLocation(mainProg, "spotLight.quadratic" ), quadratic);
 	glUniform1f(glGetUniformLocation(mainProg, "spotLight.cutOff" ), cutOff);
 	glUniform1f(glGetUniformLocation(mainProg, "spotLight.outerCutOff" ), outerCutOff);
-
+*/
 
 	glUseProgram(program);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
 	glUseProgram(programObj);
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+
+	glUseProgram(mainProg);
+	glUniformMatrix4fv(glGetUniformLocation(mainProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+
 
 	glUseProgram(pageShader);
 	glUniformMatrix4fv(glGetUniformLocation(pageShader, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
@@ -166,6 +171,45 @@ void Fundamentals::update(){
 	book->draw(camMatrix, pageShader, t);
 
 	//DRAWS THE SCENES
+
+	glUseProgram(mainProg);
+	vec3 viewPos = {camera-> getPosition().x, camera-> getPosition().y, camera-> getPosition().z};
+	glUniform3fv(glGetUniformLocation(mainProg, "viewPos"), 1, &viewPos.x);
+	glUniform1i(glGetUniformLocation(mainProg, "number_of_point_lights"), 1);
+	vec3 lightPos = pointLight1->getPosition();
+	vec3 colour = pointLight1-> getColour();
+	vec3 ambient = pointLight1-> getAmbient();
+	vec3 diffuse = pointLight1-> getDiffuse();
+	vec3 specular = pointLight1-> getSpecular();
+	GLfloat constant = pointLight1->  getConstant();
+	GLfloat linear = pointLight1->  getLinear();
+	GLfloat quadratic = pointLight1 ->  getQuadratic();
+
+	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[0].position"), 1, &(lightPos).x);
+	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[0].colour"), 1, &(colour).x);
+	glUniform3fv(glGetUniformLocation(mainProg, "pointLightz[0].ambient"), 1, &(ambient).x);
+	glUniform3fv(glGetUniformLocation(mainProg,  "pointLightz[0].diffuse"), 1, &(diffuse).x);
+	glUniform3fv(glGetUniformLocation(mainProg,  "pointLightz[0].specular"), 1, &(specular).x);
+	glUniform1f(glGetUniformLocation(mainProg,  "pointLightz[0].constant"), constant);
+	glUniform1f(glGetUniformLocation(mainProg, "pointLightz[0].linear"), linear);
+	glUniform1f(glGetUniformLocation(mainProg, "pointLightz[0].quadratic"), quadratic);
+
+	mat4 modelView = T(box->getPosition().x, box->getPosition().y, box->getPosition().z);
+	mat4 Tot = Mult(camMatrix, Mult(Mult(modelView, S(1.0f,1.0f,1.0f)), Ry(0.0)));
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, box->getTexture());
+	glUniform1i(glGetUniformLocation(mainProg, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(mainProg, "mdlMatrix"), 1, GL_TRUE, Tot.m);
+	glUniformMatrix4fv(glGetUniformLocation(mainProg, "model"), 1, GL_TRUE, modelView.m);
+	DrawModel(boxModel, mainProg, "inPosition", "inNormal", "inTexCoord");
+
+//	box->draw(camMatrix, mainProg, 1.0, Ry(0.0));
+
+
+
+
+/*
+
 	glUseProgram(programObj);
 
 	if (book->getCurrentPage() == 1 && book->getFadeBool()){
@@ -190,7 +234,7 @@ void Fundamentals::update(){
 						fadeInObjects();
 					}
 				drawSecondScene();
-		}
+		}*/
 }
 
 void Fundamentals::cameraCollision(){
@@ -237,6 +281,7 @@ void Fundamentals::initobjects(){
 	bookMark = new Object(vec3(-14.0f, 1.0f, 0.0f), bookMarkModel, leatherTex);
 
 	listOfObj_1.push_back(frame);
+	listOfObj_1.push_back(toppage);
 	listOfObj_1.push_back(firstPage);
 	listOfObj_1.push_back(secondPage);
 	listOfObj_1.push_back(pages);
@@ -264,6 +309,7 @@ void Fundamentals::initobjects(){
 	bird = new Object(vec3(10.0f, 15.0f, -4.4f), birdModel, waterTex);
 	bird2 = new Object(vec3(15.0f, 15.0f, -10.4f), birdModel, waterTex);
 	bird3 = new Object(vec3(-20.0f, 15.0f, 10.4f), birdModel, waterTex);
+	box = new Object(vec3(0.0f, 10.0f, 0.0f), boxModel, grassTex);
 
 
 	listOfObj_2.push_back(house);
@@ -278,6 +324,7 @@ void Fundamentals::initobjects(){
 	listOfObj_2.push_back(rosebush2);
 	listOfObj_2.push_back(rosebush3);
 	listOfObj_2.push_back(bird);
+	listOfObj_2.push_back(box);
 
 	//OBJECTS FOR SCENE 2
 	velociraptor1 = new Object(vec3(-40.0f, 3.8f, -4.0f), velociModel, leatherTex);
@@ -461,6 +508,8 @@ void Fundamentals::drawFirstScene(){
 	rosebush3->draw(camMatrix, programObj, 1.0, Ry(0.0));
 	pile->draw(camMatrix, programObj, 1.0, Ry(0.0));
 
+
+
 	mat4 modelViewbird = T(bird->getPosition().x*sin(-t), bird->getPosition().y+0.3*sin(5*t), bird->getPosition().z*cos(-t));
 	mat4 Totbird = Mult(camMatrix, Mult(modelViewbird, Mult(Ry(t+4.71), Rz(3.14/3*(sin(t))))));
 	glActiveTexture(GL_TEXTURE0);
@@ -488,6 +537,9 @@ void Fundamentals::drawFirstScene(){
 	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, Totbird3.m);
 	DrawModel(bird3->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+
+
+
 
 
 }
@@ -573,4 +625,57 @@ void Fundamentals::drawLights(){
 	glUniformMatrix4fv(glGetUniformLocation(mainProg, "model"), 1, GL_TRUE, modelPos.m);
 	DrawModel(box->getModel(), mainProg, "inPosition", "inNormal", "inTexCoord");
 
+}
+
+void Fundamentals::initLights(){
+	//General
+
+	//Point Light 1
+	pointLightPos1 = {0.0f, 10.0f, 0.0f};
+	pointLightColour1 = {0.9f, 0.1f, 0.1f};
+	pointLight1 = new LightSource(pointLightPos1, pointLightColour1);
+
+	//SpotLight 1
+	spotLightPos1 = {5.0f, 5.0f, 5.0f};
+	spotLightColour1 = {0.5f, 0.0f, 0.5f};
+	spotLight1 = new LightSource(spotLightPos1, spotLightColour1);
+
+}
+
+void Fundamentals::drawPointLight(int index, GLuint shader){
+	glUseProgram(mainProg);
+	std::string posString = "pointLightz[" + std::to_string(index) + "].colour";
+	std::string colString = "pointLightz[" + std::to_string(index) + "].colour";
+  std::string ambString = "pointLightz[" + std::to_string(index) + "].ambient";
+  std::string diffString = "pointLightz[" + std::to_string(index) + "].diffuse";
+  std::string specString = "pointLightz[" + std::to_string(index) + "].specular";
+  std::string constString = "pointLightz[" + std::to_string(index) + "].constant";
+  std::string linString = "pointLightz[" + std::to_string(index) + "].linear";
+  std::string quaString = "pointLightz[" + std::to_string(index) + "].quadratic";
+
+	vec3 lightPos = pointLight1->getPosition();
+	vec3 colour = pointLight1-> getColour();
+	vec3 ambient = pointLight1-> getAmbient();
+	vec3 diffuse = pointLight1-> getDiffuse();
+	vec3 specular = pointLight1-> getSpecular();
+	GLfloat constant = pointLight1->  getConstant();
+	GLfloat linear = pointLight1->  getLinear();
+	GLfloat quadratic = pointLight1 ->  getQuadratic();
+/*
+	glUniform3fv(glGetUniformLocation(shader, posString.c_str()), 1, &(lightPos).x);
+	glUniform3fv(glGetUniformLocation(shader, colString.c_str()), 1, &(colour).x);
+	glUniform3fv(glGetUniformLocation(shader, ambString.c_str()), 1, &(ambient).x);
+	glUniform3fv(glGetUniformLocation(shader,  diffString.c_str()), 1, &(diffuse).x);
+	glUniform3fv(glGetUniformLocation(shader,  specString.c_str()), 1, &(specular).x);
+	glUniform1f(glGetUniformLocation(shader,  constString.c_str()), constant);
+	glUniform1f(glGetUniformLocation(shader, linString.c_str()), linear);
+	glUniform1f(glGetUniformLocation(shader, quaString.c_str()), quadratic);*/
+	glUniform3fv(glGetUniformLocation(shader, "pointLightz[0].position"), 1, &(lightPos).x);
+	glUniform3fv(glGetUniformLocation(shader, "pointLightz[0].colour"), 1, &(colour).x);
+	glUniform3fv(glGetUniformLocation(shader, "pointLightz[0].ambient"), 1, &(ambient).x);
+	glUniform3fv(glGetUniformLocation(shader,  "pointLightz[0].diffuse"), 1, &(diffuse).x);
+	glUniform3fv(glGetUniformLocation(shader,  "pointLightz[0].specular"), 1, &(specular).x);
+	glUniform1f(glGetUniformLocation(shader,  "pointLightz[0].constant"), constant);
+	glUniform1f(glGetUniformLocation(shader, "pointLightz[0].linear"), linear);
+	glUniform1f(glGetUniformLocation(shader, "pointLightz[0].quadratic"), quadratic);
 }

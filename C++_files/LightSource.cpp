@@ -4,17 +4,17 @@
 #include "loadobj.h"
 #include "LightSource.h"
 
-LightSource::LightSource(vec3 position, vec3 col, GLfloat constant, GLfloat linear, GLfloat quadratic)
+LightSource::LightSource(vec3 pos, vec3 col)
 {
-    ambient = {0.5f, 0.5f, 0.5f};
-    diffuse = {1.0f, 1.0f, 1.0f};
+    ambient = {0.05f, 0.05f, 0.05f};
+    diffuse = {0.8f, 0.8f, 0.8f};
     specular = {1.0f, 1.0f, 1.0f};
     direction = {-0.2f, -1.0f, -0.3f};
+    position = position;
     colour = col;
-    specular = specular;
-    constant = constant;
-    linear = linear;
-    quadratic = quadratic;
+    constant = 1.0f;//liten betyder starkt
+    linear = 0.09;
+    quadratic = 0.032;
     cutOff = cos(  12.5f*2*M_PI/180  );
     outerCutOff = cos(  15.5f*2*M_PI/180 );
 }

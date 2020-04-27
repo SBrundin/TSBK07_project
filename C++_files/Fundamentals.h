@@ -30,6 +30,8 @@ public:
     void drawSecondScene();
     void drawSkybox();
     void drawLights();
+    void initLights();
+    void drawPointLight(int index, GLuint shader);
 
     GLfloat getMyTimer(){
       return _myTime;
@@ -54,15 +56,17 @@ private:
   Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
   Model *skybox[6], *bookMarkModel;
   Lamp* lampLight;
-  LightSource *lightSource, *dirrLight, *spotLight;
+  LightSource *lightSource, *dirrLight, *spotLight, *pointLight1, *spotLight1;
   LightHandler *pointLightVec;
   mat4 projectionMatrix, camMatrix, camMat2;
-  vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
+  vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour, pointLightPos1, pointLightColour1;
+  vec3 spotLightColour1, spotLightPos1;
   GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
   GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex, truckTex, greenTex;
   GLuint woodTex, wood2Tex, cottageTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
+  GLfloat constant, linear, quadratic;
   int pointLightIndex;
   vec3 v = {0.0, 1.0, 0.0};
   vec3 rotationAxis = {-14.565f, 0.0f, 0.0f};

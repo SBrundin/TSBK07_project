@@ -9,6 +9,7 @@ out float height;
 uniform mat4 myRotX;
 uniform mat4 myRotY;
 uniform mat4 myRotZ;
+//uniform mat4 model;
 
 // NY
 uniform mat4 projMatrix;
