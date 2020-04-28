@@ -1,7 +1,9 @@
 #version 150
 
+//DEssa måste vara fler eller lika med så många ljus man skickar in
 #define NUMBER_OF_POINT_LIGHTS 2
 #define NUMBER_OF_DIR_LIGHTS 1
+#define NUMBER_OF_SPOT_LIGHTS 1
 struct PointLight
 {
    vec3 position;
@@ -55,10 +57,11 @@ uniform vec3 viewPos;
 
 uniform int number_of_point_lights;
 uniform int number_of_dir_lights;
-uniform PointLight pointLight;
+uniform int number_of_spot_lights;
+
 uniform PointLight pointLightz[NUMBER_OF_POINT_LIGHTS];
 uniform DirLight dirLightz[NUMBER_OF_DIR_LIGHTS];
-uniform SpotLight spotLight;
+uniform SpotLight spotLightz[NUMBER_OF_SPOT_LIGHTS];
 uniform sampler2D Tex;
 uniform vec3 fragColour; //Ta bort sen när textures kommer in
 
@@ -131,7 +134,7 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDirectio
 
     // Specular shading
     vec3 reflectDir = reflect( -lightDir, normal );
-    float spec = pow( max( dot( viewDirection, reflectDir ), 0.0 ), 32 );
+    float spec = pow( max( dot( viewDirection, reflectDir ), 0.0 ), 256 );
 
     // Attenuation
     float distance = length( light.position - fragPos );
@@ -160,21 +163,23 @@ void main(void)
 {
   vec3 norm = normalize(normal);
   vec3 viewDirection = normalize(viewPos - fragPos);
-  vec3 res = vec3(0.0f,0.0f,0.0f);
-  for ( int i= 0; i < 1; i++){
-     res += calcPointLight(pointLightz[i], norm, fragPos, viewDirection);
+  vec3 pointResult = vec3(0.0f,0.0f,0.0f);
+  vec3 dirResult = vec3(0.0f,0.0f,0.0f);
+  vec3 spotResult = vec3(0.0f,0.0f,0.0f);
+
+  for ( int i= 0; i < number_of_point_lights; i++){
+     pointResult += calcPointLight(pointLightz[i], norm, fragPos, viewDirection);
   }
 
   for ( int i= 0; i < number_of_dir_lights; i++){
-     res += calcDirLight(dirLightz[i], norm, viewDirection);
+     dirResult += calcDirLight(dirLightz[i], norm, viewDirection);
   }
 
+  for ( int i= 0; i < number_of_spot_lights; i++){
+     spotResult += calcSpotLight(spotLightz[i], norm, fragPos, viewDirection);
+  }
+//pointResult + spotResult +
 
-
-  vec3 pointLights = calcPointLight(pointLightz[0], norm, fragPos, viewDirection);//*lightColour;
-  //vec3 dirLights = CalcDirLight(dirLight, norm, viewDirection);
-  vec3 spotLights = calcSpotLight(spotLight, norm, fragPos, viewDirection);
-
-  vec3 result = ( res )  * vec3( texture( Tex, exTexCoord ) );
+  vec3 result = (  spotResult  )  * vec3( texture( Tex, exTexCoord ) );
   colour = vec4(result, 1.0f);//*vec3( texture( boxTex, exTexCoord ) );
 }

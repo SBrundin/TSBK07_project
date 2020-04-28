@@ -102,28 +102,35 @@ void Fundamentals::update(){
 	//DRAWS THE BOOK
 	book->draw(camMatrix, pageShader, t);
 
-	//Point Light
+	//////Point Light
 	glUseProgram(mainProg);
-	mat4 scale = S(5.0, 5.0, 5.0);
 	vec3 viewPos = {camera-> getPosition().x, camera-> getPosition().y, camera-> getPosition().z};
 	glUniform3fv(glGetUniformLocation(mainProg, "viewPos"), 1, &viewPos.x);
-	glUniform1i(glGetUniformLocation(mainProg, "number_of_point_lights"), 1);
 
-	pointLight1-> setPosition(box->getPosition());
-	drawPointLight(0, pointLight1, mainProg);
+
+	pointLight0-> setPosition(box->getPosition());
+	drawPointLight(0, pointLight0, mainProg);
+	glUniform1i(glGetUniformLocation(mainProg, "number_of_point_lights"), 1);
 	//För att veta vart PointLight är
   box->draw(camMatrix, mainProg, 1.0, Ry(0.0));
 
-	//DirLight
-	dirLight1 -> setDirection(vec3(0.0f, -1.0f, 0.0f));
-	drawDirLight(0, dirLight1, mainProg);
+	///////DirLight
+	dirLight0 -> setDirection(vec3(0.0f, -1.0f, 0.0f));
+	drawDirLight(0, dirLight0, mainProg);
 	//Måste skickas in med rätt antal
 	int numDirLights = 1;
 	glUniform1i(glGetUniformLocation(mainProg, "number_of_dir_lights"), numDirLights);
+
+	///////SpotLight
+	spotLight0 -> setDirection(vec3(0.0f, -1.0f, 0.0f));
+	spotLight0 -> setPosition(vec3(box->getPosition().x, box->getPosition().y +10*sin(t), box->getPosition().z));
+	spotLight0-> setColour(vec3(0.8f, 0.4f, 0.8f));
+	spotLight0 -> setOuterCutOff(17.5);
+	spotLight0 -> setCutOff(12.5);
+
+	drawSpotLight(0, spotLight0, mainProg);
+	glUniform1i(glGetUniformLocation(mainProg, "number_of_spot_lights"), 1);
 	//DRAWS THE SCENES
-
-
-
 
 	//glUseProgram(programObj);
 
@@ -545,24 +552,30 @@ void Fundamentals::drawLights(){
 void Fundamentals::initLights(){
 	//General
 
-	//Point Light 1
-	pointLightPos1 = {0.0f, 10.0f, 0.0f};
-	pointLightColour1 = {0.9f, 0.1f, 0.1f};
-	pointLight1 = new LightSource(pointLightPos1, pointLightColour1);
+	//Point Light 0
+	pointLightPos0 = {0.0f, 10.0f, 0.0f};
+	pointLightColour0 = {0.9f, 0.1f, 0.1f};
+	pointLight0 = new LightSource(pointLightPos0, pointLightColour0);
 
-	//SpotLight 1
-	spotLightPos1 = {5.0f, 5.0f, 5.0f};
-	spotLightColour1 = {0.5f, 0.0f, 0.5f};
-	spotLight1 = new LightSource(spotLightPos1, spotLightColour1);
+	//SpotLight 0
+	spotLightPos0 = {5.0f, 5.0f, 5.0f};
+	spotLightColour0 = {0.5f, 0.0f, 0.5f};
+	spotLight0 = new LightSource(spotLightPos0, spotLightColour0);
+	spotLight0 -> setAmbient(vec3(0.0f, 0.0f, 0.0f));
+	spotLight0 -> setDiffuse(vec3(1.0f, 1.0f, 1.0f));
+	spotLight0 -> setSpecular(vec3(1.0f, 1.0f, 1.0f));
+	spotLight0 -> setLinear(1.9f);
+	spotLight0 -> setConstant(1.0f);
+	spotLight0 -> setQuadratic(0.032f);
 
-	//Directional light 1
-	dirLightPos1 = {10000.0f, 10.0f, 0.0f}; // KAn vara vad som helst
-	dirLightColor1 =  {0.7f, 0.7f, 0.7f};
-	dirLight1 = new LightSource(dirLightPos1, dirLightColor1);
-	dirLight1->setDirection(vec3(0.0f, -1.0f, 0.0f));
-	dirLight1 -> setAmbient(vec3(0.05f, 0.05f, 0.05f));
-	dirLight1 -> setDiffuse(vec3(0.4f, 0.4f, 0.4f));
-	dirLight1 -> setSpecular(vec3(0.5f, 0.5f, 0.5f));
+	//Directional light 0
+	dirLightPos0 = {10000.0f, 10.0f, 0.0f}; // KAn vara vad som helst
+	dirLightColor0 =  {0.7f, 0.7f, 0.7f};
+	dirLight0 = new LightSource(dirLightPos0, dirLightColor0);
+	dirLight0->setDirection(vec3(0.0f, -1.0f, 0.0f));
+	dirLight0 -> setAmbient(vec3(0.05f, 0.05f, 0.05f));
+	dirLight0 -> setDiffuse(vec3(0.4f, 0.4f, 0.4f));
+	dirLight0 -> setSpecular(vec3(0.5f, 0.5f, 0.5f));
 
 }
 
@@ -616,4 +629,45 @@ void Fundamentals::drawDirLight(int index, LightSource* light, GLuint shader){
 	glUniform3fv(glGetUniformLocation(shader, ambString.c_str()), 1, &(ambient).x);
 	glUniform3fv(glGetUniformLocation(shader,  diffString.c_str()), 1, &(diffuse).x);
 	glUniform3fv(glGetUniformLocation(shader,  specString.c_str()), 1, &(specular).x);
+}
+
+
+void Fundamentals::drawSpotLight(int index, LightSource* light, GLuint shader){
+
+	std::string posString = "spotLightz[" + std::to_string(index) + "].position";
+	std::string colString = "spotLightz[" + std::to_string(index) + "].colour";
+	std::string dirString = "spotLightz[" + std::to_string(index) + "].direction";
+  std::string ambString = "spotLightz[" + std::to_string(index) + "].ambient";
+  std::string diffString = "spotLightz[" + std::to_string(index) + "].diffuse";
+  std::string specString = "spotLightz[" + std::to_string(index) + "].specular";
+  std::string constString = "spotLightz[" + std::to_string(index) + "].constant";
+  std::string linString = "spotLightz[" + std::to_string(index) + "].linear";
+  std::string quaString = "spotLightz[" + std::to_string(index) + "].quadratic";
+  std::string cutOffString = "spotLightz[" + std::to_string(index) + "].cutOff";
+  std::string outerCutOffString = "spotLightz[" + std::to_string(index) + "].outerCutOff";
+
+	vec3 lightPos =light->getPosition();
+	vec3 colour = light-> getColour();
+	vec3 direction = light-> getDirection();
+	vec3 ambient = light-> getAmbient();
+	vec3 diffuse = light-> getDiffuse();
+	vec3 specular = light-> getSpecular();
+	GLfloat constant = light->  getConstant();
+	GLfloat linear = light->  getLinear();
+	GLfloat quadratic = light ->  getQuadratic();
+	GLfloat cutOff = light ->  getCutOff();
+	GLfloat outerCutOff = light ->  getOuterCutOff();
+
+	glUniform3fv(glGetUniformLocation(shader, posString.c_str()), 1, &(lightPos).x);
+	glUniform3fv(glGetUniformLocation(shader, colString.c_str()), 1, &(colour).x);
+	glUniform3fv(glGetUniformLocation(shader, dirString.c_str()), 1, &(direction).x);
+	glUniform3fv(glGetUniformLocation(shader, ambString.c_str()), 1, &(ambient).x);
+	glUniform3fv(glGetUniformLocation(shader,  diffString.c_str()), 1, &(diffuse).x);
+	glUniform3fv(glGetUniformLocation(shader,  specString.c_str()), 1, &(specular).x);
+	glUniform1f(glGetUniformLocation(shader,  constString.c_str()), constant);
+	glUniform1f(glGetUniformLocation(shader, linString.c_str()), linear);
+	glUniform1f(glGetUniformLocation(shader, quaString.c_str()), quadratic);
+	glUniform1f(glGetUniformLocation(shader, cutOffString.c_str()), cutOff);
+	glUniform1f(glGetUniformLocation(shader, outerCutOffString.c_str()), outerCutOff);
+
 }

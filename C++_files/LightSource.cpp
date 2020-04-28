@@ -21,6 +21,7 @@ LightSource::LightSource(vec3 pos, vec3 col)
     quadratic = 0.32;
 
     //För spotLights och hur stor radie på "ficklampan de ska vara"
+    //Skillnaden mellan outerCuttOff och CuttOff bestämmer hur smooth den ska fadea ut
     cutOff = cos(  12.5f*2*M_PI/180  );
     outerCutOff = cos(  15.5f*2*M_PI/180 );
 }
@@ -134,7 +135,7 @@ vec3 LightSource::getDirection()
 
 void LightSource::setCutOff(GLfloat co)
 {
-  cutOff = cos(  co*2*M_PI/180 );
+  cutOff = cos(co*2*M_PI/180);
 }
 
 GLfloat LightSource::getCutOff()

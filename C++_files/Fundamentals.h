@@ -33,6 +33,7 @@ public:
     void initLights();
     void drawPointLight(int index, LightSource* light, GLuint shader);
     void drawDirLight(int index, LightSource* light, GLuint shader);
+    void drawSpotLight(int index, LightSource* light, GLuint shader);
 
     GLfloat getMyTimer(){
       return _myTime;
@@ -57,11 +58,11 @@ private:
   Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
   Model *skybox[6], *bookMarkModel;
   Lamp* lampLight;
-  LightSource *lightSource, *dirrLight, *spotLight, *pointLight1, *spotLight1, *dirLight1;
+  LightSource *lightSource, *dirrLight, *spotLight, *pointLight0, *spotLight0, *dirLight0;
   LightHandler *pointLightVec;
   mat4 projectionMatrix, camMatrix, camMat2;
-  vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour, pointLightPos1, pointLightColour1;
-  vec3 spotLightColour1, spotLightPos1, dirLightPos1, dirLightColor1;
+  vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour, pointLightPos0, pointLightColour0;
+  vec3 spotLightColour0, spotLightPos0, dirLightPos0, dirLightColor0;
   GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
   GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex, truckTex, greenTex;
   GLuint woodTex, wood2Tex, cottageTex;
