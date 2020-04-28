@@ -246,7 +246,7 @@ void Fundamentals::initobjects(){
 
 void Fundamentals::loadmodels(){
 	topModel = LoadModelPlus("../Modeller/booktopreal.obj");
-	firstModel = LoadModelPlus("../Modeller/pagefirst.obj");
+	firstModel = LoadModelPlus("../Modeller/page1.obj");
 	secondModel =LoadModelPlus("../Modeller/pagesecond.obj");
 	frameModel = LoadModelPlus("../Modeller/bookstaticcover.obj");
 	pagesModel = LoadModelPlus("../Modeller/bookstaticpages.obj");
@@ -269,7 +269,7 @@ void Fundamentals::loadmodels(){
 	sunModel = LoadModelPlus("../Modeller/sun.obj");
 	moonModel = LoadModelPlus("../Modeller/moon.obj");
 	mountainModel = LoadModelPlus("../Modeller/mountain.obj");
-	cloudModel = LoadModelPlus("../Modeller/cloud.obj");
+	cloudModel = LoadModelPlus("../Modeller/clod2.obj");
 	//rainbowModel = LoadModelPlus("../Modeller/rainbow.obj");
 
 	birdModel = LoadModelPlus("../Modeller/bird.obj");
@@ -408,16 +408,16 @@ void Fundamentals::drawFirstScene(){
 	bookMark->draw(camMatrix, programObj, 1.0, Ry(0.0));
 
 	house->drawOn(camMatrix, programObj, 2.0, Ry(0.0), toppage); // camMatrix, shader, scale, angle
-	cottage->draw(camMatrix, programObj, 1.0, Ry(M_PI));
-	cottage1->draw(camMatrix, programObj, 1.0, Ry(0.0));
-	cottage2->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+	cottage->drawOn(camMatrix, programObj, 1.0, Ry(M_PI), toppage);
+	cottage1->drawOn(camMatrix, programObj, 1.0, Ry(0.0), toppage);
+	cottage2->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
 	elephant->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/4), toppage);
 	elephantbby->drawOn(camMatrix, programObj, 0.3, Ry(7.5*M_PI/4), toppage);
-	tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
-	rosebush1->draw(camMatrix, programObj, 2.2, Ry(0.0));
-	rosebush2->draw(camMatrix, programObj, 1.5, Ry(0.0));
-	rosebush3->draw(camMatrix, programObj, 1.0, Ry(0.0));
-	pile->draw(camMatrix, programObj, 1.0, Ry(0.0));
+	tree->drawOn(camMatrix, programObj, 2.0, Ry(0.0), toppage);
+	rosebush1->drawOn(camMatrix, programObj, 2.2, Ry(0.0), firstPage);
+	rosebush2->drawOn(camMatrix, programObj, 1.5, Ry(0.0), toppage);
+	rosebush3->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
+	pile->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
 	background->drawOver(camMatrix, programObj, 1.0, Rz(t/100), background->getPosition().y);
 	mat4 moonrot = Mult(T(0.0f, 21.0f, 0.0f), Mult(Rz(t/100 + 3 * M_PI/16), T(-15.0f, -20.0f, 0.0f)));
 	mat4 sunrot = Mult(T(0.0f, -16.0f, 0.0f), Mult(Rz(t/100 - 3 * M_PI/16), T(-15.0f, 17.0f, 0.0f)));
@@ -425,7 +425,7 @@ void Fundamentals::drawFirstScene(){
 	moon->drawOver(camMatrix, programObj, 1.0, moonrot, background->getPosition().y - moon->getPosition().y);
 	mountain->drawOver(camMatrix, programObj, 1.0, Ry(0.0), background->getPosition().y - mountain->getPosition().y);
 	mountain2->drawOver(camMatrix, programObj, 0.7, Ry(0.0), background->getPosition().y - mountain2->getPosition().y);
-	cloud->drawOver(camMatrix, programObj, 1.0, Ry(0.0), background->getPosition().y - cloud->getPosition().y);
+	cloud->drawOver(camMatrix, programObj, 1.0, Ry(M_PI/2), background->getPosition().y - cloud->getPosition().y);
 	mat4 modelViewbird = T(bird->getPosition().x*sin(-t), bird->getPosition().y+0.3*sin(5*t), bird->getPosition().z*cos(-t));
 	mat4 Totbird = Mult(camMatrix, Mult(modelViewbird, Mult(Ry(t+4.71), Rz(3.14/3*(sin(t))))));
 	glActiveTexture(GL_TEXTURE0);
@@ -459,21 +459,21 @@ void Fundamentals::drawFirstScene(){
 
 void Fundamentals::drawSecondScene(){
 
-	velociraptor1->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-	velociraptor2->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-	velociraptor3->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-	velociraptor4->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-	velociraptor5->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-	velociraptor6->draw(camMatrix, programObj, 1.0, Ry(2*M_PI/5));
-	velociraptor7->draw(camMatrix, programObj, 1.0, Ry(M_PI/3));
-	trex->draw(camMatrix, programObj, 1.0, Ry(-3*M_PI/4));
-	stegos1->draw(camMatrix, programObj, 1.0, Ry(M_PI/4));
-	stegos2->draw(camMatrix, programObj, 1.0, Ry(-M_PI/2));
-	stegos3->draw(camMatrix, programObj, 1.0, Ry(-M_PI/3));
-	tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
-	rosebush1->draw(camMatrix, programObj, 2.2, Ry(0.0));
-	rosebush2->draw(camMatrix, programObj, 1.5, Ry(0.0));
-	rosebush3->draw(camMatrix, programObj, 1.0, Ry(0.0));
+	velociraptor1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	velociraptor2->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	velociraptor3->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	velociraptor4->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	velociraptor5->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	velociraptor6->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	velociraptor7->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	trex->drawOn(camMatrix, programObj, 1.0, Ry(-3*M_PI/4), secondPage);
+	stegos1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/4), secondPage);
+	stegos2->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/2), secondPage);
+	stegos3->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/3), secondPage);
+	tree->drawOn(camMatrix, programObj, 2.0, Ry(0.0), firstPage);
+	rosebush1->drawOn(camMatrix, programObj, 2.2, Ry(0.0), secondPage);
+	rosebush2->drawOn(camMatrix, programObj, 1.5, Ry(0.0), firstPage);
+	rosebush3->drawOn(camMatrix, programObj, 1.0, Ry(0.0), secondPage);
 
 }
 
