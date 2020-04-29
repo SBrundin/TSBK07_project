@@ -181,5 +181,5 @@ void main(void)
 //pointResult + spotResult +
 
   vec3 result = (  spotResult  )  * vec3( texture( Tex, exTexCoord ) );
-  colour = vec4(result, 1.0f);//*vec3( texture( boxTex, exTexCoord ) );
+  colour = vec4(result, 1.0f);
 }
