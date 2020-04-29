@@ -186,7 +186,7 @@ void Fundamentals::initobjects(){
 	bird = new Object(vec3(10.0f, 15.0f, -4.4f), birdModel, waterTex);
 	bird2 = new Object(vec3(15.0f, 15.0f, -10.4f), birdModel, waterTex);
 	bird3 = new Object(vec3(-20.0f, 15.0f, 10.4f), birdModel, waterTex);
-	background = new Object(vec3(-14.75f, 1.25f, -19.25f), backgroundModel, backgroundTex);
+	background = new Object(vec3(-14.565f, frame->getSize().y/2, -19.25f), backgroundModel, backgroundTex);
 	sun = new Object(vec3(-15.0f, 17.0f, -18.9f), sunModel, sunTex);
 	moon = new Object(vec3(-15.0f, -20.0f, -18.9f), moonModel, moonTex);
 	mountain = new Object(vec3(-7.0f, 7.5f, -18.5f), mountainModel, stoneTex);
@@ -418,7 +418,11 @@ void Fundamentals::drawFirstScene(){
 	rosebush2->drawOn(camMatrix, programObj, 1.5, Ry(0.0), toppage);
 	rosebush3->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
 	pile->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
-	background->drawOver(camMatrix, programObj, 1.0, Rz(t/100), background->getPosition().y);
+
+	GLfloat heightl = background->getPosition().y;
+	GLfloat minheightl = heightl -  toppage->getSize().y;
+
+	background->drawOver(camMatrix, programObj, 1.0, Rz(t/100), 0.0f);
 	mat4 moonrot = Mult(T(0.0f, 21.0f, 0.0f), Mult(Rz(t/100 + 3 * M_PI/16), T(-15.0f, -20.0f, 0.0f)));
 	mat4 sunrot = Mult(T(0.0f, -16.0f, 0.0f), Mult(Rz(t/100 - 3 * M_PI/16), T(-15.0f, 17.0f, 0.0f)));
 	sun->drawOver(camMatrix, programObj, 1.0, sunrot, background->getPosition().y - sun->getPosition().y);

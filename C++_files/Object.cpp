@@ -185,7 +185,7 @@ void Object::drawOn(mat4 camMatrix, GLuint shader, float scale, mat4 rot, Object
 
 void Object::draw(mat4 camMatrix, GLuint shader, float scale, mat4 rot)
  {
-   GLfloat opac = -100;
+   GLfloat opac = -100.0f;
    mat4 modelView = T(_position.x, _position.y, _position.z);
    mat4 Tot = Mult(camMatrix, Mult(Mult(modelView, S(scale,scale,scale)), rot));
    glActiveTexture(GL_TEXTURE0);
