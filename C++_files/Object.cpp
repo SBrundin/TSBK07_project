@@ -57,8 +57,17 @@ Object::Object(Model* model, GLuint tex, GLuint texSide, GLuint texUp)
     setBoundingBox();
 }
 
-void Object::setY(GLfloat y){
-  _position.y = y;
+Object::Object(Model* model, GLuint tex, GLuint texSide, GLuint texUp0, GLuint texUp1, GLuint texUp2)
+{
+    _position = vec3(0.0f, 0.0f, 0.0f);
+    _model = model;
+    _texture = tex;
+    _size = vec3(0.0f, 0.0f, 0.0f);
+    _textureSide = texSide;
+    _textureUp0 = texUp0;
+    _textureUp1 = texUp1;
+    _textureUp2 = texUp2;
+    setBoundingBox();
 }
 
 vec3 Object::getPosition()
@@ -106,9 +115,9 @@ GLuint Object::getTextureSide()
     return _textureSide;
 }
 
-GLuint Object::getTextureUp()
+vec3 Object::getTextureUp()
 {
-    return _textureUp;
+    return vec3(_textureUp0, _textureUp1, _textureUp2);
 }
 
 void Object::setTexture(GLuint tex)
@@ -161,32 +170,75 @@ void Object::updateBoundingBox(mat4 rotation, GLfloat scale)
   //std::cout << _size.x << ' ' << _size.y << ' ' << _size.z << '\n';
 }
 
+void Object::drawOn(mat4 camMatrix, GLuint shader, float scale, mat4 rot, Object* object){
+  GLfloat xx = _position.x - object->getPosition().x;
+  GLfloat zz = _position.z - object->getPosition().z;
+  if(_position.x < -15.0){
+    _position.y = -object->getRealHeight(-xx , zz, object, 1) + object->getPosition().y +  _size.y/2;
+  }
+  else{
+    _position.y = object->getRealHeight(xx , zz, object, 0) + object->getPosition().y +  _size.y/2;
+
+  }
+  draw(camMatrix, shader, scale, rot);
+}
+
 void Object::draw(mat4 camMatrix, GLuint shader, float scale, mat4 rot)
  {
-   mat4 modelView = T(getPosition().x, getPosition().y, getPosition().z);
+   GLfloat opac = -100;
+   mat4 modelView = T(_position.x, _position.y, _position.z);
    mat4 Tot = Mult(camMatrix, Mult(Mult(modelView, S(scale,scale,scale)), rot));
    glActiveTexture(GL_TEXTURE0);
    glBindTexture(GL_TEXTURE_2D, getTexture());
    glUniform1i(glGetUniformLocation(shader, "Tex"), 0); // Texture unit 0
+   glUniform1f(glGetUniformLocation(shader, "opac"), opac);
    glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, Tot.m);
    glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelView.m);
    DrawModel(getModel(), shader, "inPosition", "inNormal", "inTexCoord");
  }
 
+ void Object::drawOver(mat4 camMatrix, GLuint shader, float scale, mat4 rot, GLfloat opac)
+  {
+    mat4 modelView = T(_position.x, _position.y, _position.z);
+    mat4 Tot = Mult(camMatrix, Mult(Mult(modelView, S(scale,scale,scale)), rot));
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, getTexture());
+    glUniform1i(glGetUniformLocation(shader, "Tex"), 0); // Texture unit 0
+    glUniform1f(glGetUniformLocation(shader, "opac"), opac);
+    glUniformMatrix4fv(glGetUniformLocation(shader, "myRotZ"), 1, GL_TRUE, rot.m);
+    glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, Tot.m);
+    DrawModel(getModel(), shader, "inPosition", "inNormal", "inTexCoord");
+  }
+
 GLfloat Object::getCorrHeightInt(int x, int z){
 	return _model->vertexArray[(x + z)*3 + 1];
 }
 
-GLfloat Object::getRealHeight(GLfloat x, GLfloat z){
-		GLfloat p1,p2,p3,p4,height,u,v,uPrim,vPrim;
-		p1 = getCorrHeightInt(floor(x), ceil(z));
-		p2 = getCorrHeightInt(ceil(x), ceil(z));
-		p3 = getCorrHeightInt(floor(x), floor(z));
-		p4 = getCorrHeightInt(ceil(x), floor(z));
-		u = x-floor(x);
-		uPrim = 1-u;
-		v = z-floor(z);
-		vPrim = 1-v;
-		height = _position.y + v*(uPrim*p1 + u*p2) + vPrim*(uPrim*p3 + u*p4);
-		return height;
-  }
+GLfloat Object::getRealHeight(GLfloat x, GLfloat z, Object* object, GLint flipped){
+    Model* placeon = object->getModel();
+    GLfloat xx, zz, tempdist, height;
+    GLfloat dist = 1000000;
+
+    for (int i = 0; i < placeon->numVertices; i++){
+      xx = placeon->vertexArray[3 * i];
+      zz = placeon->vertexArray[3 * i + 2];
+      tempdist = sqrt(pow((xx - x), 2) + pow((zz - z), 2));
+      if (tempdist < dist){
+          height = placeon->vertexArray[3 * i + 1];
+          dist = tempdist;
+        }
+        if (flipped == 0){
+          if (tempdist == dist && height < placeon->vertexArray[3 * i + 1]){
+                  height = placeon->vertexArray[3 * i + 1];
+                  dist = tempdist;
+                }
+              }
+        if (flipped == 1){
+          if (tempdist == dist && height > placeon->vertexArray[3 * i + 1]){
+                  height = placeon->vertexArray[3 * i + 1];
+                  dist = tempdist;
+                }
+              }
+      }
+      return height;
+    }

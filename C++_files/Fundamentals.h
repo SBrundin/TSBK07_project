@@ -56,7 +56,7 @@ private:
   std::vector<Object*> listOfObj_2;
   std::vector<Object*> listOfObj_3;
   Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
-  Model *skybox[6], *bookMarkModel;
+  Model *skybox[6], *bookMarkModel, *sunModel, *moonModel, *mountainModel, *cloudModel, *rainbowModel, *backgroundModel;
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight, *pointLight0, *spotLight0, *dirLight0;
   LightHandler *pointLightVec;
@@ -64,8 +64,9 @@ private:
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour, pointLightPos0, pointLightColour0;
   vec3 spotLightColour0, spotLightPos0, dirLightPos0, dirLightColor0;
   GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
-  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, bilTex, paperTex, truckTex, greenTex;
-  GLuint woodTex, wood2Tex, cottageTex;
+  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, leather2Tex, bilTex, paperTex, truckTex, asphaltTex, backgroundTex, bricksTex, bricks2Tex;
+  GLuint woodTex, wood2Tex, cloudTex, crackedmudTex, crackedmud2Tex, crackedmud3Tex, pathTex, greenTex, moonTex, sunTex, stoneTex, rainbowTex;
+  GLuint grass1Tex, grass2Tex, grass3Tex, grass4Tex, grass5Tex, grass6Tex, cottageTex, sandTex, sand1Tex, sand2Tex, lavaTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   GLfloat constant, linear, quadratic;
@@ -108,6 +109,13 @@ private:
   Object* bird;
   Object* bird2;
   Object* bird3;
+  Object* background;
+  Object* sun;
+  Object* moon;
+  Object* mountain;
+  Object* mountain2;
+  Object* cloud;
+  Object* rainbow;
 
   Model *houseModel, *cottageModel, *elephantModel, *treeModel, *rosebushModel, *pileModel, *birdModel;
 

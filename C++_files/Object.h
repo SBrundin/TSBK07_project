@@ -19,6 +19,7 @@ public:
     Object(vec3 pos, Model* model, GLuint tex);
     Object(Model* model, GLuint tex, GLuint texSide, GLuint texUp);
     Object(vec3 pos, Model* model, GLuint tex, GLuint texSide, GLuint texUp);
+    Object(Model* model, GLuint tex, GLuint texSide, GLuint texUp0, GLuint texUp1, GLuint texUp2);
 
     vec3 getPosition();
     void setPosition(vec3 position);
@@ -32,7 +33,7 @@ public:
 
     GLuint getTexture();
     GLuint getTextureSide();
-    GLuint getTextureUp();
+    vec3 getTextureUp();
     void setTexture(GLuint tex);
     void setTextureSide(GLuint tex);
     void setTextureUp(GLuint tex);
@@ -42,9 +43,11 @@ public:
     vec3 getSize();
 
     void draw(mat4 camMatrix, GLuint shader, float scale, mat4 rot);
+    void drawOver(mat4 camMatrix, GLuint shader, float scale, mat4 rot, GLfloat opac);
+    void drawOn(mat4 camMatrix, GLuint shader, float scale, mat4 rot, Object* object);
 
     GLfloat getCorrHeightInt(int x, int z);
-    GLfloat getRealHeight(GLfloat x, GLfloat z);
+    GLfloat getRealHeight(GLfloat x, GLfloat z, Object* object, GLint flipped);
 
 private:
     vec3 _position;
@@ -54,7 +57,7 @@ private:
     Model* _model;
     GLuint _texture;
     GLuint _textureSide;
-    GLuint _textureUp;
+    GLuint _textureUp, _textureUp0, _textureUp1, _textureUp2;
 };
 
 #endif

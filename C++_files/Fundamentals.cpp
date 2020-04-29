@@ -63,8 +63,10 @@ void Fundamentals::loadfiles(){
 	glUseProgram(pageShader);
 	glUniformMatrix4fv(glGetUniformLocation(pageShader, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 	glUniform1i(glGetUniformLocation(pageShader, "Tex"), 0); // Texture unit 0
-	glUniform1i(glGetUniformLocation(pageShader, "TexUp"), 1);
-	glUniform1i(glGetUniformLocation(pageShader, "sideTex"), 2);
+	glUniform1i(glGetUniformLocation(pageShader, "TexUp0"), 1);
+	glUniform1i(glGetUniformLocation(pageShader, "TexUp1"), 2);
+	glUniform1i(glGetUniformLocation(pageShader, "TexUp2"), 3);
+	glUniform1i(glGetUniformLocation(pageShader, "sideTex"), 4);
 
 	glUseProgram(skyboxProg);
 	glUniform1i(glGetUniformLocation(skyboxProg, "tex0"), 0); // Texture unit 0
@@ -132,7 +134,7 @@ void Fundamentals::update(){
 	glUniform1i(glGetUniformLocation(mainProg, "number_of_spot_lights"), 1);
 	//DRAWS THE SCENES
 
-	//glUseProgram(programObj);
+	glUseProgram(programObj);
 
 	if (book->getCurrentPage() == 1 && book->getFadeBool()){
 				book->setFadeBool();
@@ -194,11 +196,11 @@ void Fundamentals::initobjects(){
 
 
 	//MULTIPLE TEXTURE OBJECTS, Object(pos, model, tex, texside, texup)
-	toppage = new Object(topModel, leatherTex);
-	frame = new Object(frameModel, leatherTex, leatherTex, leatherTex);
-	firstPage = new Object(firstModel, grassTex, snowTex, grassTex);
-	secondPage = new Object(secondModel, grassTex, snowTex, grassTex);
-	pages = new Object(pagesModel, grassTex, snowTex, grassTex);
+	toppage = new Object(topModel, leatherTex, leatherTex, leatherTex, leatherTex, leatherTex);
+	frame = new Object(frameModel, leatherTex, leatherTex, leatherTex, leatherTex, leatherTex);
+	firstPage = new Object(firstModel, paperTex, paperTex, grass1Tex, grass2Tex, grass3Tex);
+	secondPage = new Object(secondModel, paperTex, paperTex, crackedmud2Tex, crackedmud3Tex, lavaTex);
+	pages = new Object(pagesModel, paperTex, paperTex, paperTex, paperTex, paperTex);
 	book = new Book(toppage, firstPage, secondPage, frame, pages);
 	bookMark = new Object(vec3(-14.0f, 1.0f, 0.0f), bookMarkModel, leatherTex);
 
@@ -231,7 +233,14 @@ void Fundamentals::initobjects(){
 	bird = new Object(vec3(10.0f, 15.0f, -4.4f), birdModel, waterTex);
 	bird2 = new Object(vec3(15.0f, 15.0f, -10.4f), birdModel, waterTex);
 	bird3 = new Object(vec3(-20.0f, 15.0f, 10.4f), birdModel, waterTex);
+
 	box = new Object(vec3(0.0f, 10.0f, 0.0f), boxModel, grassTex);
+	background = new Object(vec3(-14.75f, 1.25f, -19.25f), backgroundModel, backgroundTex);
+	sun = new Object(vec3(-15.0f, 17.0f, -18.9f), sunModel, sunTex);
+	moon = new Object(vec3(-15.0f, -20.0f, -18.9f), moonModel, moonTex);
+	mountain = new Object(vec3(-7.0f, 7.5f, -18.5f), mountainModel, stoneTex);
+	mountain2 = new Object(vec3(-13.0f, 6.2f, -18.7f), mountainModel, stoneTex);
+	cloud = new Object(vec3(-27.0f, 20.0f, -18.85f), cloudModel, cloudTex);
 
 
 	listOfObj_2.push_back(house);
@@ -288,7 +297,7 @@ void Fundamentals::initobjects(){
 
 void Fundamentals::loadmodels(){
 	topModel = LoadModelPlus("../Modeller/booktopreal.obj");
-	firstModel = LoadModelPlus("../Modeller/pagefirst.obj");
+	firstModel = LoadModelPlus("../Modeller/page1.obj");
 	secondModel =LoadModelPlus("../Modeller/pagesecond.obj");
 	frameModel = LoadModelPlus("../Modeller/bookstaticcover.obj");
 	pagesModel = LoadModelPlus("../Modeller/bookstaticpages.obj");
@@ -307,6 +316,12 @@ void Fundamentals::loadmodels(){
 	treeModel = LoadModelPlus("../Modeller/tree.obj");
 	rosebushModel = LoadModelPlus("../Modeller/rosebush.obj");
 	pileModel = LoadModelPlus("../Modeller/pile.obj");
+	backgroundModel = LoadModelPlus("../Modeller/background.obj");
+	sunModel = LoadModelPlus("../Modeller/sun.obj");
+	moonModel = LoadModelPlus("../Modeller/moon.obj");
+	mountainModel = LoadModelPlus("../Modeller/mountain.obj");
+	cloudModel = LoadModelPlus("../Modeller/clod2.obj");
+	//rainbowModel = LoadModelPlus("../Modeller/rainbow.obj");
 
 	birdModel = LoadModelPlus("../Modeller/bird.obj");
 
@@ -318,15 +333,41 @@ void Fundamentals::loadmodels(){
 
 void Fundamentals::loadtextures(){
 	LoadTGATextureSimple("../textures/grass.tga", &grassTex);
+	LoadTGATextureSimple("../textures/grass2.tga", &grass1Tex);
+	LoadTGATextureSimple("../textures/dried_grass.tga", &grass2Tex);
+	LoadTGATextureSimple("../textures/dried_grass2.tga", &grass3Tex);
+	LoadTGATextureSimple("../textures/dried_grass3.tga", &grass4Tex);
+	LoadTGATextureSimple("../textures/dried_grass4.tga", &grass5Tex);
+	LoadTGATextureSimple("../textures/dried_grass5.tga", &grass6Tex);
 	LoadTGATextureSimple("../textures/snow.tga", &snowTex);
 	loadskybox();
 	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
+	LoadTGATextureSimple("../textures/LeatherBrown.tga", &leather2Tex);
 	LoadTGATextureSimple("../textures/bilskissred.tga", &bilTex);
 	LoadTGATextureSimple("../textures/water.tga", &waterTex);
 	LoadTGATextureSimple("../textures/wood.tga", &woodTex);
 	LoadTGATextureSimple("../textures/wood2.tga", &wood2Tex);
 	LoadTGATextureSimple("../textures/PStoTGA.tga", &greenTex);
 	LoadTGATextureSimple("../textures/CottageUV.tga", &cottageTex);
+	LoadTGATextureSimple("../textures/Asphalt.tga", &asphaltTex);
+	LoadTGATextureSimple("../textures/Background.tga", &backgroundTex);
+	LoadTGATextureSimple("../textures/Bricks.tga", &bricksTex);
+	LoadTGATextureSimple("../textures/Bricks2.tga", &bricks2Tex);
+	LoadTGATextureSimple("../textures/Cloud.tga", &cloudTex);
+	LoadTGATextureSimple("../textures/CrackedMud.tga", &crackedmudTex);
+	LoadTGATextureSimple("../textures/CrackedMud2.tga", &crackedmud2Tex);
+	LoadTGATextureSimple("../textures/CrackedMud3.tga", &crackedmud3Tex);
+	LoadTGATextureSimple("../textures/ForestPath.tga", &pathTex);
+	LoadTGATextureSimple("../textures/Green.tga", &greenTex);
+	LoadTGATextureSimple("../textures/Sun.tga", &sunTex);
+	LoadTGATextureSimple("../textures/Moon.tga", &moonTex);
+	LoadTGATextureSimple("../textures/Stone.tga", &stoneTex);
+	LoadTGATextureSimple("../textures/Paper.tga", &paperTex);
+	LoadTGATextureSimple("../textures/Sand2.tga", &sandTex);
+	LoadTGATextureSimple("../textures/Sand3.tga", &sand1Tex);
+	LoadTGATextureSimple("../textures/Sand5.tga", &sand2Tex);
+	LoadTGATextureSimple("../textures/HardeningLava.tga", &lavaTex);
+	//LoadTGATextureSimple("../textures/Rosepedal.tga", &rainbowTex);
 }
 
 void Fundamentals::initshaders(){
@@ -364,7 +405,6 @@ void Fundamentals::fadeInObjects(){
 	}
 }
 
-
 void Fundamentals::loadskybox(){
 	std::string	skytextures[6*3] =
 	{
@@ -391,14 +431,14 @@ void Fundamentals::loadskybox(){
 	};
 
 	std::string filename[6] =
-{
-	"../Modeller/skybox/side0.obj",
-	"../Modeller/skybox/side1.obj",
-	"../Modeller/skybox/side2.obj",
-	"../Modeller/skybox/side3.obj",
-	"../Modeller/skybox/side4.obj",
-	"../Modeller/skybox/side5.obj"
-};
+	{
+		"../Modeller/skybox/side0.obj",
+		"../Modeller/skybox/side1.obj",
+		"../Modeller/skybox/side2.obj",
+		"../Modeller/skybox/side3.obj",
+		"../Modeller/skybox/side4.obj",
+		"../Modeller/skybox/side5.obj"
+	};
 
 	for (unsigned int i = 0; i < 6*3; i++)
 	{
@@ -415,23 +455,28 @@ void Fundamentals::loadskybox(){
 	}
 }
 
-
 void Fundamentals::drawFirstScene(){
 	bookMark->draw(camMatrix, programObj, 1.0, Ry(0.0));
-	house->draw(camMatrix, programObj, 2.0, Ry(0.0)); // camMatrix, shader, scale, angle
-	cottage->draw(camMatrix, programObj, 1.0, Ry(M_PI));
-	cottage1->draw(camMatrix, programObj, 1.0, Ry(0.0));
-	cottage2->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-	elephant->draw(camMatrix, programObj, 1.0, Ry(M_PI/4));
-	elephantbby->draw(camMatrix, programObj, 0.3, Ry(7.5*M_PI/4));
-	tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
-	rosebush1->draw(camMatrix, programObj, 2.2, Ry(0.0));
-	rosebush2->draw(camMatrix, programObj, 1.5, Ry(0.0));
-	rosebush3->draw(camMatrix, programObj, 1.0, Ry(0.0));
-	pile->draw(camMatrix, programObj, 1.0, Ry(0.0));
 
-
-
+	house->drawOn(camMatrix, programObj, 2.0, Ry(0.0), toppage); // camMatrix, shader, scale, angle
+	cottage->drawOn(camMatrix, programObj, 1.0, Ry(M_PI), toppage);
+	cottage1->drawOn(camMatrix, programObj, 1.0, Ry(0.0), toppage);
+	cottage2->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	elephant->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/4), toppage);
+	elephantbby->drawOn(camMatrix, programObj, 0.3, Ry(7.5*M_PI/4), toppage);
+	tree->drawOn(camMatrix, programObj, 2.0, Ry(0.0), toppage);
+	rosebush1->drawOn(camMatrix, programObj, 2.2, Ry(0.0), firstPage);
+	rosebush2->drawOn(camMatrix, programObj, 1.5, Ry(0.0), toppage);
+	rosebush3->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
+	pile->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
+	background->drawOver(camMatrix, programObj, 1.0, Rz(t/100), background->getPosition().y);
+	mat4 moonrot = Mult(T(0.0f, 21.0f, 0.0f), Mult(Rz(t/100 + 3 * M_PI/16), T(-15.0f, -20.0f, 0.0f)));
+	mat4 sunrot = Mult(T(0.0f, -16.0f, 0.0f), Mult(Rz(t/100 - 3 * M_PI/16), T(-15.0f, 17.0f, 0.0f)));
+	sun->drawOver(camMatrix, programObj, 1.0, sunrot, background->getPosition().y - sun->getPosition().y);
+	moon->drawOver(camMatrix, programObj, 1.0, moonrot, background->getPosition().y - moon->getPosition().y);
+	mountain->drawOver(camMatrix, programObj, 1.0, Ry(0.0), background->getPosition().y - mountain->getPosition().y);
+	mountain2->drawOver(camMatrix, programObj, 0.7, Ry(0.0), background->getPosition().y - mountain2->getPosition().y);
+	cloud->drawOver(camMatrix, programObj, 1.0, Ry(M_PI/2), background->getPosition().y - cloud->getPosition().y);
 	mat4 modelViewbird = T(bird->getPosition().x*sin(-t), bird->getPosition().y+0.3*sin(5*t), bird->getPosition().z*cos(-t));
 	mat4 Totbird = Mult(camMatrix, Mult(modelViewbird, Mult(Ry(t+4.71), Rz(3.14/3*(sin(t))))));
 	glActiveTexture(GL_TEXTURE0);
@@ -468,24 +513,23 @@ void Fundamentals::drawFirstScene(){
 
 void Fundamentals::drawSecondScene(){
 
-velociraptor1->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor2->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor3->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor4->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor5->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
-velociraptor6->draw(camMatrix, programObj, 1.0, Ry(2*M_PI/5));
-velociraptor7->draw(camMatrix, programObj, 1.0, Ry(M_PI/3));
-trex->draw(camMatrix, programObj, 1.0, Ry(-3*M_PI/4));
-stegos1->draw(camMatrix, programObj, 1.0, Ry(M_PI/4));
-stegos2->draw(camMatrix, programObj, 1.0, Ry(-M_PI/2));
-stegos3->draw(camMatrix, programObj, 1.0, Ry(-M_PI/3));
-tree->draw(camMatrix, programObj, 2.0, Ry(0.0));
-rosebush1->draw(camMatrix, programObj, 2.2, Ry(0.0));
-rosebush2->draw(camMatrix, programObj, 1.5, Ry(0.0));
-rosebush3->draw(camMatrix, programObj, 1.0, Ry(0.0));
+	velociraptor1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	velociraptor2->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	velociraptor3->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	velociraptor4->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	velociraptor5->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	velociraptor6->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	velociraptor7->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
+	trex->drawOn(camMatrix, programObj, 1.0, Ry(-3*M_PI/4), secondPage);
+	stegos1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/4), secondPage);
+	stegos2->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/2), secondPage);
+	stegos3->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/3), secondPage);
+	tree->drawOn(camMatrix, programObj, 2.0, Ry(0.0), firstPage);
+	rosebush1->drawOn(camMatrix, programObj, 2.2, Ry(0.0), secondPage);
+	rosebush2->drawOn(camMatrix, programObj, 1.5, Ry(0.0), firstPage);
+	rosebush3->drawOn(camMatrix, programObj, 1.0, Ry(0.0), secondPage);
 
 }
-
 
 void Fundamentals::drawSkybox(){
 	glUniform1i(glGetUniformLocation(skyboxProg, "ID"), book->getCurrentPage());
