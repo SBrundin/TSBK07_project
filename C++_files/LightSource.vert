@@ -12,7 +12,6 @@ uniform mat4 model;
 
 
 //To frag
-//out vec3 fragColour;
 out vec2 exTexCoord;
 out vec3 fragPos;
 out vec3 normal;

@@ -24,9 +24,10 @@ Book::Book(Object* top, Object* firstPage, Object* secondPage, Object* frame, Ob
   _pages->setPosition(_pagesPos);
 }
 
-void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
+void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t, vec3 viewPos){
 
   glUseProgram(shader);
+  glUniform3fv(glGetUniformLocation(shader, "viewPos"), 1, &viewPos.x);
 
   if (glutKeyIsDown('n') && getRotationBool() == false && _currentPage != 3)
     {
@@ -58,6 +59,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
       mat4 modelViewTop = T(_top->getPosition().x, _top->getPosition().y ,_top->getPosition().z);
       mat4 totalTop = Mult(camMatrix, modelViewTop);
       glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
+      glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelViewTop.m);
       DrawModel(_top->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
       //First page
       glActiveTexture(GL_TEXTURE0);
@@ -67,6 +69,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
       mat4 modelViewfirst = T(_firstPage->getPosition().x, _firstPage->getPosition().y, _firstPage->getPosition().z );
       mat4 totalfirst = Mult(camMatrix, modelViewfirst);
       glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalfirst.m);
+      glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelViewfirst.m);
       DrawModel(_firstPage->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
       //Second pages
       glActiveTexture(GL_TEXTURE0);
@@ -76,6 +79,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t){
       mat4 modelViewSecond = T(_secondPage->getPosition().x, _secondPage->getPosition().y, _secondPage->getPosition().z);
       mat4 totalSecond = Mult(camMatrix, modelViewSecond);
       glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalSecond.m);
+      glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelViewSecond.m);
       DrawModel(_secondPage->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
     }
   else if (_currentPage == 2){

@@ -54,7 +54,6 @@ in vec3 fragPos;
 
 // Uniform
 uniform vec3 viewPos;
-
 uniform int number_of_point_lights;
 uniform int number_of_dir_lights;
 uniform int number_of_spot_lights;
@@ -181,5 +180,6 @@ void main(void)
 //pointResult + spotResult +
 
   vec3 result = (  spotResult  )  * vec3( texture( Tex, exTexCoord ) );
+
   colour = vec4(result, 1.0f);
 }

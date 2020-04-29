@@ -101,40 +101,63 @@ void Fundamentals::update(){
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	viewPos = {camera-> getPosition().x, camera-> getPosition().y, camera-> getPosition().z};
 	//DRAWS THE BOOK
-	book->draw(camMatrix, pageShader, t);
-
-	//////Point Light
-	glUseProgram(mainProg);
-	vec3 viewPos = {camera-> getPosition().x, camera-> getPosition().y, camera-> getPosition().z};
-	glUniform3fv(glGetUniformLocation(mainProg, "viewPos"), 1, &viewPos.x);
-
-
+	book->draw(camMatrix, pageShader, t, viewPos);
 	pointLight0-> setPosition(box->getPosition());
-	drawPointLight(0, pointLight0, mainProg);
-	glUniform1i(glGetUniformLocation(mainProg, "number_of_point_lights"), 1);
+	drawPointLight(0, pointLight0, pageShader);
+	glUniform1i(glGetUniformLocation(pageShader, "number_of_point_lights"), 1);
 	//För att veta vart PointLight är
-  box->draw(camMatrix, mainProg, 1.0, Ry(0.0));
+	//box->draw(camMatrix, pageShader, 1.0, Ry(0.0));
 
 	///////DirLight
 	dirLight0 -> setDirection(vec3(0.0f, -1.0f, 0.0f));
-	drawDirLight(0, dirLight0, mainProg);
+	drawDirLight(0, dirLight0, pageShader);
 	//Måste skickas in med rätt antal
 	int numDirLights = 1;
-	glUniform1i(glGetUniformLocation(mainProg, "number_of_dir_lights"), numDirLights);
+	glUniform1i(glGetUniformLocation(pageShader, "number_of_dir_lights"), numDirLights);
 
 	///////SpotLight
 	spotLight0 -> setDirection(vec3(0.0f, -1.0f, 0.0f));
 	spotLight0 -> setPosition(vec3(box->getPosition().x, box->getPosition().y +10*sin(t), box->getPosition().z));
-	spotLight0-> setColour(vec3(0.8f, 0.4f, 0.8f));
+	spotLight0-> setColour(vec3(0.9f, 0.0f, 0.9f));
 	spotLight0 -> setOuterCutOff(17.5);
 	spotLight0 -> setCutOff(12.5);
 
-	drawSpotLight(0, spotLight0, mainProg);
-	glUniform1i(glGetUniformLocation(mainProg, "number_of_spot_lights"), 1);
+	//drawSpotLight(0, spotLight0, pageShader);
+	glUniform1i(glGetUniformLocation(pageShader, "number_of_spot_lights"), 1);
+
+	//////Point Light
+	glUseProgram(programObj);
+	glUniform3fv(glGetUniformLocation(programObj, "viewPos"), 1, &viewPos.x);
+	vec3 sunPos = vec3(sun->getPosition().x, sun->getPosition().y, sun->getPosition().z + 2);
+	pointLight0-> setPosition(sunPos);
+	pointLight0 -> setColour(vec3(0.7f, 1.0f, 1.0f));
+	drawPointLight(0, pointLight0, programObj);
+	glUniform1i(glGetUniformLocation(programObj, "number_of_point_lights"), 1);
+	//För att veta vart PointLight är
+	box -> setPosition(sunPos);
+  box->draw(camMatrix, programObj, 1.0, Ry(0.0));
+
+	///////DirLight
+	dirLight0 -> setDirection(vec3(0.0f, -1.0f, 0.0f));
+	drawDirLight(0, dirLight0, programObj);
+	//Måste skickas in med rätt antal
+	 numDirLights = 1;
+	glUniform1i(glGetUniformLocation(programObj, "number_of_dir_lights"), numDirLights);
+
+	///////SpotLight
+	spotLight0 -> setDirection(vec3(0.0f, -1.0f, 0.0f));
+	spotLight0 -> setPosition(vec3(box->getPosition().x, box->getPosition().y +10*sin(t), box->getPosition().z));
+//	spotLight0-> setColour(vec3(0.8f, 0.4f, 0.8f));
+	spotLight0 -> setOuterCutOff(17.5);
+	spotLight0 -> setCutOff(12.5);
+
+	drawSpotLight(0, spotLight0, programObj);
+	glUniform1i(glGetUniformLocation(programObj, "number_of_spot_lights"), 1);
 	//DRAWS THE SCENES
 
-	glUseProgram(programObj);
+
 
 	if (book->getCurrentPage() == 1 && book->getFadeBool()){
 				book->setFadeBool();
@@ -234,7 +257,7 @@ void Fundamentals::initobjects(){
 	bird2 = new Object(vec3(15.0f, 15.0f, -10.4f), birdModel, waterTex);
 	bird3 = new Object(vec3(-20.0f, 15.0f, 10.4f), birdModel, waterTex);
 
-	box = new Object(vec3(0.0f, 10.0f, 0.0f), boxModel, grassTex);
+	box = new Object(vec3(0.0f, 10.0f, 0.0f), boxModel, cloudTex);
 	background = new Object(vec3(-14.75f, 1.25f, -19.25f), backgroundModel, backgroundTex);
 	sun = new Object(vec3(-15.0f, 17.0f, -18.9f), sunModel, sunTex);
 	moon = new Object(vec3(-15.0f, -20.0f, -18.9f), moonModel, moonTex);

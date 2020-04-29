@@ -17,8 +17,8 @@ LightSource::LightSource(vec3 pos, vec3 col)
     //Behövs tunas för att se vad som är en bra standard.
     //attenation = 2.0/(constant + linear*(distans till ljus) + quadratic*(distans till ljus)^2)
     constant = 1.0f;//liten betyder starkt
-    linear = 0.9;
-    quadratic = 0.32;
+    linear = 0.022;
+    quadratic = 0.0019;
 
     //För spotLights och hur stor radie på "ficklampan de ska vara"
     //Skillnaden mellan outerCuttOff och CuttOff bestämmer hur smooth den ska fadea ut
