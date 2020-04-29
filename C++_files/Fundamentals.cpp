@@ -186,7 +186,7 @@ void Fundamentals::initobjects(){
 	bird = new Object(vec3(10.0f, 15.0f, -4.4f), birdModel, waterTex);
 	bird2 = new Object(vec3(15.0f, 15.0f, -10.4f), birdModel, waterTex);
 	bird3 = new Object(vec3(-20.0f, 15.0f, 10.4f), birdModel, waterTex);
-	background = new Object(vec3(-15.0f, 1.0f, -19.25f), backgroundModel, backgroundTex);
+	background = new Object(vec3(-14.75f, 1.25f, -19.25f), backgroundModel, backgroundTex);
 	sun = new Object(vec3(-15.0f, 17.0f, -18.9f), sunModel, sunTex);
 	moon = new Object(vec3(-15.0f, -20.0f, -18.9f), moonModel, moonTex);
 	mountain = new Object(vec3(-7.0f, 7.5f, -18.5f), mountainModel, stoneTex);
