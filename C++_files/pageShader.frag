@@ -74,6 +74,7 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDirectio
 
 vec3 calcPointLight( PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir )
 {
+
     vec3 lightDir = normalize( light.position - fragPos );
 
     // Diffuse shading
@@ -152,6 +153,7 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDirectio
 
     return ( ambient + diffuse + specular );
 }
+
 
 
 /////////////////////////////////////////////////////Main
@@ -269,4 +271,5 @@ else{
 
 out_Color = color * vec4(result,1.0f);
 out_Color.w = 1.0;
+
 }

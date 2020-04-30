@@ -26,8 +26,16 @@ public:
 
     vec3 getDirection();
     void setDirection(vec3 direction);
-    void setY(GLfloat y);
+    void setY(GLfloat y){
+      _position.y = y;
+    }
+    void setX(GLfloat x){
+      _position.x = x;
+    }
 
+    void setZ(GLfloat z){
+      _position.z = z;
+    }
     Model* getModel();
     void setModel(Model* model);
 

@@ -24,7 +24,9 @@ Book::Book(Object* top, Object* firstPage, Object* secondPage, Object* frame, Ob
   _pages->setPosition(_pagesPos);
 }
 
+
 void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t, vec3 viewPos){
+
 
   glUseProgram(shader);
   glUniform3fv(glGetUniformLocation(shader, "viewPos"), 1, &viewPos.x);
@@ -185,6 +187,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t, vec3 viewPos){
   mat4 totalPages = Mult(camMatrix, modelViewPages);
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalPages.m);
   DrawModel(_pages->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
+
   //FRAME OF THE BOOK
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, _frame->getTexture());
@@ -225,6 +228,7 @@ void Book::browse(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Obje
   }
 
   if (pageNbr == 1){
+
   	totRottop = Mult(modelViewTop, totRottop);
     totalTop = Mult(camMatrix, totRottop);
     totalSec = Mult(camMatrix, modelViewSec);
@@ -234,7 +238,12 @@ void Book::browse(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Obje
     totalSec = Mult(camMatrix, totRotp1);
     totalTop = Mult(camMatrix, Mult(modelViewTop, Rz(M_PI)));
   }
-
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, _firstPage->getTexture());
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, _firstPage->getTexture());
+  glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureSide());
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
   glUniform1i(glGetUniformLocation(shader, "ID"), 0);
   glActiveTexture(GL_TEXTURE0);
@@ -274,6 +283,7 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
     _currentPage++;
     _timer = 0;
     _openRot = Rz(M_PI);
+
   }
   //TOP ROTATION BACKWARD
   else if (timer <= 3.13 && currentPage == 2 && button == 'r')
@@ -288,6 +298,7 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
     setRotationBool();
     _currentPage--;
     _timer = 0;
+    _openRot = Rz(0);
   }
   //FIRST PAGE ROTATION FORWARD
   else if (timer <= 3.13 && currentPage == 2 && button == 'l')
@@ -319,6 +330,21 @@ void Book::makeRotation(GLfloat timer, GLuint currentPage, mat4 camMatrix, GLuin
     _currentPage--;
     _timer = 0;
     _openRot = Rz(0);
+
   }
 
+}
+
+void Book::makeRotation(Object* obj, mat4 rotation)
+{
+  //std::cout << _size.x << ' ' << _size.y << ' ' << _size.z << '\n';
+
+  vec4 size4 = vec4(obj->getPosition().x, obj->getPosition().y, obj->getPosition().z, 1);
+  vec4 temp =  MultVec4(rotation, size4);
+
+  obj->setX(abs(temp.x / temp.w));
+  obj->setY(abs(temp.y / temp.w));
+  obj->setZ(abs(temp.z / temp.w));
+  //_size = ScalarMult(_size, scale);
+  //std::cout << _size.x << ' ' << _size.y << ' ' << _size.z << '\n';
 }
