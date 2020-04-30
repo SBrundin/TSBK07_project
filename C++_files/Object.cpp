@@ -174,13 +174,15 @@ void Object::updateBoundingBox(mat4 rotation, GLfloat scale)
 
 
 void Object::drawOn(mat4 camMatrix, GLuint shader, float scale, mat4 rot, Object* object){
-  GLfloat x = _position.x - object->getPosition().x;
-  GLfloat z = _position.z - object->getPosition().z;
-  if(_position.x < 0){
-    _position.y = object->getRealHeight(-x, z) + object->getPosition().y + _size.y/2;
+
+  GLfloat xx = _position.x - object->getPosition().x;
+  GLfloat zz = _position.z - object->getPosition().z;
+  if(_position.x < -15.0){
+    _position.y = -object->getRealHeight(-xx , zz, object, 1) + object->getPosition().y +  _size.y/2;
   }
   else{
-    _position.y = object->getRealHeight(x, z) + object->getPosition().y + _size.y/2;
+    _position.y = object->getRealHeight(xx , zz, object, 0) + object->getPosition().y +  _size.y/2;
+
   }
   draw(camMatrix, shader, scale, rot);
 }
@@ -195,6 +197,7 @@ void Object::draw(mat4 camMatrix, GLuint shader, float scale, mat4 rot)
    glUniform1i(glGetUniformLocation(shader, "Tex"), 0); // Texture unit 0
    glUniform1f(glGetUniformLocation(shader, "opac"), opac);
    glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, Tot.m);
+   glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelView.m);
    DrawModel(getModel(), shader, "inPosition", "inNormal", "inTexCoord");
  }
 
@@ -215,21 +218,31 @@ GLfloat Object::getCorrHeightInt(int x, int z){
 	return _model->vertexArray[(x + z)*3 + 1];
 }
 
-GLfloat Object::getRealHeight(GLfloat x, GLfloat z){
+GLfloat Object::getRealHeight(GLfloat x, GLfloat z, Object* object, GLint flipped){
+    Model* placeon = object->getModel();
     GLfloat xx, zz, tempdist, height;
     GLfloat dist = 1000000;
-    for (int i = 0; i < _model->numVertices; i++){
-      xx = _model->vertexArray[3 * i];
-      zz = _model->vertexArray[3 * i + 2];
+
+    for (int i = 0; i < placeon->numVertices; i++){
+      xx = placeon->vertexArray[3 * i];
+      zz = placeon->vertexArray[3 * i + 2];
       tempdist = sqrt(pow((xx - x), 2) + pow((zz - z), 2));
       if (tempdist < dist){
-        dist = tempdist;
-        height = _model->vertexArray[3 * i + 1];
-      }
-      else if ((tempdist == dist) && (_model->vertexArray[3 * i + 1] > height)){
-        dist = tempdist;
-        height = _model->vertexArray[3* i + 1];
-      }
+          height = placeon->vertexArray[3 * i + 1];
+          dist = tempdist;
+        }
+        if (flipped == 0){
+          if (tempdist == dist && height < placeon->vertexArray[3 * i + 1]){
+                  height = placeon->vertexArray[3 * i + 1];
+                  dist = tempdist;
+                }
+              }
+        if (flipped == 1){
+          if (tempdist == dist && height > placeon->vertexArray[3 * i + 1]){
+                  height = placeon->vertexArray[3 * i + 1];
+                  dist = tempdist;
+                }
+              }
       }
       return height;
     }

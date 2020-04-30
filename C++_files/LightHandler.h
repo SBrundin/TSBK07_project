@@ -11,7 +11,7 @@ class LightHandler
 {
 public:
     LightHandler();
-    int addLight(vec3 position, vec3 col, GLfloat constant, GLfloat linear, GLfloat quadratic); //Adds light and returns index of that light;
+  //  int addLight(vec3 position, vec3 col, GLfloat constant, GLfloat linear, GLfloat quadratic); //Adds light and returns index of that light;
     void uploadPointLights(GLuint shader);
     void setPosition(int index, vec3 pos);
     //void changeLightPos(int index, vec3 pos);

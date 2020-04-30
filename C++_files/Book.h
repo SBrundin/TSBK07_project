@@ -10,7 +10,8 @@ class Book
 {
 public:
     Book(Object* top, Object* firstPage, Object* secondPage, Object* frame, Object* pages);
-    void draw(mat4 camMatrix, GLuint shader, GLuint shader2,GLfloat t);
+
+    void draw(mat4 camMatrix, GLuint shader, GLfloat t, vec3 viewPos);
     void browse(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Object* firstPage, GLuint pageNbr, char button);
     void makeRotation(GLfloat timer, GLuint page, mat4 camMatrix, GLuint shader, char button);
     void makeRotation(Object* obj, mat4 rotation);
@@ -63,20 +64,21 @@ private:
     Object* _firstPage;
     Object* _secondPage;
     Object* _pages;
-    vec3 _firstPos = {0.21f, 3.133f, 0.0f};
+    vec3 _firstPos = {0.108f, 3.133f, 0.0f};
     vec3 _topPos = {0.435f, 3.625f, 0.0f};
     vec3 _topPosOpen = {-29.565f, 2.375f, 0.0f};
-    vec3 _firstOpen = {-29.065f, 2.768f, 0.0f};
+    vec3 _firstOpen = {-28.962f, 2.767f, 0.0f};
     vec3 _secondPos = {0.06f, 2.78f, 0.0f};
-    vec3 _rotationAxis = {-14.565f, -0.25f, 0.0f};
-    mat4 _topRot = Rz(0);
-    mat4 _firstRot = Rz(0);
+    vec3 _rotationAxistop = {-15.0f, -0.625f, 0.0f};
+    vec3 _rotationAxisp1 = {-14.535f, -0.183f, 0.0f};
+    vec3 _pagesPos = {-0.315f, 0.173f, 0.0f};
     GLuint _currentPage;
     GLuint _pageNbr;
     bool _rotationBool;
     bool _fadeBool;
     GLfloat _timer = 0;
     char _buttonPressed;
+    mat4 _openRot = Rz(0);
 };
 
 #endif

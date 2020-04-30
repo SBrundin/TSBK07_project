@@ -7,7 +7,7 @@
 class LightSource
 {
 public:
-    LightSource(vec3 position, vec3 colour, float constant, float linear, float quadratic);
+    LightSource(vec3 pos, vec3 col);
 
 
     vec3 getPosition();
@@ -51,6 +51,9 @@ public:
     void uploadDirLight(GLuint shader);
     void updateDirection(GLuint shader, vec3 dir);
 
+    GLfloat getAmp();
+    void setAmp(GLfloat a);
+
 
 
 
@@ -68,6 +71,7 @@ private:
     GLfloat quadratic;
     GLfloat cutOff;
     GLfloat outerCutOff;
+    GLfloat amp;
 };
 
 #endif

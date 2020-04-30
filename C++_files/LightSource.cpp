@@ -4,19 +4,29 @@
 #include "loadobj.h"
 #include "LightSource.h"
 
-LightSource::LightSource(vec3 position, vec3 col, GLfloat constant, GLfloat linear, GLfloat quadratic)
+LightSource::LightSource(vec3 pos, vec3 col)
 {
-    ambient = {0.2f, 0.2f, 0.2f};
-    diffuse = {0.5f, 0.5f, 0.5f}; 
+    ambient = {0.05f, 0.05f, 0.05f};
+    diffuse = {0.8f, 0.8f, 0.8f};
     specular = {1.0f, 1.0f, 1.0f};
     direction = {-0.2f, -1.0f, -0.3f};
+    position = position;
     colour = col;
-    specular = specular;
-    constant = constant;
-    linear = linear;
-    quadratic = quadratic;
+
+    //Dessa 3 floats kontrollerar hur långt ljuset når.
+    //Behövs tunas för att se vad som är en bra standard.
+    //attenation = 2.0/(constant + linear*(distans till ljus) + quadratic*(distans till ljus)^2)
+    constant = 1.0f;//liten betyder starkt
+    linear = 0.022;
+    quadratic = 0.0019;
+
+    //För spotLights och hur stor radie på "ficklampan de ska vara"
+    //Skillnaden mellan outerCuttOff och CuttOff bestämmer hur smooth den ska fadea ut
     cutOff = cos(  12.5f*2*M_PI/180  );
-    outerCutOff = cos(  15.5f*2*M_PI/180 );
+    outerCutOff = cos(  17.5f*2*M_PI/180 );
+
+    //Gör ljus starkare
+    amp = 5.0f;
 }
 
 
@@ -128,7 +138,7 @@ vec3 LightSource::getDirection()
 
 void LightSource::setCutOff(GLfloat co)
 {
-  cutOff = cos(  co*2*M_PI/180 );
+  cutOff = cos(co*2*M_PI/180);
 }
 
 GLfloat LightSource::getCutOff()
@@ -160,4 +170,14 @@ void LightSource::updateDirection(GLuint shader, vec3 dir)
   direction = dir;
   glUniform3fv(glGetUniformLocation(shader, "dirLight.direction"), 1, &direction.x);
 
+}
+
+GLfloat LightSource::getAmp()
+{
+  return amp;
+}
+
+void LightSource::setAmp(GLfloat a)
+{
+  amp = a;
 }
