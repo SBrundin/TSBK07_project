@@ -1,9 +1,9 @@
 #version 150
 
 //DEssa måste vara fler eller lika med så många ljus man skickar in
-#define NUMBER_OF_POINT_LIGHTS 2
-#define NUMBER_OF_DIR_LIGHTS 1
-#define NUMBER_OF_SPOT_LIGHTS 1
+#define NUMBER_OF_POINT_LIGHTS 10
+#define NUMBER_OF_DIR_LIGHTS 10
+#define NUMBER_OF_SPOT_LIGHTS 10
 
 struct PointLight
 {
@@ -11,6 +11,7 @@ struct PointLight
    float constant;
    float linear;
    float quadratic;
+   float amp;
    vec3 ambient;
    vec3 diffuse;
    vec3 specular;
@@ -35,6 +36,7 @@ struct SpotLight
     float constant;
     float linear;
     float quadratic;
+    float amp;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -83,7 +85,7 @@ vec3 calcPointLight( PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir )
 
     // Attenuation
     float distance = length( light.position - fragPos );
-    float attenuation = 10.0f / ( light.constant + light.linear * distance + light.quadratic * ( distance * distance ) );
+    float attenuation = light.amp / ( light.constant + light.linear * distance + light.quadratic * ( distance * distance ) );
 
     // Combine results
     vec3 ambient = light.ambient * light.colour;//vec3( texture( material.diffuse, TexCoords ) );
@@ -132,7 +134,7 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDirectio
 
     // Attenuation
     float distance = length( light.position - fragPos );
-    float attenuation = 10.0f / ( light.constant + light.linear * distance + light.quadratic * ( distance * distance ) );
+    float attenuation = light.amp / ( light.constant + light.linear * distance + light.quadratic * ( distance * distance ) );
 
     // Spotlight intensity
     float theta = dot( lightDir, normalize( -light.direction ) );
@@ -260,10 +262,10 @@ else{
   }
 
   for ( int i= 0; i < number_of_spot_lights; i++){
-     //spotResult += calcSpotLight(spotLightz[i], norm, fragPos, viewDirection);
+     spotResult += calcSpotLight(spotLightz[i], norm, fragPos, viewDirection);
   }
 
-  vec3 result = (  spotResult + dirResult + pointResult  );///Lägg ttill alla ljus sen.
+  vec3 result = (  spotResult + dirResult + pointResult   );///Lägg ttill alla ljus sen.
 
 out_Color = color * vec4(result,1.0f);
 out_Color.w = 1.0;

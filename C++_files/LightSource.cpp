@@ -23,7 +23,10 @@ LightSource::LightSource(vec3 pos, vec3 col)
     //För spotLights och hur stor radie på "ficklampan de ska vara"
     //Skillnaden mellan outerCuttOff och CuttOff bestämmer hur smooth den ska fadea ut
     cutOff = cos(  12.5f*2*M_PI/180  );
-    outerCutOff = cos(  15.5f*2*M_PI/180 );
+    outerCutOff = cos(  17.5f*2*M_PI/180 );
+
+    //Gör ljus starkare
+    amp = 5.0f;
 }
 
 
@@ -167,4 +170,14 @@ void LightSource::updateDirection(GLuint shader, vec3 dir)
   direction = dir;
   glUniform3fv(glGetUniformLocation(shader, "dirLight.direction"), 1, &direction.x);
 
+}
+
+GLfloat LightSource::getAmp()
+{
+  return amp;
+}
+
+void LightSource::setAmp(GLfloat a)
+{
+  amp = a;
 }

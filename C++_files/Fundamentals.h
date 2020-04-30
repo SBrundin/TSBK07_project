@@ -34,6 +34,7 @@ public:
     void drawPointLight(int index, LightSource* light, GLuint shader);
     void drawDirLight(int index, LightSource* light, GLuint shader);
     void drawSpotLight(int index, LightSource* light, GLuint shader);
+    void drawLightsScene1(GLuint objShader);
 
     GLfloat getMyTimer(){
       return _myTime;
@@ -58,12 +59,12 @@ private:
   Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
   Model *skybox[6], *bookMarkModel, *sunModel, *moonModel, *mountainModel, *cloudModel, *rainbowModel, *backgroundModel;
   Lamp* lampLight;
-  LightSource *lightSource, *dirrLight, *spotLight, *pointLight0, *spotLight0, *dirLight0;
+  LightSource *lightSource, *dirrLight, *spotLight, *pointLight0, *spotLight0, *dirLight0, *sunLight1, *spotLight1, *spotLight2, *dirLight1;
   LightHandler *pointLightVec;
   mat4 projectionMatrix, camMatrix, camMat2;
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour, pointLightPos0, pointLightColour0;
   vec3 spotLightColour0, spotLightPos0, dirLightPos0, dirLightColor0;
-  vec3 viewPos;
+  vec3 viewPos, sunColour, sunPosition;
   GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
   GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, leather2Tex, bilTex, paperTex, truckTex, asphaltTex, backgroundTex, bricksTex, bricks2Tex;
   GLuint woodTex, wood2Tex, cloudTex, crackedmudTex, crackedmud2Tex, crackedmud3Tex, pathTex, greenTex, moonTex, sunTex, stoneTex, rainbowTex;

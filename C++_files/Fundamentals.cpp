@@ -104,6 +104,7 @@ void Fundamentals::update(){
 	viewPos = {camera-> getPosition().x, camera-> getPosition().y, camera-> getPosition().z};
 	//DRAWS THE BOOK
 	book->draw(camMatrix, pageShader, t, viewPos);
+	/*
 	pointLight0-> setPosition(box->getPosition());
 	drawPointLight(0, pointLight0, pageShader);
 	glUniform1i(glGetUniformLocation(pageShader, "number_of_point_lights"), 1);
@@ -128,7 +129,7 @@ void Fundamentals::update(){
 	glUniform1i(glGetUniformLocation(pageShader, "number_of_spot_lights"), 1);
 
 	//////Point Light
-	glUseProgram(programObj);
+
 	glUniform3fv(glGetUniformLocation(programObj, "viewPos"), 1, &viewPos.x);
 	vec3 sunPos = vec3(sun->getPosition().x, sun->getPosition().y, sun->getPosition().z + 2);
 	pointLight0-> setPosition(sunPos);
@@ -154,10 +155,10 @@ void Fundamentals::update(){
 	spotLight0 -> setCutOff(12.5);
 
 	drawSpotLight(0, spotLight0, programObj);
-	glUniform1i(glGetUniformLocation(programObj, "number_of_spot_lights"), 1);
+	glUniform1i(glGetUniformLocation(programObj, "number_of_spot_lights"), 1);*/
 	//DRAWS THE SCENES
 
-
+	glUseProgram(programObj);
 
 	if (book->getCurrentPage() == 1 && book->getFadeBool()){
 				book->setFadeBool();
@@ -171,6 +172,8 @@ void Fundamentals::update(){
 				fadeInObjects();
 			}
 			drawFirstScene();
+			drawLightsScene1(programObj);
+			drawLightsScene1(pageShader);
 		}
 
 		else if (book->getCurrentPage() == 3){
@@ -617,8 +620,8 @@ void Fundamentals::drawLights(){
 }
 
 void Fundamentals::initLights(){
-	//General
 
+	///Scene0
 	//Point Light 0
 	pointLightPos0 = {0.0f, 10.0f, 0.0f};
 	pointLightColour0 = {0.9f, 0.1f, 0.1f};
@@ -644,6 +647,34 @@ void Fundamentals::initLights(){
 	dirLight0 -> setDiffuse(vec3(0.4f, 0.4f, 0.4f));
 	dirLight0 -> setSpecular(vec3(0.5f, 0.5f, 0.5f));
 
+	////////////////Scene 1
+	////SunLight
+	sunColour = vec3(0.7f, 1.0f, 1.0f);
+	sunPosition = sun->getPosition();
+	sunLight1 = new LightSource(sunPosition, sunColour);
+	sunLight1 -> setAmp(50);
+	//Tuna så att man får bra ljus ifrån solen
+	sunLight1 -> setLinear(0.09f);
+	sunLight1 -> setConstant(1.0f);
+	sunLight1 -> setQuadratic(0.032f);
+
+	spotLight1 = new LightSource(vec3(-20.0f, 8.9f, -15.0f), vec3(0.7f, 1.0f, 1.0f)); //Cottage
+	spotLight1 ->setDirection(vec3(0.0f, -1.0f, 0.0f));
+	spotLight1 -> setAmp(100);
+	spotLight2 = new LightSource(vec3(7.0f, 5.1f, -11.0f), vec3(0.7f, 1.0f, 1.0f));//Pile
+	spotLight2 ->setDirection(vec3(0.0f, -1.0f, 0.0f));
+	spotLight2 -> setAmp(100);
+
+	dirLightPos0 = {10000.0f, 10.0f, 0.0f}; // KAn vara vad som helst
+	dirLightColor0 =  {0.7f, 0.7f, 0.7f};
+	dirLight1 = new LightSource(dirLightPos0, dirLightColor0);
+	dirLight1->setDirection(vec3(0.0f, -1.0f, 0.0f));
+	dirLight1 -> setAmbient(vec3(0.05f, 0.05f, 0.05f));
+	dirLight1 -> setDiffuse(vec3(0.4f, 0.4f, 0.4f));
+	dirLight1 -> setSpecular(vec3(0.5f, 0.5f, 0.5f));
+
+	//Scene 2
+
 }
 
 void Fundamentals::drawPointLight(int index, LightSource* light, GLuint shader){
@@ -656,6 +687,7 @@ void Fundamentals::drawPointLight(int index, LightSource* light, GLuint shader){
   std::string constString = "pointLightz[" + std::to_string(index) + "].constant";
   std::string linString = "pointLightz[" + std::to_string(index) + "].linear";
   std::string quaString = "pointLightz[" + std::to_string(index) + "].quadratic";
+  std::string ampString = "pointLightz[" + std::to_string(index) + "].amp";
 
 	vec3 lightPos =light->getPosition();
 	vec3 colour = light-> getColour();
@@ -665,6 +697,7 @@ void Fundamentals::drawPointLight(int index, LightSource* light, GLuint shader){
 	GLfloat constant = light->  getConstant();
 	GLfloat linear = light->  getLinear();
 	GLfloat quadratic = light ->  getQuadratic();
+	GLfloat amp = light ->  getAmp();
 
 	glUniform3fv(glGetUniformLocation(shader, posString.c_str()), 1, &(lightPos).x);
 	glUniform3fv(glGetUniformLocation(shader, colString.c_str()), 1, &(colour).x);
@@ -674,6 +707,7 @@ void Fundamentals::drawPointLight(int index, LightSource* light, GLuint shader){
 	glUniform1f(glGetUniformLocation(shader,  constString.c_str()), constant);
 	glUniform1f(glGetUniformLocation(shader, linString.c_str()), linear);
 	glUniform1f(glGetUniformLocation(shader, quaString.c_str()), quadratic);
+	glUniform1f(glGetUniformLocation(shader, ampString.c_str()), amp);
 
 }
 
@@ -712,6 +746,7 @@ void Fundamentals::drawSpotLight(int index, LightSource* light, GLuint shader){
   std::string quaString = "spotLightz[" + std::to_string(index) + "].quadratic";
   std::string cutOffString = "spotLightz[" + std::to_string(index) + "].cutOff";
   std::string outerCutOffString = "spotLightz[" + std::to_string(index) + "].outerCutOff";
+	std::string ampString = "spotLightz[" + std::to_string(index) + "].amp";
 
 	vec3 lightPos =light->getPosition();
 	vec3 colour = light-> getColour();
@@ -724,6 +759,7 @@ void Fundamentals::drawSpotLight(int index, LightSource* light, GLuint shader){
 	GLfloat quadratic = light ->  getQuadratic();
 	GLfloat cutOff = light ->  getCutOff();
 	GLfloat outerCutOff = light ->  getOuterCutOff();
+	GLfloat amp = light ->  getAmp();
 
 	glUniform3fv(glGetUniformLocation(shader, posString.c_str()), 1, &(lightPos).x);
 	glUniform3fv(glGetUniformLocation(shader, colString.c_str()), 1, &(colour).x);
@@ -736,5 +772,28 @@ void Fundamentals::drawSpotLight(int index, LightSource* light, GLuint shader){
 	glUniform1f(glGetUniformLocation(shader, quaString.c_str()), quadratic);
 	glUniform1f(glGetUniformLocation(shader, cutOffString.c_str()), cutOff);
 	glUniform1f(glGetUniformLocation(shader, outerCutOffString.c_str()), outerCutOff);
+	glUniform1f(glGetUniformLocation(shader, ampString.c_str()), amp);
+
+}
+
+void Fundamentals::drawLightsScene1(GLuint shader){
+
+	glUseProgram(shader);
+	//pointLights
+	drawPointLight(0, sunLight1, shader);
+	int number_of_point_lights = 1;
+	glUniform1i(glGetUniformLocation(shader, "number_of_point_lights"), number_of_point_lights);
+
+	//SpotLight
+	spotLight1 -> setPosition(vec3(cottage->getPosition().x, cottage->getPosition().y + 5*sin(2*t), cottage->getPosition().z));
+	drawSpotLight(0, spotLight1, shader);
+	//drawSpotLight(1, spotLight2, shader);
+	int number_of_spot_lights = 1;
+	glUniform1i(glGetUniformLocation(shader, "number_of_spot_lights"), number_of_spot_lights);
+
+	//DirLights
+	drawDirLight(0, dirLight1, shader);
+	int number_of_dir_lights = 1;
+	glUniform1i(glGetUniformLocation(shader, "number_of_dir_lights"), number_of_dir_lights);
 
 }
