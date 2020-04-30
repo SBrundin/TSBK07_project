@@ -55,7 +55,7 @@ private:
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight;
   LightHandler *pointLightVec;
-  mat4 projectionMatrix, camMatrix, camMat2;
+  mat4 projectionMatrix, camMatrix, camMat2, backgroundrot;
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
   GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
   GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, leather2Tex, bilTex, paperTex, truckTex, asphaltTex, backgroundTex, bricksTex, bricks2Tex;
@@ -63,11 +63,13 @@ private:
   GLuint grass1Tex, grass2Tex, grass3Tex, grass4Tex, grass5Tex, grass6Tex, cottageTex, sandTex, sand1Tex, sand2Tex, lavaTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
+  GLfloat dir = 0.01;
   int pointLightIndex;
   vec3 v = {0.0, 1.0, 0.0};
   vec3 rotationAxis = {-14.565f, 0.0f, 0.0f};
   bool cameraCollisionFlag = false;
   GLfloat t;
+  GLfloat oldt = 0;
   Camera* camera;
   Object* car;
   Object* toppage;

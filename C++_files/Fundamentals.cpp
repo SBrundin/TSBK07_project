@@ -30,6 +30,7 @@ void Fundamentals::loadfiles(){
 	//INIT MATRICES
 	camMatrix = camera->getCamMatrix();
 	projectionMatrix = camera->getProj_matrix();
+	backgroundrot = IdentityMatrix();
 
 	//INIT
 	initshaders();
@@ -186,12 +187,12 @@ void Fundamentals::initobjects(){
 	bird = new Object(vec3(10.0f, 15.0f, -4.4f), birdModel, waterTex);
 	bird2 = new Object(vec3(15.0f, 15.0f, -10.4f), birdModel, waterTex);
 	bird3 = new Object(vec3(-20.0f, 15.0f, 10.4f), birdModel, waterTex);
-	background = new Object(vec3(-14.565f, frame->getSize().y/2, -19.25f), backgroundModel, backgroundTex);
-	sun = new Object(vec3(-15.0f, 17.0f, -18.9f), sunModel, sunTex);
+	background = new Object(vec3(-14.25f, frame->getSize().y/2, -19.24f), backgroundModel, backgroundTex);
+	sun = new Object(vec3(-15.0f, 25.0f, -18.9f), sunModel, sunTex);
 	moon = new Object(vec3(-15.0f, -20.0f, -18.9f), moonModel, moonTex);
 	mountain = new Object(vec3(-7.0f, 7.5f, -18.5f), mountainModel, stoneTex);
 	mountain2 = new Object(vec3(-13.0f, 6.2f, -18.7f), mountainModel, stoneTex);
- 	cloud = new Object(vec3(-27.0f, 20.0f, -18.85f), cloudModel, cloudTex);
+ 	cloud = new Object(vec3(-0.0f, 20.0f, -18.85f), cloudModel, cloudTex);
 
 	listOfObj_2.push_back(house);
 	listOfObj_2.push_back(cottage);
@@ -420,16 +421,39 @@ void Fundamentals::drawFirstScene(){
 	pile->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
 
 	GLfloat heightl = background->getPosition().y;
-	GLfloat minheightl = heightl -  toppage->getSize().y;
+	GLfloat minheightl = - toppage->getSize().y + 0.1;
+	GLfloat heightr = -(heightl - firstPage->getPosition().y) - firstPage->getSize().y/2;
+	GLfloat minheightr = heightr + firstPage->getSize().y;
+	GLfloat deltat = t - oldt;
+	oldt = t;
+	vec3 sunpos = sun->getPosition();
+	vec3 bpos = background->getPosition();
+	vec4 superpos = Mult(Mult(T(bpos.x,bpos.y,bpos.z), Rz(deltat/100)), T(-bpos.x,-bpos.y,-bpos.z))*vec4(sunpos.x, sunpos.y, sunpos.z, 1.0);
+	sun->setPosition(vec3(superpos.x, superpos.y, superpos.z));
+	vec3 moonpos = moon->getPosition();
+	superpos = Mult(Mult(T(bpos.x,bpos.y,bpos.z), Rz(deltat/100)), T(-bpos.x,-bpos.y,-bpos.z))*vec4(moonpos.x, moonpos.y, moonpos.z, 1.0);
+	moon->setPosition(vec3(superpos.x, superpos.y, superpos.z));
 
-	background->drawOver(camMatrix, programObj, 1.0, Rz(t/100), 0.0f);
-	mat4 moonrot = Mult(T(0.0f, 21.0f, 0.0f), Mult(Rz(t/100 + 3 * M_PI/16), T(-15.0f, -20.0f, 0.0f)));
-	mat4 sunrot = Mult(T(0.0f, -16.0f, 0.0f), Mult(Rz(t/100 - 3 * M_PI/16), T(-15.0f, 17.0f, 0.0f)));
-	sun->drawOver(camMatrix, programObj, 1.0, sunrot, background->getPosition().y - sun->getPosition().y);
-	moon->drawOver(camMatrix, programObj, 1.0, moonrot, background->getPosition().y - moon->getPosition().y);
-	mountain->drawOver(camMatrix, programObj, 1.0, Ry(0.0), background->getPosition().y - mountain->getPosition().y);
-	mountain2->drawOver(camMatrix, programObj, 0.7, Ry(0.0), background->getPosition().y - mountain2->getPosition().y);
-	cloud->drawOver(camMatrix, programObj, 1.0, Ry(M_PI/2), background->getPosition().y - cloud->getPosition().y);
+	vec4 suninter = vec4(minheightl - sun->getPosition().y + bpos.y, -sun->getPosition().y + bpos.y, heightr - sun->getPosition().y + bpos.y, minheightr - sun->getPosition().y + bpos.y);
+	vec4 mooninter = vec4(minheightl - moon->getPosition().y + bpos.y, -moon->getPosition().y + bpos.y, heightr - moon->getPosition().y + bpos.y, minheightr - moon->getPosition().y + bpos.y);
+
+	backgroundrot = Mult(backgroundrot,  Rz(deltat/100));
+	glUniform1f(glGetUniformLocation(programObj, "quickfix"), 0.0f);
+	background->drawOver(camMatrix, programObj, 1.0, backgroundrot, vec4(minheightl, 0.0f, heightr, minheightr));
+	glUniform1f(glGetUniformLocation(programObj, "quickfix"), (sun->getPosition().x - bpos.x));
+	sun->drawOver(camMatrix, programObj, 1.0, Rz(0), suninter);
+	glUniform1f(glGetUniformLocation(programObj, "quickfix"), (moon->getPosition().x - bpos.x));
+	moon->drawOver(camMatrix, programObj, 1.0, Rz(0), mooninter);
+	glUniform1f(glGetUniformLocation(programObj, "quickfix"), 0.0f);
+	mountain->draw(camMatrix, programObj, 1.0, Ry(0.0));
+	mountain2->draw(camMatrix, programObj, 0.7, Ry(0.0));
+	cloud->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+	vec3 cpos = cloud->getPosition();
+	if(abs(cpos.x + 15) > 20){
+		dir = -dir;
+	}
+	cpos.x += dir;
+	cloud->setPosition(cpos);
 	mat4 modelViewbird = T(bird->getPosition().x*sin(-t), bird->getPosition().y+0.3*sin(5*t), bird->getPosition().z*cos(-t));
 	mat4 Totbird = Mult(camMatrix, Mult(modelViewbird, Mult(Ry(t+4.71), Rz(3.14/3*(sin(t))))));
 	glActiveTexture(GL_TEXTURE0);
