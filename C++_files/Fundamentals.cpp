@@ -578,7 +578,6 @@ mat4 totTruck = Mult(camMatrix, Mult(Mult(mdlTruck, S(3,3,3)), Ry(_rotangle)));
 glActiveTexture(GL_TEXTURE0);
 glBindTexture(GL_TEXTURE_2D, truck->getTexture());
 glUniform1i(glGetUniformLocation(programObj, "Tex"), 0);
-std::cout << abs(truck->getPosition().z) << std::endl;
 if (abs(truck->getPosition().z) > 25){
 		glUniform1f(glGetUniformLocation(programObj, "timer"),0);
 }
