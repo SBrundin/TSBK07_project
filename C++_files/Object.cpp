@@ -246,3 +246,15 @@ GLfloat Object::getRealHeight(GLfloat x, GLfloat z, Object* object, GLint flippe
       }
       return height;
     }
+
+void Object::rotate(mat4 rotation)
+    {
+
+      vec4 size4 = vec4(_position.x, _position.y, _position.z, 1);
+      vec4 temp =  MultVec4(rotation, size4);
+      _position.x=(abs(temp.x / temp.w));
+      _position.y=(abs(temp.y / temp.w));
+      _position.z=(abs(temp.z / temp.w));
+      //_size = ScalarMult(_size, scale);
+      //std::cout << _size.x << ' ' << _size.y << ' ' << _size.z << '\n';
+    }

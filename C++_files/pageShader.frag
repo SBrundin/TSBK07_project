@@ -250,6 +250,21 @@ else if (ID == 3){ //Draws special lava top
     color = texture(sideTex, ex_TexCoord);
   }
   }
+  else if (ID == 4){
+    if((position.x > 0.0 && position.x < 10.0) || (position.x < 0.0 && position.x > -3.0 && position.z > -5.0 && position.z < 5.0)){
+      color = abs(position.z/80) * texture(TexUp0, 5.0*ex_TexCoord);
+    }
+    else{
+    float dist = min(sqrt(pow((position.x + 4.0)/5.0, 2) + pow((position.z + 17.5)/2.5, 2)), 1.0);
+    color0 =  dist * min(abs(position.x/30), 1.0) * texture(TexUp0, 10*ex_TexCoord);
+    color0 = color0 + abs(position.z/80) * texture(TexUp0, 5.0*ex_TexCoord);
+    color1 = dist * min(abs(1 - position.x/30), 1.0) * texture(TexUp1, 15*ex_TexCoord);
+    color2 = 5 * (1 - dist) * texture(TexUp2, 5.0*ex_TexCoord);
+    color = color0 + color1 + color2;
+    }
+  }
+
+
 else{
   color = vec4(1.0, 0.0, 0.0, 1.0);
   }

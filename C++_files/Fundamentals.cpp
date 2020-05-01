@@ -159,23 +159,13 @@ void Fundamentals::cameraCollision(){
 }
 
 void Fundamentals::initobjects(){
-	//SIMPLE OBJECTS
-	// box = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, grassTex);
-	// lamp = new Object(vec3(0.0f, 4.0f, 0.0f), boxModel, snowTex);
-	// car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
-	// coronaSimple = new Object(vec3(0.0f, 4.0f, 5.0f), coronaModel1, snowTex);
-	// coronaBase = new Object(vec3(5.0f, 4.0f, 0.0f), coronaModel2, grassTex);
-	// car = new Object(vec3(0.0f, 4.0f, 0.0f), carModel, bilTex);
-	// truck = new Object(vec3(10.2f, 4.6f, 8.9f), truckModel, waterTex);
-	// truck->updateBoundingBox(Ry(M_PI/2), 3.0);
-
 
 	//MULTIPLE TEXTURE OBJECTS, Object(pos, model, tex, texside, texup)
 
 	toppage = new Object(topModel, leatherTex, leatherTex, leatherTex, leatherTex, leatherTex);
 	frame = new Object(frameModel, leatherTex, leatherTex, leatherTex, leatherTex, leatherTex);
 	firstPage = new Object(firstModel, paperTex, paperTex, grass1Tex, grass2Tex, grass3Tex);
-	secondPage = new Object(secondModel, paperTex, paperTex, crackedmud2Tex, crackedmud3Tex, lavaTex);
+	secondPage = new Object(secondModel, paperTex, paperTex, asphaltTex, crackedmud3Tex, lavaTex);
 	pages = new Object(pagesModel, paperTex, paperTex, paperTex, paperTex, paperTex);
 
 	book = new Book(toppage, firstPage, secondPage, frame, pages);
@@ -196,8 +186,9 @@ void Fundamentals::initobjects(){
 	elephantbby = new Object(vec3(-33.3f, 3.2f, 13.0f), elephantModel, leatherTex);
  	pile = new Object(vec3(7.0f, 3.9f, -11.0f), pileModel, woodTex);
 	tree = new Object(vec3(-18.0f, 6.5f, 4.4f), treeModel, grassTex);
+
 	rosebush1 = new Object(vec3(7.0f, 4.8f, 4.4f), rosebushModel, bilTex);
-	rosebush2 = new Object(vec3(-30.0f, 4.6f, -16.0f), rosebushModel, bilTex);
+	rosebush2 = new Object(vec3(-20.0f, 4.6f, -16.0f), rosebushModel, bilTex);
 	rosebush3 = new Object(vec3(10.0f, 4.8f, -4.4f), rosebushModel, bilTex);
 	bird = new Object(vec3(10.0f, 15.0f, -3.4f), birdModel, waterTex);
 	bird2 = new Object(vec3(10.0f, 15.0f, -10.4f), birdModel, waterTex);
@@ -255,13 +246,16 @@ void Fundamentals::initobjects(){
 	stegos1 = new Object(vec3(-2.0f, 4.6f, -10.0f), stegosModel, leatherTex);
 	stegos2 = new Object(vec3(-5.0f, 4.6f, -16.0f), stegosModel, leatherTex);
 	stegos3 = new Object(vec3(-10.0f, 4.6f, -4.0f), stegosModel, leatherTex);
-	coronaSimple = new Object(vec3(-15.0f, 6.3f, 0.0f), coronaModel1, grassTex);
-	stopSign = new Object(vec3(-20.0f, 4.8f, 2.0f), stopModel, leatherTex);
-	trafficLight = new Object(vec3(-20.0f, 4.8f, 6.0f), trafficModel, leatherTex);
+	coronaSimple = new Object(vec3(-29.0f, 5.0f, -5.0f), coronaModel1, grassTex);
+	stopSign = new Object(vec3(-28.0f, 4.8f, 16.0f), stopModel, leatherTex);
+	trafficLight = new Object(vec3(-27.0f, 4.8f, 0.0f), trafficModel, waterTex);
 	streetLight = new Object(vec3(-40.0f, 6.0f, -17.0f), streetLightModel, leatherTex);
-	man = new Object(vec3(-35.0f, 4.8f, -2.0f), manModel, grass6Tex);
-	trashcan = new Object(vec3(-20.0f, 4.8f, -2.0f), trashcanModel, grass4Tex);
+	man = new Object(vec3(-29.0f, 4.0f, -5.0f), manModel, leatherTex);
+	trashcan = new Object(vec3(-28.0f, 4.0f, 6.0f), trashcanModel, grass1Tex);
 	fence = new Object(vec3(-15.0f, 4.8f, 0.0f), fenceModel, snowTex);
+	truck = new Object(vec3(-35.0f, 3.3f, 0.0f), truckModel, snowTex);
+	tree2 = new Object(vec3(-20.0f, 6.5f, 10.4f), treeModel, grassTex);
+
 
 	velociraptor1->updateBoundingBox(Ry(M_PI/2), 1.0);
 	velociraptor2->updateBoundingBox(Ry(M_PI/2), 1.0);
@@ -272,8 +266,13 @@ void Fundamentals::initobjects(){
 	velociraptor7->updateBoundingBox(Ry(M_PI/3), 1.0);
 	trex->updateBoundingBox(Ry(-3*M_PI/4), 1.0);
 	stegos1->updateBoundingBox(Ry(M_PI/4), 1.0);
-	stegos1->updateBoundingBox(Ry(-M_PI/2), 1.0);
-	stegos1->updateBoundingBox(Ry(-M_PI/3), 1.0);
+	stegos2->updateBoundingBox(Ry(-M_PI/2), 1.0);
+	stegos3->updateBoundingBox(Ry(-M_PI/3), 1.0);
+	truck->updateBoundingBox(Ry(_rotangle), 1.0);
+	fence->updateBoundingBox(Ry(M_PI), 1.0);
+	man->updateBoundingBox(Ry(0), 1.0);
+	tree2->updateBoundingBox(Ry(0.0), 2.0);
+
 
 	listOfObj_3.push_back(velociraptor1);
 	listOfObj_3.push_back(velociraptor2);
@@ -287,6 +286,12 @@ void Fundamentals::initobjects(){
 	listOfObj_3.push_back(stegos2);
 	listOfObj_3.push_back(stegos3);
 	listOfObj_3.push_back(coronaSimple);
+	listOfObj_3.push_back(truck);
+	listOfObj_3.push_back(man);
+	listOfObj_3.push_back(trashcan);
+	listOfObj_3.push_back(fence);
+	listOfObj_3.push_back(trafficLight);
+	listOfObj_3.push_back(streetLight);
 }
 
 void Fundamentals::loadmodels(){
@@ -323,11 +328,12 @@ void Fundamentals::loadmodels(){
 	trexModel = LoadModelPlus("../Modeller/trex.obj");
 	stegosModel = LoadModelPlus("../Modeller/stegosaurus.obj");
 	stopModel = LoadModelPlus("../Modeller/stopsign.obj");
-	trafficModel = LoadModelPlus("../Modeller/trafficlight.obj");
+	trafficModel = LoadModelPlus("../Modeller/busstop.obj");
 	streetLightModel = LoadModelPlus("../Modeller/streetlamp1.obj");
 	manModel = LoadModelPlus("../Modeller/man.obj");
 	trashcanModel = LoadModelPlus("../Modeller/trashcan3.obj");
 	fenceModel = LoadModelPlus("../Modeller/fence.obj");
+	//carModel = LoadModelPlus("../Modeller/car1.obj");
 }
 
 void Fundamentals::loadtextures(){
@@ -456,19 +462,18 @@ void Fundamentals::loadskybox(){
 
 void Fundamentals::drawFirstScene(){
 
-	//Objects on toppage
+	//STATIC OBJECTS ON TOPPAGE
 	bookMark->draw(camMatrix, programObj, 1.0, Ry(0.0));
 	house->drawOn(camMatrix, programObj, 2.0, Ry(0.0), toppage); // camMatrix, shader, scale, angle
 	cottage->drawOn(camMatrix, programObj, 1.0, Ry(M_PI), toppage);
 	cottage1->drawOn(camMatrix, programObj, 1.0, Ry(0.0), toppage);
 	rosebush2->drawOn(camMatrix, programObj, 1.5, Ry(0.0), toppage);
-
 	elephant->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/4), toppage);
 	elephantbby->drawOn(camMatrix, programObj, 0.3, Ry(7.5*M_PI/4), toppage);
 	tree->drawOn(camMatrix, programObj, 2.0, Ry(0.0), toppage);
 	rosebush1->drawOn(camMatrix, programObj, 2.2, Ry(0.0), firstPage);
 
-	//Objects on firstpage
+	//STATIC OBJECTS ON FIRSTPAGE
 	cottage2->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
 	rosebush3->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
 	pile->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
@@ -480,6 +485,7 @@ void Fundamentals::drawFirstScene(){
 	mountain->drawOver(camMatrix, programObj, 1.0, Ry(0.0), background->getPosition().y - mountain->getPosition().y);
 	mountain2->drawOver(camMatrix, programObj, 0.7, Ry(0.0), background->getPosition().y - mountain2->getPosition().y);
 
+	//DYNAMIC OBJECTS
 	cloud->drawOver(camMatrix, programObj, 1.0, Ry(M_PI/2), background->getPosition().y - cloud->getPosition().y);
 	mat4 modelViewbird = T(bird->getPosition().x*sin(-t), bird->getPosition().y+0.3*sin(5*t), bird->getPosition().z*cos(-t));
 	mat4 Totbird = Mult(camMatrix, Mult(modelViewbird, Mult(Ry(t+4.71), Rz(3.14/3*(sin(t))))));
@@ -513,7 +519,21 @@ void Fundamentals::drawFirstScene(){
 
 void Fundamentals::drawSecondScene(){
 
-	//First page objects
+//STATIC FIRST PAGE OBJECTS
+rosebush3->drawOn(camMatrix, programObj, 1.0, Ry(0.0), secondPage);
+fence->draw(camMatrix, programObj, 5.3, Ry(M_PI/2));
+trafficLight->draw(camMatrix, programObj, 1.0, Ry(-M_PI/2));
+stopSign->draw(camMatrix, programObj, 1.0, Ry(M_PI));
+man->draw(camMatrix, programObj, 1.0, Ry(0.0));
+trashcan->draw(camMatrix, programObj, 1.5, Ry(0));
+tree2->draw(camMatrix, programObj, 2.0, Ry(0));
+
+
+//STATIC SECOND PAGE OBJECTS
+trex->drawOn(camMatrix, programObj, 1.0, Ry(-3*M_PI/4), secondPage);
+stegos1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/4),secondPage);
+stegos2->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/2),secondPage);
+stegos3->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/3), secondPage);
 velociraptor1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
 velociraptor2->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
 velociraptor3->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
@@ -521,19 +541,11 @@ velociraptor4->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
 velociraptor5->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
 velociraptor6->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
 velociraptor7->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
-tree->drawOn(camMatrix, programObj, 2.0, Ry(0.0), firstPage);
-
-//Second page objects
-trex->drawOn(camMatrix, programObj, 1.0, Ry(-3*M_PI/4), secondPage);
-stegos1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/4),secondPage);
-stegos2->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/2),secondPage);
-stegos3->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/3), secondPage);
-
 rosebush1->drawOn(camMatrix, programObj, 2.2, Ry(0.0), secondPage);
 rosebush2->drawOn(camMatrix, programObj, 1.5, Ry(0.0), secondPage);
-rosebush3->drawOn(camMatrix, programObj, 1.0, Ry(0.0), secondPage);
-fence->draw(camMatrix, programObj, 5.3, Ry(M_PI/2));
 
+//DYNAMIC OBJECTS
+//LAMPS
 for (int i =0; i<6;i++){
 	mat4 mdlLight = T(streetLight->getPosition().x, streetLight->getPosition().y, streetLight->getPosition().z+7*i);
 	mat4 totLight = Mult(camMatrix, mdlLight);
@@ -541,23 +553,40 @@ for (int i =0; i<6;i++){
 	DrawModel(streetLight->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 }
 
-trafficLight->draw(camMatrix, programObj, 1.0, Ry(0.0));
-stopSign->draw(camMatrix, programObj, 1.0, Ry(0.0));
-man->draw(camMatrix, programObj, 2.0, Ry(0.0));
-trashcan->draw(camMatrix, programObj, 2.0, Ry(M_PI));
-//coronaSimple->draw(camMatrix, programObj, 1.0, Ry(0.0));
-
-mat4 modelViewCor = T(coronaSimple->getPosition().x+15*sin(t), coronaSimple->getPosition().y+sin(t*5), coronaSimple->getPosition().z);
-
-//mat4 rotBird2 =  Mult(mdlRotAxisCor, Mult(Ry(2*t+4.71), Rz(3.14/3*(sin(2*t)))));
-mat4 totCor = Mult(camMatrix, Mult(modelViewCor, Rz(t/2)));
+//CORONA
+mat4 modelViewCor = T(coronaSimple->getPosition().x+0.5*sin(t), coronaSimple->getPosition().y+0.2*sin(t*8), coronaSimple->getPosition().z+0.5*cos(t));
+mat4 totCor = Mult(camMatrix, Mult(modelViewCor, Mult(S(0.1,0.1,0.1),Rz(t/2))));
 glActiveTexture(GL_TEXTURE0);
 glBindTexture(GL_TEXTURE_2D, coronaSimple->getTexture());
 glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
 glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, totCor.m);
 DrawModel(coronaSimple->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 
-
+//TRUCK
+GLfloat prevPos = truck->getPosition().z;
+truck->setZ(35*sin(t/5));
+if(prevPos <  truck->getPosition().z){
+	_rotangle = -M_PI/2;
+	_lane= -2;
+}
+else{
+	_rotangle = M_PI/2;
+	_lane = 4;
+}
+mat4 mdlTruck = T(truck->getPosition().x+_lane, truck->getPosition().y+0.03*sin(t*100), truck->getPosition().z);
+mat4 totTruck = Mult(camMatrix, Mult(Mult(mdlTruck, S(3,3,3)), Ry(_rotangle)));
+glActiveTexture(GL_TEXTURE0);
+glBindTexture(GL_TEXTURE_2D, truck->getTexture());
+glUniform1i(glGetUniformLocation(programObj, "Tex"), 0);
+std::cout << abs(truck->getPosition().z) << std::endl;
+if (abs(truck->getPosition().z) > 25){
+		glUniform1f(glGetUniformLocation(programObj, "timer"),0);
+}
+else if (abs(truck->getPosition().z) >= 15  && abs(truck->getPosition().z) <= 30){
+	glUniform1f(glGetUniformLocation(programObj, "timer"), cos(15/(30-abs(truck->getPosition().z))));
+}
+glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, totTruck.m);
+DrawModel(truck->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 }
 
 void Fundamentals::drawSkybox(){
@@ -735,7 +764,6 @@ void Fundamentals::drawDirLight(int index, LightSource* light, GLuint shader){
 	glUniform3fv(glGetUniformLocation(shader,  specString.c_str()), 1, &(specular).x);
 }
 
-
 void Fundamentals::drawSpotLight(int index, LightSource* light, GLuint shader){
 
 	std::string posString = "spotLightz[" + std::to_string(index) + "].position";
@@ -789,7 +817,7 @@ void Fundamentals::drawLightsScene1(GLuint shader){
 
 	//SpotLight
 	spotLight1 -> setPosition(vec3(cottage->getPosition().x + t/4, cottage->getPosition().y + 9, cottage->getPosition().z + t/4));
-	std::cout << spotLight1->getPosition().y << '\n';
+	//std::cout << spotLight1->getPosition().y << '\n';
 	drawSpotLight(0, spotLight1, shader);
 	//drawSpotLight(1, spotLight2, shader);
 	int number_of_spot_lights = 1;
@@ -799,5 +827,4 @@ void Fundamentals::drawLightsScene1(GLuint shader){
 	drawDirLight(0, dirLight1, shader);
 	int number_of_dir_lights = 1;
 	glUniform1i(glGetUniformLocation(shader, "number_of_dir_lights"), number_of_dir_lights);
-
 }

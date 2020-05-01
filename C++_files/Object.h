@@ -49,6 +49,7 @@ public:
     void setBoundingBox();
     void updateBoundingBox(mat4 rotation, GLfloat scale);
     vec3 getSize();
+    void rotate(mat4 rotation);
 
     void draw(mat4 camMatrix, GLuint shader, float scale, mat4 rot);
     void drawOver(mat4 camMatrix, GLuint shader, float scale, mat4 rot, GLfloat opac);

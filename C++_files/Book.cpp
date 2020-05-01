@@ -140,7 +140,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t, vec3 viewPos){
     glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
     DrawModel(_top->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
     //First page
-    glUniform1i(glGetUniformLocation(shader, "ID"), 2);
+    glUniform1i(glGetUniformLocation(shader, "ID"), 4);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _firstPage->getTexture());
     glActiveTexture(GL_TEXTURE1);

@@ -52,6 +52,10 @@ public:
       _myTime -= t;
     }
 
+    void updateRotangle(GLfloat t){
+      _rotangle += t;
+    }
+
 private:
   std::vector<Object*> listOfObj_1;
   std::vector<Object*> listOfObj_2;
@@ -72,6 +76,8 @@ private:
   GLuint grass1Tex, grass2Tex, grass3Tex, grass4Tex, grass5Tex, grass6Tex, cottageTex, sandTex, sand1Tex, sand2Tex, lavaTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
+  GLfloat _rotangle;
+  GLfloat _lane;
   GLfloat constant, linear, quadratic;
   int pointLightIndex;
   vec3 v = {0.0, 1.0, 0.0};
@@ -105,6 +111,7 @@ private:
   Object* elephant;
   Object* elephantbby;
   Object* tree;
+  Object* tree2;
   Object* rosebush1;
   Object* rosebush2;
   Object* rosebush3;
