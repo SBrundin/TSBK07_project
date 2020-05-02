@@ -38,6 +38,7 @@ void Fundamentals::loadfiles(){
 	loadmodels();
 	initobjects();
 	initLights();
+	book -> setPage(1);
 
 	//lamp
 
@@ -109,6 +110,14 @@ void Fundamentals::update(){
 
 	glUseProgram(programObj);
 
+	if (book->getCurrentPage() == 1 && !book->getFadeBool()){
+		drawLightsScene0(pageShader);
+		drawLightsScene0(programObj);
+		box->draw(camMatrix, programObj, 1.0, Ry(0.0));
+
+
+	}
+
 	if (book->getCurrentPage() == 1 && book->getFadeBool()){
 				book->setFadeBool();
 			}
@@ -133,6 +142,8 @@ void Fundamentals::update(){
 						fadeInObjects();
 					}
 				drawSecondScene();
+				drawLightsScene2(programObj);
+				drawLightsScene2(pageShader);
 		}
 }
 
@@ -544,6 +555,7 @@ velociraptor7->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
 rosebush1->drawOn(camMatrix, programObj, 2.2, Ry(0.0), secondPage);
 rosebush2->drawOn(camMatrix, programObj, 1.5, Ry(0.0), secondPage);
 
+
 //DYNAMIC OBJECTS
 //LAMPS
 for (int i =0; i<6;i++){
@@ -705,6 +717,40 @@ void Fundamentals::initLights(){
 	dirLight1 -> setSpecular(vec3(0.5f, 0.5f, 0.5f));
 
 	//Scene 2
+	streetLight1 = new LightSource(vec3(7.0f, 5.1f, -11.0f), vec3(0.7f, 1.0f, 1.0f));//Pile
+	streetLight1->setDirection(vec3(0.0f, 1.0f, 0.0f));
+	streetLight1 -> setAmp(10);
+
+	//Scene zerooo
+	bookSpot1 = new LightSource(vec3(-15.0f, 18.1f , 22.0f ), vec3(0.7f, 1.0f, 1.0f));
+	bookSpot1 -> setAmp(5);
+	bookSpot1 -> setColour(vec3(0.9f, 0.4, 1.0));
+	bookSpot1 -> setDirection(vec3(0.7 , -0.8, -0.7)); //y -0.16
+	bookSpot1 -> setCutOff(8);
+
+	bookSpot2 = new LightSource(vec3(15.0f, 18.1f , 22.0f), vec3(0.7f, 1.0f, 1.0f));
+	bookSpot2 -> setAmp(5);
+	bookSpot2 -> setColour(vec3(1.0, 1.0, 0.2f));
+	bookSpot2 -> setDirection(vec3( -0.60 , -0.8, -0.8 ));
+	bookSpot2 -> setCutOff(8);
+
+	bookSpot3 = new LightSource(vec3(-15.0f, 18.1f, -22.0f), vec3(0.7f, 1.0f, 1.0f));
+	bookSpot3 -> setAmp(5);
+	bookSpot3 -> setColour(vec3(1.0, 1.0, 0.2f));
+	bookSpot3 -> setDirection(vec3( 0.60 , -0.8, 0.8 ));
+	bookSpot3 -> setCutOff(8);
+
+	bookSpot4 = new LightSource(vec3(15.0f, 18.1f , -22.0f), vec3(0.7f, 1.0f, 1.0f));
+	bookSpot4 -> setAmp(5);
+	bookSpot4 -> setColour(vec3(0.9, 0.4, 1.0f));
+	bookSpot4 -> setDirection(vec3( -0.5 , -0.8, 0.84 ));
+	bookSpot4 -> setCutOff(8);
+
+	bookDir = new LightSource(vec3(0,0,0), vec3(0.9, 0.7, 0.2));
+	bookDir->setDirection(vec3(0.0f, -1.0f, 0.0f));
+	bookDir -> setAmbient(vec3(0.05f, 0.05f, 0.05f));
+	bookDir -> setDiffuse(vec3(0.4f, 0.4f, 0.4f));
+	bookDir -> setSpecular(vec3(0.5f, 0.5f, 0.5f));
 
 }
 
@@ -815,8 +861,10 @@ void Fundamentals::drawLightsScene1(GLuint shader){
 	glUniform1i(glGetUniformLocation(shader, "number_of_point_lights"), number_of_point_lights);
 
 	//SpotLight
-	spotLight1 -> setPosition(vec3(cottage->getPosition().x + t/4, cottage->getPosition().y + 9, cottage->getPosition().z + t/4));
-	//std::cout << spotLight1->getPosition().y << '\n';
+	//spotLight1 -> setPosition(vec3(spotLight1->getPosition().x - t/2, spotLight1->getPosition().y, spotLight1->getPosition().z));
+	spotLight1 -> setPosition(vec3(pile->getPosition().x - t/4, pile->getPosition().y + 9, pile->getPosition().z));
+	//spotLight1 -> setCutOff(12+t/2);
+	//std::cout << 0.00 + 0.0001*t << '\n';
 	drawSpotLight(0, spotLight1, shader);
 	//drawSpotLight(1, spotLight2, shader);
 	int number_of_spot_lights = 1;
@@ -827,3 +875,49 @@ void Fundamentals::drawLightsScene1(GLuint shader){
 	int number_of_dir_lights = 1;
 	glUniform1i(glGetUniformLocation(shader, "number_of_dir_lights"), number_of_dir_lights);
 }
+
+void Fundamentals::drawLightsScene2(GLuint shader){
+	glUseProgram(shader);
+
+	drawPointLight(0, sunLight1, shader);
+	int number_of_point_lights = 1;
+	glUniform1i(glGetUniformLocation(shader, "number_of_point_lights"), number_of_point_lights);
+
+	//for (int i =0; i<6;i++){
+	//	mat4 mdlLight = T(streetLight->getPosition().x, streetLight->getPosition().y, streetLight->getPosition().z+7*i);
+	vec3 streetPos = vec3(-40.0f, 9.0f + 20*sin(t), -17.0f);
+
+	streetLight1 -> setPosition(streetPos);//vec3(spotLight1->getPosition().x - t/2, spotLight1->getPosition().y, spotLight1->getPosition().z));
+	streetLight1 -> setAmp(10);
+	//streetLight1 -> setCutOff(10);
+	//streetLight1 -> setOuterCutOff(15);
+	drawSpotLight(0, streetLight1, shader);
+	int number_of_spot_lights = 1;
+	glUniform1i(glGetUniformLocation(shader, "number_of_spot_lights"), number_of_spot_lights);
+
+	drawDirLight(0, dirLight1, shader);
+	int number_of_dir_lights = 1;
+	glUniform1i(glGetUniformLocation(shader, "number_of_dir_lights"), number_of_dir_lights);
+	box ->setPosition(streetPos);
+
+	}
+
+
+
+	void Fundamentals::drawLightsScene0(GLuint shader){
+		glUseProgram(shader);
+		bookSpot1 -> setPosition(vec3(-15.0f, 18.1f + 2*sin(2*t) , 22.0f ));
+		bookSpot2 -> setPosition(vec3(15.0f, 18.1f + 2*cos(2*t) , 22.0f));
+		bookSpot3 -> setPosition(vec3(-15.0f, 18.1f +2*cos(2*t) , -22.0f));
+		bookSpot4 -> setPosition(vec3(15.0f, 18.1f + 2*sin(2*t) , -22.0f));
+		drawSpotLight(0, bookSpot1, shader);
+		drawSpotLight(1, bookSpot2, shader);
+		drawSpotLight(2, bookSpot3, shader);
+		drawSpotLight(3, bookSpot4, shader);
+		int number_of_spot_lights = 4;
+		glUniform1i(glGetUniformLocation(shader, "number_of_spot_lights"), number_of_spot_lights);
+
+		drawDirLight(0, bookDir, shader);
+		int number_of_dir_lights = 1;
+		glUniform1i(glGetUniformLocation(shader, "number_of_dir_lights"), number_of_dir_lights);
+		}

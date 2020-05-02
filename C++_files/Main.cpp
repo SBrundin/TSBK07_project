@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	glutCreateWindow ("GLUTen project");
 	init ();
 	glutDisplayFunc(display);
-
+	glutHideCursor();
 	glutTimerFunc(20, &timer, 0);
 	glutMainLoop();
 	exit(0);

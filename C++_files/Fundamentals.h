@@ -35,6 +35,9 @@ public:
     void drawDirLight(int index, LightSource* light, GLuint shader);
     void drawSpotLight(int index, LightSource* light, GLuint shader);
     void drawLightsScene1(GLuint objShader);
+    void drawLightsScene2(GLuint objShader);
+    void drawLightsScene0(GLuint objShader);
+
 
     GLfloat getMyTimer(){
       return _myTime;
@@ -64,7 +67,8 @@ private:
   Model *skybox[6], *bookMarkModel, *sunModel, *moonModel, *mountainModel, *cloudModel, *rainbowModel, *backgroundModel, *stopModel, *trafficModel, *streetLightModel;
   Model *manModel, *trashcanModel;
   Lamp* lampLight;
-  LightSource *lightSource, *dirrLight, *spotLight, *pointLight0, *spotLight0, *dirLight0, *sunLight1, *spotLight1, *spotLight2, *dirLight1;
+  LightSource *lightSource, *dirrLight, *spotLight, *pointLight0, *spotLight0, *dirLight0, *sunLight1, *spotLight1, *spotLight2, *dirLight1, *streetLight1;
+  LightSource *bookSpot1, *bookSpot2,*bookSpot3, *bookSpot4, *bookDir;
   LightHandler *pointLightVec;
   mat4 projectionMatrix, camMatrix, camMat2;
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour, pointLightPos0, pointLightColour0;

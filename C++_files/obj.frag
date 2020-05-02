@@ -171,7 +171,7 @@ vec3 dirResult = vec3(0.0f,0.0f,0.0f);
 vec3 spotResult = vec3(0.0f,0.0f,0.0f);
 
 for ( int i= 0; i < number_of_point_lights; i++){
-   pointResult += calcPointLight(pointLightz[i], norm, fragPos, viewDirection);
+  // pointResult += calcPointLight(pointLightz[i], norm, fragPos, viewDirection);
 }
 
 for ( int i= 0; i < number_of_dir_lights; i++){

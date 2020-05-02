@@ -271,7 +271,7 @@ else{
   ///////////////////7Lights
 
   for ( int i= 0; i < number_of_point_lights; i++){
-     pointResult += calcPointLight(pointLightz[i], norm, fragPos, viewDirection);
+     //pointResult += calcPointLight(pointLightz[i], norm, fragPos, viewDirection);
   }
 
   for ( int i= 0; i < number_of_dir_lights; i++){

@@ -37,6 +37,10 @@ public:
       return _currentPage;
     }
 
+    void setPage(GLuint page){
+      _currentPage = page;
+    }
+
     GLuint getDirection(){
       if (_buttonPressed == 'l') return 1;
       if (_buttonPressed == 'r') return -1;
