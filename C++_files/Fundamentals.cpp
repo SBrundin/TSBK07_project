@@ -522,10 +522,10 @@ void Fundamentals::drawSecondScene(){
 //STATIC FIRST PAGE OBJECTS
 rosebush3->drawOn(camMatrix, programObj, 1.0, Ry(0.0), secondPage);
 fence->draw(camMatrix, programObj, 5.3, Ry(M_PI/2));
-trafficLight->draw(camMatrix, programObj, 1.0, Ry(-M_PI/2));
-stopSign->draw(camMatrix, programObj, 1.0, Ry(M_PI));
-man->draw(camMatrix, programObj, 1.0, Ry(0.0));
-trashcan->draw(camMatrix, programObj, 1.5, Ry(0));
+trafficLight->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/2), firstPage);
+stopSign->drawOn(camMatrix, programObj, 1.0, Ry(M_PI), firstPage);
+man->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
+trashcan->drawOn(camMatrix, programObj, 1.5, Ry(0), firstPage);
 tree2->draw(camMatrix, programObj, 2.0, Ry(0));
 
 
@@ -534,13 +534,13 @@ trex->drawOn(camMatrix, programObj, 1.0, Ry(-3*M_PI/4), secondPage);
 stegos1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/4),secondPage);
 stegos2->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/2),secondPage);
 stegos3->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/3), secondPage);
-velociraptor1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
-velociraptor2->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
-velociraptor3->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
-velociraptor4->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
-velociraptor5->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
-velociraptor6->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
-velociraptor7->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
+velociraptor1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), secondPage);
+velociraptor2->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), secondPage);
+velociraptor3->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), secondPage);
+velociraptor4->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), secondPage);
+velociraptor5->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), secondPage);
+velociraptor6->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), secondPage);
+velociraptor7->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), secondPage);
 rosebush1->drawOn(camMatrix, programObj, 2.2, Ry(0.0), secondPage);
 rosebush2->drawOn(camMatrix, programObj, 1.5, Ry(0.0), secondPage);
 
