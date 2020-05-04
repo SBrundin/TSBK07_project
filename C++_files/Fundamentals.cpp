@@ -692,7 +692,7 @@ void Fundamentals::initLights(){
 	spotLight1 = new LightSource(vec3(-20.0f, 8.9f, -15.0f), vec3(0.7f, 1.0f, 1.0f)); //Cottage
 	spotLight1 ->setDirection(vec3(0.0f, -1.0f, 0.0f));
 	spotLight1 -> setAmp(10);
-	spotLight2 = new LightSource(vec3(7.0f, 5.1f, -11.0f), vec3(0.7f, 1.0f, 1.0f));//Pile
+	spotLight2 = new LightSource(vec3(7.0f, 9.1f, -11.0f), vec3(0.7f, 1.0f, 1.0f));//Pile
 	spotLight2 ->setDirection(vec3(0.0f, -1.0f, 0.0f));
 	spotLight2 -> setAmp(10);
 
@@ -816,10 +816,11 @@ void Fundamentals::drawLightsScene1(GLuint shader){
 
 	//SpotLight
 	spotLight1 -> setPosition(vec3(cottage->getPosition().x + t/4, cottage->getPosition().y + 9, cottage->getPosition().z + t/4));
+	spotLight2 -> setPosition(vec3(pile->getPosition().x, pile->getPosition().y + 9*sin(2*t), pile->getPosition().z));
 	//std::cout << spotLight1->getPosition().y << '\n';
 	drawSpotLight(0, spotLight1, shader);
-	//drawSpotLight(1, spotLight2, shader);
-	int number_of_spot_lights = 1;
+	drawSpotLight(1, spotLight2, shader);
+	int number_of_spot_lights = 2;
 	glUniform1i(glGetUniformLocation(shader, "number_of_spot_lights"), number_of_spot_lights);
 
 	//DirLights
