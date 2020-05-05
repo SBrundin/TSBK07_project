@@ -491,16 +491,16 @@ void Fundamentals::drawFirstScene(){
 	oldt = t;
 	vec3 sunpos = sun->getPosition();
 	vec3 bpos = background->getPosition();
-	vec4 superpos = Mult(Mult(T(bpos.x,bpos.y,bpos.z), Rz(deltat/100)), T(-bpos.x,-bpos.y,-bpos.z))*vec4(sunpos.x, sunpos.y, sunpos.z, 1.0);
+	vec4 superpos = Mult(Mult(T(bpos.x,bpos.y,bpos.z), Rz(deltat/20)), T(-bpos.x,-bpos.y,-bpos.z))*vec4(sunpos.x, sunpos.y, sunpos.z, 1.0);
 	sun->setPosition(vec3(superpos.x, superpos.y, superpos.z));
 	vec3 moonpos = moon->getPosition();
-	superpos = Mult(Mult(T(bpos.x,bpos.y,bpos.z), Rz(deltat/100)), T(-bpos.x,-bpos.y,-bpos.z))*vec4(moonpos.x, moonpos.y, moonpos.z, 1.0);
+	superpos = Mult(Mult(T(bpos.x,bpos.y,bpos.z), Rz(deltat/20)), T(-bpos.x,-bpos.y,-bpos.z))*vec4(moonpos.x, moonpos.y, moonpos.z, 1.0);
 	moon->setPosition(vec3(superpos.x, superpos.y, superpos.z));
 
 	vec4 suninter = vec4(minheightl - sun->getPosition().y + bpos.y, -sun->getPosition().y + bpos.y, heightr - sun->getPosition().y + bpos.y, minheightr - sun->getPosition().y + bpos.y);
 	vec4 mooninter = vec4(minheightl - moon->getPosition().y + bpos.y, -moon->getPosition().y + bpos.y, heightr - moon->getPosition().y + bpos.y, minheightr - moon->getPosition().y + bpos.y);
 
-	backgroundrot = Mult(backgroundrot,  Rz(deltat/100));
+	backgroundrot = Mult(backgroundrot,  Rz(deltat/20));
 	glUniform1f(glGetUniformLocation(programObj, "quickfix"), 0.0f);
 	background->drawOver(camMatrix, programObj, 1.0, backgroundrot, vec4(minheightl, 0.0f, heightr, minheightr));
 	glUniform1f(glGetUniformLocation(programObj, "quickfix"), (sun->getPosition().x - bpos.x));
@@ -706,6 +706,13 @@ void Fundamentals::initLights(){
 	sunLight1 -> setConstant(1.0f);
 	sunLight1 -> setQuadratic(0.032f);
 
+	moonLight = new LightSource(moon->getPosition(), vec3(0.8f, 0.78f, 0.68f));
+	moonLight -> setLinear(0.09f);
+	moonLight -> setConstant(1.0f);
+	moonLight -> setQuadratic(0.032f);
+	moonLight -> setAmp(20);
+
+
 	spotLight1 = new LightSource(vec3(-20.0f, 8.9f, -15.0f), vec3(0.7f, 1.0f, 1.0f)); //Cottage
 	spotLight1 ->setDirection(vec3(0.0f, -1.0f, 0.0f));
 	spotLight1 -> setAmp(10);
@@ -751,6 +758,15 @@ void Fundamentals::initLights(){
 	bookSpot4 -> setColour(vec3(0.9, 0.4, 1.0f));
 	bookSpot4 -> setDirection(vec3( -0.5 , -0.8, 0.84 ));
 	bookSpot4 -> setCutOff(8);
+
+
+	dirLightPos0 = {10000.0f, 10.0f, 0.0f}; // KAn vara vad som helst
+	dirLightColor0 =  {0.4f, 0.4f, 0.4f};
+	dirrLight2 = new LightSource(dirLightPos0, dirLightColor0);
+	dirrLight2->setDirection(vec3(0.0f, -1.0f, 0.0f));
+	dirrLight2 -> setAmbient(vec3(0.05f, 0.05f, 0.05f));
+	dirrLight2 -> setDiffuse(vec3(0.4f, 0.4f, 0.4f));
+	dirrLight2 -> setSpecular(vec3(0.5f, 0.5f, 0.5f));
 
 	bookDir = new LightSource(vec3(0,0,0), vec3(0.9, 0.7, 0.2));
 	bookDir->setDirection(vec3(0.0f, -1.0f, 0.0f));
@@ -862,19 +878,38 @@ void Fundamentals::drawLightsScene1(GLuint shader){
 
 	glUseProgram(shader);
 	//pointLights
+	float temp = min((sun->getPosition().y-background->getPosition().y)/10.0f, 1.0f);
+	vec3 fade = vec3(1.0f, temp + 0.5, temp);
+	if (temp < - (sun->getSize().y)/20){
+		fade = vec3(0.0f, 0.0f, 0.0f);
+	}
+
+	float tempMoon = min((moon->getPosition().y-background->getPosition().y)/10.0f, 1.0f);
+	vec3 fadeMoon = vec3(tempMoon*0.73f, tempMoon*0.73f, tempMoon*0.73f);
+	if (tempMoon < - (moon->getSize().y)/20){
+		fadeMoon = vec3(0.0f, 0.0f, 0.0f);
+	}
+
 	sunLight1 -> setPosition(vec3( sun -> getPosition().x, sun -> getPosition().y, sun -> getPosition().z + 0.1));
+	sunLight1 ->setColour(fade);
+	moonLight -> setPosition(vec3( moon -> getPosition().x, moon -> getPosition().y, moon -> getPosition().z + 0.5));
+  moonLight ->setColour(fadeMoon);
 	drawPointLight(0, sunLight1, shader);
-	int number_of_point_lights = 1;
+	drawPointLight(1, moonLight, shader);
+	int number_of_point_lights = 2;
 	glUniform1i(glGetUniformLocation(shader, "number_of_point_lights"), number_of_point_lights);
 
 	//SpotLight
-	spotLight2 -> setPosition(vec3(pile->getPosition().x, pile->getPosition().y + 9, pile->getPosition().z));
-	drawSpotLight(0, spotLight2, shader);
+	//spotLight2 -> setPosition(vec3(pile->getPosition().x, pile->getPosition().y + 9, pile->getPosition().z));
+	//drawSpotLight(0, spotLight2, shader);
 
-	int number_of_spot_lights = 1;
+	int number_of_spot_lights = 0;
 	glUniform1i(glGetUniformLocation(shader, "number_of_spot_lights"), number_of_spot_lights);
 
 	//DirLights
+	float intensity = max(temp, 0.0f);
+	vec3 dircolour = vec3(0.5*intensity,0.5*intensity, 0.5*intensity);
+	dirLight1 ->setColour(dircolour);
 	drawDirLight(0, dirLight1, shader);
 	int number_of_dir_lights = 1;
 	glUniform1i(glGetUniformLocation(shader, "number_of_dir_lights"), number_of_dir_lights);
@@ -883,8 +918,8 @@ void Fundamentals::drawLightsScene1(GLuint shader){
 void Fundamentals::drawLightsScene2(GLuint shader){
 	glUseProgram(shader);
 
-	drawPointLight(0, sunLight1, shader);
-	int number_of_point_lights = 1;
+	//drawPointLight(0, sunLight1, shader);
+	int number_of_point_lights = 0;
 	glUniform1i(glGetUniformLocation(shader, "number_of_point_lights"), number_of_point_lights);
 
 	int numStreetLights = 6;
@@ -898,14 +933,14 @@ void Fundamentals::drawLightsScene2(GLuint shader){
 	for (int i =0; i<numStreetLights;i++){
 		vec3 streetPos = vec3(streetLight->getPosition().x + 2, streetLight->getPosition().y + 5, streetLight->getPosition().z+7*i);
 		streetLight1->setPosition(streetPos);
-		streetLight1 -> setAmp(2);
+		streetLight1 -> setAmp(10);
 		drawSpotLight(i, streetLight1, shader);
 	}
 	glUniform1i(glGetUniformLocation(shader, "number_of_spot_lights"), numStreetLights);
 
 
 
-	drawDirLight(0, dirLight1, shader);
+	drawDirLight(0, dirrLight2, shader);
 	int number_of_dir_lights = 1;
 	glUniform1i(glGetUniformLocation(shader, "number_of_dir_lights"), number_of_dir_lights);
 
@@ -929,4 +964,8 @@ void Fundamentals::drawLightsScene0(GLuint shader){
 	drawDirLight(0, bookDir, shader);
 	int number_of_dir_lights = 1;
 	glUniform1i(glGetUniformLocation(shader, "number_of_dir_lights"), number_of_dir_lights);
+
+	int number_of_point_lights = 0;
+	glUniform1i(glGetUniformLocation(shader, "number_of_point_lights"), number_of_point_lights);
+
 	}

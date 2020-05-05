@@ -124,10 +124,6 @@ vec3 calcDirLight(DirLight light, vec3 normal, vec3 viewDirection)
 ////////////////////////spotlight
 vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDirection)
 {
-    if (ID == 2 || ID == 4){
-    normal.y = -normal.y;
-    normal.x = -normal.x;
-    }
     vec3 lightDir = normalize( light.position - fragPos );
     if (ID == 2 || ID == 4){
           normal.y = -normal.y;
@@ -171,7 +167,6 @@ vec4 color0, color1, color2;
 vec4 color = vec4(1.0, 0.0, 0.0, 1.0);
 
 vec3 norm = normalize(normal);
-
 vec3 viewDirection = normalize(viewPos - fragPos);
 vec3 pointResult = vec3(0.0f,0.0f,0.0f);
 vec3 dirResult = vec3(0.0f,0.0f,0.0f);
@@ -302,7 +297,7 @@ else{
   ///////////////////7Lights
 
   for ( int i= 0; i < number_of_point_lights; i++){
-     //pointResult += calcPointLight(pointLightz[i], norm, fragPos, viewDirection);
+     pointResult += calcPointLight(pointLightz[i], norm, fragPos, viewDirection);
   }
 
   for ( int i= 0; i < number_of_dir_lights; i++){
