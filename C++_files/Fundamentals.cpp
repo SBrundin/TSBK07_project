@@ -16,6 +16,7 @@
 #include "LightSource.h"
 #include "LightHandler.h"
 #include "Book.h"
+#include <cstdlib>
 #include <iostream>
 #include <list>
 using namespace std;
@@ -605,7 +606,8 @@ void Fundamentals::drawSecondScene(){
 		_lane = 4;
 	}
 	mat4 mdlTruck = T(truck->getPosition().x+_lane, truck->getPosition().y+0.03*sin(t*100), truck->getPosition().z);
-	mat4 totTruck = Mult(camMatrix, Mult(Mult(mdlTruck, S(3,3,3)), Ry(_rotangle)));
+	mdlTruck = Mult(Mult(mdlTruck, S(3,3,3)), Ry(_rotangle));
+	mat4 totTruck = Mult(camMatrix, mdlTruck);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, truck->getTexture());
 	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0);
@@ -616,6 +618,7 @@ void Fundamentals::drawSecondScene(){
 		glUniform1f(glGetUniformLocation(programObj, "timer"), cos(15/(30-abs(truck->getPosition().z))));
 	}
 	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, totTruck.m);
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "model"), 1, GL_TRUE, mdlTruck.m);
 	DrawModel(truck->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 }
 
@@ -733,6 +736,16 @@ void Fundamentals::initLights(){
 	streetLight1->setDirection(vec3(0.0f, -1.0f, 0.0f));
 	streetLight1 ->setCutOff(4);
 	streetLight1 ->setOuterCutOff(11);
+
+	lava = new LightSource(vec3(2.0f, secondPage->getPosition().y +0.1, 10.0f), vec3(0.66f, 0.26f, 0.09f ));
+	lava -> setQuadratic(0.003);
+	lava -> setLinear(0.03);
+	lava -> setConstant(0.2);
+
+	lava2 = new LightSource(vec3(-4.0f, secondPage->getPosition().y +0.1, -17.5f), vec3(0.66f, 0.26f, 0.09f ));
+	lava2 -> setQuadratic(0.003);
+	lava2 -> setLinear(0.03);
+	lava2 -> setConstant(0.2);
 
 	//Scene zerooo
 	bookSpot1 = new LightSource(vec3(-15.0f, 18.1f , 22.0f ), vec3(0.7f, 1.0f, 1.0f));
@@ -917,25 +930,29 @@ void Fundamentals::drawLightsScene1(GLuint shader){
 
 void Fundamentals::drawLightsScene2(GLuint shader){
 	glUseProgram(shader);
+	lava->setAmp(6 + 3*sin(t));
+	lava2->setAmp(4 + 2*sin(t+1));
 
-	//drawPointLight(0, sunLight1, shader);
-	int number_of_point_lights = 0;
+	drawPointLight(0, lava, shader);
+	drawPointLight(1, lava2, shader);
+	int number_of_point_lights = 2;
 	glUniform1i(glGetUniformLocation(shader, "number_of_point_lights"), number_of_point_lights);
 
 	int numStreetLights = 6;
 	streetLight1 ->setCutOff(4 + 2*sin(t));
-	streetLight1 -> setColour(vec3(1.0f, 0.95f, 0.74f));
-	int flicker = floor(t*5);
-	if (flicker % 5 == 0){
-		streetLight1 ->setColour(vec3(0.0f, 0.0f, 0.0f));
-	}
-
+	int flicker = round(t*5);
+	int randomnum = rand()%100;
 	for (int i =0; i<numStreetLights;i++){
 		vec3 streetPos = vec3(streetLight->getPosition().x + 2, streetLight->getPosition().y + 5, streetLight->getPosition().z+7*i);
 		streetLight1->setPosition(streetPos);
+		streetLight1 -> setColour(vec3(1.0f, 0.95f - 0.2 * abs(sin(t)), 0.74f - 0.2 * abs(sin(t))));
+		if (flicker % 3 == 0 && randomnum == i){
+			streetLight1 ->setColour(vec3(0.0f, 0.0f, 0.0f));
+		}
 		streetLight1 -> setAmp(10);
 		drawSpotLight(i, streetLight1, shader);
 	}
+	//drawSpotLight(6, lava, shader);
 	glUniform1i(glGetUniformLocation(shader, "number_of_spot_lights"), numStreetLights);
 
 
@@ -945,8 +962,6 @@ void Fundamentals::drawLightsScene2(GLuint shader){
 	glUniform1i(glGetUniformLocation(shader, "number_of_dir_lights"), number_of_dir_lights);
 
 	}
-
-
 
 void Fundamentals::drawLightsScene0(GLuint shader){
 	glUseProgram(shader);

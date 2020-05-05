@@ -67,7 +67,7 @@ private:
   Model *skybox[6], *bookMarkModel, *sunModel, *moonModel, *mountainModel, *cloudModel, *rainbowModel, *backgroundModel, *stopModel, *trafficModel, *streetLightModel;
   Model *manModel, *trashcanModel;
   Lamp* lampLight;
-  LightSource *lightSource, *dirrLight, *spotLight, *pointLight0, *spotLight0, *dirLight0, *sunLight1, *spotLight1, *spotLight2, *dirLight1, *streetLight1, *dirrLight2;
+  LightSource *lightSource, *dirrLight, *spotLight, *pointLight0, *spotLight0, *dirLight0, *lava, *lava2, *sunLight1, *spotLight1, *spotLight2, *dirLight1, *streetLight1, *dirrLight2;
   LightSource *bookSpot1, *bookSpot2,*bookSpot3, *bookSpot4, *bookDir, *moonLight;
   LightHandler *pointLightVec;
   mat4 projectionMatrix, camMatrix, camMat2, backgroundrot;

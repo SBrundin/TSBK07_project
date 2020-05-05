@@ -10,7 +10,7 @@ LightSource::LightSource(vec3 pos, vec3 col)
     diffuse = {0.8f, 0.8f, 0.8f};
     specular = {1.0f, 1.0f, 1.0f};
     direction = {-0.2f, -1.0f, -0.3f};
-    position = position;
+    position = pos;
     colour = col;
 
     //Dessa 3 floats kontrollerar hur långt ljuset når.
