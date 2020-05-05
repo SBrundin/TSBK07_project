@@ -722,9 +722,10 @@ void Fundamentals::initLights(){
 	dirLight1 -> setSpecular(vec3(0.5f, 0.5f, 0.5f));
 
 	//Scene 2
-	streetLight1 = new LightSource(vec3(7.0f, 5.1f, -11.0f), vec3(0.7f, 1.0f, 1.0f));//Pile
+	streetLight1 = new LightSource(vec3(7.0f, 5.1f, -11.0f), vec3(1.0f, 0.95f, 0.74f));//Pile
 	streetLight1->setDirection(vec3(0.0f, -1.0f, 0.0f));
-	streetLight1 -> setAmp(10);
+	streetLight1 ->setCutOff(4);
+	streetLight1 ->setOuterCutOff(11);
 
 	//Scene zerooo
 	bookSpot1 = new LightSource(vec3(-15.0f, 18.1f , 22.0f ), vec3(0.7f, 1.0f, 1.0f));
@@ -886,17 +887,23 @@ void Fundamentals::drawLightsScene2(GLuint shader){
 	int number_of_point_lights = 1;
 	glUniform1i(glGetUniformLocation(shader, "number_of_point_lights"), number_of_point_lights);
 
-	//for (int i =0; i<6;i++){
-	//	mat4 mdlLight = T(streetLight->getPosition().x, streetLight->getPosition().y, streetLight->getPosition().z+7*i);
-	vec3 streetPos = vec3(pile->getPosition().x - t, pile->getPosition().y + 9, pile->getPosition().z);//vec3(-40.0f, 9.0f + 20*sin(t), -17.0f);
+	int numStreetLights = 6;
+	streetLight1 ->setCutOff(4 + 2*sin(t));
+	streetLight1 -> setColour(vec3(1.0f, 0.95f, 0.74f));
+	int flicker = floor(t*5);
+	if (flicker % 5 == 0){
+		streetLight1 ->setColour(vec3(0.0f, 0.0f, 0.0f));
+	}
 
-	streetLight1 -> setPosition(streetPos);//vec3(spotLight1->getPosition().x - t/2, spotLight1->getPosition().y, spotLight1->getPosition().z));
-	streetLight1 -> setAmp(10);
-	//streetLight1 -> setCutOff(10);
-	//streetLight1 -> setOuterCutOff(15);
-	drawSpotLight(0, streetLight1, shader);
-	int number_of_spot_lights = 1;
-	glUniform1i(glGetUniformLocation(shader, "number_of_spot_lights"), number_of_spot_lights);
+	for (int i =0; i<numStreetLights;i++){
+		vec3 streetPos = vec3(streetLight->getPosition().x + 2, streetLight->getPosition().y + 5, streetLight->getPosition().z+7*i);
+		streetLight1->setPosition(streetPos);
+		streetLight1 -> setAmp(2);
+		drawSpotLight(i, streetLight1, shader);
+	}
+	glUniform1i(glGetUniformLocation(shader, "number_of_spot_lights"), numStreetLights);
+
+
 
 	drawDirLight(0, dirLight1, shader);
 	int number_of_dir_lights = 1;
