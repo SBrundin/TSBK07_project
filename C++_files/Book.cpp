@@ -148,7 +148,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t, vec3 viewPos){
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, _secondPage->getTextureUp().y);
     glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, _secondPage->getTextureUp().x);
+    glBindTexture(GL_TEXTURE_2D, _secondPage->getTextureUp().y);
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureSide());
     mat4 modelViewfirst = T(_firstPage->getPosition().x, _firstPage->getPosition().y, _firstPage->getPosition().z );

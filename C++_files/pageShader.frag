@@ -126,8 +126,12 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDirectio
 {
     if (ID == 2 || ID == 4){
     normal.y = -normal.y;
+    normal.x = -normal.x;
     }
     vec3 lightDir = normalize( light.position - fragPos );
+    if (ID == 2 || ID == 4){
+          normal.y = -normal.y;
+    }
 
     // Diffuse shading
     float diff = max( dot( normal, lightDir ), 0.0 );
@@ -167,6 +171,9 @@ vec4 color0, color1, color2;
 vec4 color = vec4(1.0, 0.0, 0.0, 1.0);
 
 vec3 norm = normalize(normal);
+if (ID == 4 || ID == 2){
+  norm.y = -norm.y;
+}
 vec3 viewDirection = normalize(viewPos - fragPos);
 vec3 pointResult = vec3(0.0f,0.0f,0.0f);
 vec3 dirResult = vec3(0.0f,0.0f,0.0f);
@@ -254,20 +261,43 @@ else if (ID == 3){ //Draws special lava top
   }
   }
   else if (ID == 4){
-    if((position.x > 0.0 && position.x < 10.0) || (position.x < 0.0 && position.x > -3.0 && position.z > -5.0 && position.z < 5.0)){
-      color = abs(position.z/80) * texture(TexUp0, 5.0*ex_TexCoord);
+    float fader = 1.0;
+      if(in_Normal.y < 0){
+        if((position.x <= 0.0 && position.x > -3.0 && position.z > -5.0 && position.z < 5.0)){
+          color0 = min(5 * min(5.0 - abs(position.z),1.0), 1.0) * min(5 * min(position.x + 3.0,1.0), 1.0) * texture(TexUp0, 5.0*ex_TexCoord);
+          fader = 1.0 - min(5 * min(5.0 - abs(position.z),1.0), 1.0) * min(5 * min(position.x + 3.0,1.0), 1.0);
+          color0 =color0 + fader * min(abs(position.x/30), 1.0) * texture(TexUp1, 10*ex_TexCoord);
+          color1 = fader * min(abs(1 - position.x/30), 1.0) * texture(TexUp1, 15*ex_TexCoord);
+          color2 = fader * abs(position.z/80) * texture(TexUp2, 5.0*ex_TexCoord);
+          color = color0 + color1 + color2;
+          }
+        else if(position.x > 0.0 && position.x < 10.0){
+          if(position.z < -4.85 || position.z > 4.85 || position.x > 0.5){
+            fader = min(5 * min(position.x, 1.0) * min(10.0 - position.x, 1.0), 1.0);
+          }
+          color0 = fader * texture(TexUp0, 5.0*ex_TexCoord);
+          color0 =color0 + (1.0 - fader) * min(abs(position.x/30), 1.0) * texture(TexUp1, 10*ex_TexCoord);
+          color1 = (1.0 - fader) * min(abs(1 - position.x/30), 1.0) * texture(TexUp1, 15*ex_TexCoord);
+          color2 = (1.0 - fader) * abs(position.z/80) * texture(TexUp2, 5.0*ex_TexCoord);
+          color = color0 + color1 + color2;
+        }
+        else{
+          color0 = min(abs(position.x/30), 1.0) * texture(TexUp1, 10*ex_TexCoord);
+          color1 = min(abs(1 - position.x/30), 1.0) * texture(TexUp1, 15*ex_TexCoord);
+          color2 = abs(position.z/80) * texture(TexUp2, 5.0*ex_TexCoord);
+          color = color0 + color1 + color2;
+          }
+      }
+      else if(in_Normal.y > 0){
+        color0 = min(abs(position.x/30), 1.0) * texture(Tex, 10*ex_TexCoord);
+        color1 = min(abs(1 - position.x/30), 1.0) * texture(Tex, 15*ex_TexCoord);
+        color2 = abs(position.z/80) * texture(Tex, 5.0*ex_TexCoord);
+        color = color0 + color1 + color2;
+      }
+      else{
+        color = texture(sideTex, ex_TexCoord);
+      }
     }
-    else{
-    float dist = min(sqrt(pow((position.x + 4.0)/5.0, 2) + pow((position.z + 17.5)/2.5, 2)), 1.0);
-    color0 =  dist * min(abs(position.x/30), 1.0) * texture(TexUp0, 10*ex_TexCoord);
-    color0 = color0 + abs(position.z/80) * texture(TexUp0, 5.0*ex_TexCoord);
-    color1 = dist * min(abs(1 - position.x/30), 1.0) * texture(TexUp1, 15*ex_TexCoord);
-    color2 = 5 * (1 - dist) * texture(TexUp2, 5.0*ex_TexCoord);
-    color = color0 + color1 + color2;
-    }
-  }
-
-
 else{
   color = vec4(1.0, 0.0, 0.0, 1.0);
   }

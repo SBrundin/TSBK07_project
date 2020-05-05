@@ -31,6 +31,7 @@ void Fundamentals::loadfiles(){
 	//INIT MATRICES
 	camMatrix = camera->getCamMatrix();
 	projectionMatrix = camera->getProj_matrix();
+	backgroundrot = IdentityMatrix();
 
 	//INIT
 	initshaders();
@@ -106,6 +107,7 @@ void Fundamentals::update(){
 	//DRAWS THE BOOK
 
 	book->draw(camMatrix, pageShader, t, viewPos);
+	std::cout << toppage->getPosition().x << '\n';
 	//DRAWS THE SCENES
 
 	glUseProgram(programObj);
@@ -113,9 +115,6 @@ void Fundamentals::update(){
 	if (book->getCurrentPage() == 1 && !book->getFadeBool()){
 		drawLightsScene0(pageShader);
 		drawLightsScene0(programObj);
-		box->draw(camMatrix, programObj, 1.0, Ry(0.0));
-
-
 	}
 
 	if (book->getCurrentPage() == 1 && book->getFadeBool()){
@@ -201,18 +200,15 @@ void Fundamentals::initobjects(){
 	rosebush1 = new Object(vec3(7.0f, 4.8f, 4.4f), rosebushModel, bilTex);
 	rosebush2 = new Object(vec3(-20.0f, 4.6f, -16.0f), rosebushModel, bilTex);
 	rosebush3 = new Object(vec3(10.0f, 4.8f, -4.4f), rosebushModel, bilTex);
-	bird = new Object(vec3(10.0f, 15.0f, -3.4f), birdModel, waterTex);
-	bird2 = new Object(vec3(10.0f, 15.0f, -10.4f), birdModel, waterTex);
-	bird3 = new Object(vec3(-20.0f, 15.0f, -2.4f), birdModel, waterTex);
-
-	box = new Object(vec3(0.0f, 10.0f, 0.0f), boxModel, cloudTex);
-	background = new Object(vec3(-14.75f, 1.25f, -19.25f), backgroundModel, backgroundTex);
-	sun = new Object(vec3(-15.0f, 17.0f, -18.9f), sunModel, sunTex);
+	bird = new Object(vec3(10.0f, 15.0f, -4.4f), birdModel, waterTex);
+	bird2 = new Object(vec3(15.0f, 15.0f, -10.4f), birdModel, waterTex);
+	bird3 = new Object(vec3(-20.0f, 15.0f, 10.4f), birdModel, waterTex);
+	background = new Object(vec3(-14.25f, frame->getSize().y/2, -19.24f), backgroundModel, backgroundTex);
+	sun = new Object(vec3(-15.0f, 25.0f, -18.9f), sunModel, sunTex);
 	moon = new Object(vec3(-15.0f, -20.0f, -18.9f), moonModel, moonTex);
 	mountain = new Object(vec3(-7.0f, 7.5f, -18.5f), mountainModel, stoneTex);
 	mountain2 = new Object(vec3(-13.0f, 6.2f, -18.7f), mountainModel, stoneTex);
-	cloud = new Object(vec3(-27.0f, 20.0f, -18.85f), cloudModel, cloudTex);
-
+	cloud = new Object(vec3(-0.0f, 20.0f, -18.85f), cloudModel, cloudTex);
 
 	house->updateBoundingBox(Ry(0), 2.0);
 	cottage->updateBoundingBox(Ry(M_PI), 1.0);
@@ -243,7 +239,6 @@ void Fundamentals::initobjects(){
 	listOfObj_2.push_back(mountain);
 	listOfObj_2.push_back(mountain2);
 	listOfObj_2.push_back(cloud);
-	listOfObj_2.push_back(box);
 
 	//OBJECTS FOR SCENE 2
 	velociraptor1 = new Object(vec3(10.0f, 3.8f, -8.0f), velociModel, leatherTex);
@@ -488,16 +483,41 @@ void Fundamentals::drawFirstScene(){
 	cottage2->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/2), firstPage);
 	rosebush3->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
 	pile->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
-	background->drawOver(camMatrix, programObj, 1.0, Rz(t/100), background->getPosition().y);
-	mat4 moonrot = Mult(T(0.0f, 21.0f, 0.0f), Mult(Rz(t/100 + 3 * M_PI/16), T(-15.0f, -20.0f, 0.0f)));
-	mat4 sunrot = Mult(T(0.0f, -16.0f, 0.0f), Mult(Rz(t/100 - 3 * M_PI/16), T(-15.0f, 17.0f, 0.0f)));
-	sun->drawOver(camMatrix, programObj, 1.0, sunrot, background->getPosition().y - sun->getPosition().y);
-	moon->drawOver(camMatrix, programObj, 1.0, moonrot, background->getPosition().y - moon->getPosition().y);
-	mountain->drawOver(camMatrix, programObj, 1.0, Ry(0.0), background->getPosition().y - mountain->getPosition().y);
-	mountain2->drawOver(camMatrix, programObj, 0.7, Ry(0.0), background->getPosition().y - mountain2->getPosition().y);
 
-	//DYNAMIC OBJECTS
-	cloud->drawOver(camMatrix, programObj, 1.0, Ry(M_PI/2), background->getPosition().y - cloud->getPosition().y);
+	GLfloat heightl = background->getPosition().y;
+	GLfloat minheightl = - toppage->getSize().y + 0.1;
+	GLfloat heightr = -(heightl - firstPage->getPosition().y) - firstPage->getSize().y/2;
+	GLfloat minheightr = heightr + firstPage->getSize().y;
+	GLfloat deltat = t - oldt;
+	oldt = t;
+	vec3 sunpos = sun->getPosition();
+	vec3 bpos = background->getPosition();
+	vec4 superpos = Mult(Mult(T(bpos.x,bpos.y,bpos.z), Rz(deltat/100)), T(-bpos.x,-bpos.y,-bpos.z))*vec4(sunpos.x, sunpos.y, sunpos.z, 1.0);
+	sun->setPosition(vec3(superpos.x, superpos.y, superpos.z));
+	vec3 moonpos = moon->getPosition();
+	superpos = Mult(Mult(T(bpos.x,bpos.y,bpos.z), Rz(deltat/100)), T(-bpos.x,-bpos.y,-bpos.z))*vec4(moonpos.x, moonpos.y, moonpos.z, 1.0);
+	moon->setPosition(vec3(superpos.x, superpos.y, superpos.z));
+
+	vec4 suninter = vec4(minheightl - sun->getPosition().y + bpos.y, -sun->getPosition().y + bpos.y, heightr - sun->getPosition().y + bpos.y, minheightr - sun->getPosition().y + bpos.y);
+	vec4 mooninter = vec4(minheightl - moon->getPosition().y + bpos.y, -moon->getPosition().y + bpos.y, heightr - moon->getPosition().y + bpos.y, minheightr - moon->getPosition().y + bpos.y);
+
+	backgroundrot = Mult(backgroundrot,  Rz(deltat/100));
+	glUniform1f(glGetUniformLocation(programObj, "quickfix"), 0.0f);
+	background->drawOver(camMatrix, programObj, 1.0, backgroundrot, vec4(minheightl, 0.0f, heightr, minheightr));
+	glUniform1f(glGetUniformLocation(programObj, "quickfix"), (sun->getPosition().x - bpos.x));
+	sun->drawOver(camMatrix, programObj, 1.0, Rz(0), suninter);
+	glUniform1f(glGetUniformLocation(programObj, "quickfix"), (moon->getPosition().x - bpos.x));
+	moon->drawOver(camMatrix, programObj, 1.0, Rz(0), mooninter);
+	glUniform1f(glGetUniformLocation(programObj, "quickfix"), 0.0f);
+	mountain->draw(camMatrix, programObj, 1.0, Ry(0.0));
+	mountain2->draw(camMatrix, programObj, 0.7, Ry(0.0));
+	cloud->draw(camMatrix, programObj, 1.0, Ry(M_PI/2));
+	vec3 cpos = cloud->getPosition();
+	if(abs(cpos.x + 15) > 20){
+		dir = -dir;
+	}
+	cpos.x += dir;
+	cloud->setPosition(cpos);
 	mat4 modelViewbird = T(bird->getPosition().x*sin(-t), bird->getPosition().y+0.3*sin(5*t), bird->getPosition().z*cos(-t));
 	mat4 Totbird = Mult(camMatrix, Mult(modelViewbird, Mult(Ry(t+4.71), Rz(3.14/3*(sin(t))))));
 	glActiveTexture(GL_TEXTURE0);
@@ -530,74 +550,73 @@ void Fundamentals::drawFirstScene(){
 
 void Fundamentals::drawSecondScene(){
 
-//STATIC FIRST PAGE OBJECTS
-rosebush3->drawOn(camMatrix, programObj, 1.0, Ry(0.0), secondPage);
-fence->draw(camMatrix, programObj, 5.3, Ry(M_PI/2));
-trafficLight->draw(camMatrix, programObj, 1.0, Ry(-M_PI/2));
-stopSign->draw(camMatrix, programObj, 1.0, Ry(M_PI));
-man->draw(camMatrix, programObj, 1.0, Ry(0.0));
-trashcan->draw(camMatrix, programObj, 1.5, Ry(0));
-tree2->draw(camMatrix, programObj, 2.0, Ry(0));
+	//STATIC FIRST PAGE OBJECTS
+	rosebush3->drawOn(camMatrix, programObj, 1.0, Ry(0.0), secondPage);
+	fence->draw(camMatrix, programObj, 5.3, Ry(M_PI/2));
+	trafficLight->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/2), firstPage);
+	stopSign->drawOn(camMatrix, programObj, 1.0, Ry(M_PI), firstPage);
+	man->drawOn(camMatrix, programObj, 1.0, Ry(0.0), firstPage);
+	trashcan->drawOn(camMatrix, programObj, 1.5, Ry(0), firstPage);
+	tree2->draw(camMatrix, programObj, 2.0, Ry(0));
 
 
-//STATIC SECOND PAGE OBJECTS
-trex->drawOn(camMatrix, programObj, 1.0, Ry(-3*M_PI/4), secondPage);
-stegos1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/4),secondPage);
-stegos2->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/2),secondPage);
-stegos3->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/3), secondPage);
-velociraptor1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
-velociraptor2->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
-velociraptor3->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
-velociraptor4->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
-velociraptor5->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
-velociraptor6->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
-velociraptor7->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), firstPage);
-rosebush1->drawOn(camMatrix, programObj, 2.2, Ry(0.0), secondPage);
-rosebush2->drawOn(camMatrix, programObj, 1.5, Ry(0.0), secondPage);
+	//STATIC SECOND PAGE OBJECTS
+	trex->drawOn(camMatrix, programObj, 1.0, Ry(-3*M_PI/4), secondPage);
+	stegos1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/4),secondPage);
+	stegos2->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/2),secondPage);
+	stegos3->drawOn(camMatrix, programObj, 1.0, Ry(-M_PI/3), secondPage);
+	velociraptor1->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), secondPage);
+	velociraptor2->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), secondPage);
+	velociraptor3->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), secondPage);
+	velociraptor4->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), secondPage);
+	velociraptor5->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), secondPage);
+	velociraptor6->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), secondPage);
+	velociraptor7->drawOn(camMatrix, programObj, 1.0, Ry(M_PI*1.75), secondPage);
+	rosebush1->drawOn(camMatrix, programObj, 2.2, Ry(0.0), secondPage);
+	rosebush2->drawOn(camMatrix, programObj, 1.5, Ry(0.0), secondPage);
 
+	//DYNAMIC OBJECTS
+	//LAMPS
+	for (int i =0; i<6;i++){
+		mat4 mdlLight = T(streetLight->getPosition().x, streetLight->getPosition().y, streetLight->getPosition().z+7*i);
+		mat4 totLight = Mult(camMatrix, mdlLight);
+		glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, totLight.m);
+		DrawModel(streetLight->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+	}
 
-//DYNAMIC OBJECTS
-//LAMPS
-for (int i =0; i<6;i++){
-	mat4 mdlLight = T(streetLight->getPosition().x, streetLight->getPosition().y, streetLight->getPosition().z+7*i);
-	mat4 totLight = Mult(camMatrix, mdlLight);
-	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, totLight.m);
-	DrawModel(streetLight->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
-}
+	//CORONA
+	mat4 modelViewCor = T(coronaSimple->getPosition().x+0.5*sin(t), coronaSimple->getPosition().y+0.2*sin(t*8), coronaSimple->getPosition().z+0.5*cos(t));
+	mat4 totCor = Mult(camMatrix, Mult(modelViewCor, Mult(S(0.1,0.1,0.1),Rz(t/2))));
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, coronaSimple->getTexture());
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, totCor.m);
+	DrawModel(coronaSimple->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 
-//CORONA
-mat4 modelViewCor = T(coronaSimple->getPosition().x+0.5*sin(t), coronaSimple->getPosition().y+0.2*sin(t*8), coronaSimple->getPosition().z+0.5*cos(t));
-mat4 totCor = Mult(camMatrix, Mult(modelViewCor, Mult(S(0.1,0.1,0.1),Rz(t/2))));
-glActiveTexture(GL_TEXTURE0);
-glBindTexture(GL_TEXTURE_2D, coronaSimple->getTexture());
-glUniform1i(glGetUniformLocation(programObj, "Tex"), 0); // Texture unit 0
-glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, totCor.m);
-DrawModel(coronaSimple->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
-
-//TRUCK
-GLfloat prevPos = truck->getPosition().z;
-truck->setZ(35*sin(t/5));
-if(prevPos <  truck->getPosition().z){
-	_rotangle = -M_PI/2;
-	_lane= -2;
-}
-else{
-	_rotangle = M_PI/2;
-	_lane = 4;
-}
-mat4 mdlTruck = T(truck->getPosition().x+_lane, truck->getPosition().y+0.03*sin(t*100), truck->getPosition().z);
-mat4 totTruck = Mult(camMatrix, Mult(Mult(mdlTruck, S(3,3,3)), Ry(_rotangle)));
-glActiveTexture(GL_TEXTURE0);
-glBindTexture(GL_TEXTURE_2D, truck->getTexture());
-glUniform1i(glGetUniformLocation(programObj, "Tex"), 0);
-if (abs(truck->getPosition().z) > 25){
-		glUniform1f(glGetUniformLocation(programObj, "timer"),0);
-}
-else if (abs(truck->getPosition().z) >= 15  && abs(truck->getPosition().z) <= 30){
-	glUniform1f(glGetUniformLocation(programObj, "timer"), cos(15/(30-abs(truck->getPosition().z))));
-}
-glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, totTruck.m);
-DrawModel(truck->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
+	//TRUCK
+	GLfloat prevPos = truck->getPosition().z;
+	truck->setZ(35*sin(t/5));
+	if(prevPos <  truck->getPosition().z){
+		_rotangle = -M_PI/2;
+		_lane= -2;
+	}
+	else{
+		_rotangle = M_PI/2;
+		_lane = 4;
+	}
+	mat4 mdlTruck = T(truck->getPosition().x+_lane, truck->getPosition().y+0.03*sin(t*100), truck->getPosition().z);
+	mat4 totTruck = Mult(camMatrix, Mult(Mult(mdlTruck, S(3,3,3)), Ry(_rotangle)));
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, truck->getTexture());
+	glUniform1i(glGetUniformLocation(programObj, "Tex"), 0);
+	if (abs(truck->getPosition().z) > 25){
+			glUniform1f(glGetUniformLocation(programObj, "timer"),0);
+	}
+	else if (abs(truck->getPosition().z) >= 15  && abs(truck->getPosition().z) <= 30){
+		glUniform1f(glGetUniformLocation(programObj, "timer"), cos(15/(30-abs(truck->getPosition().z))));
+	}
+	glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, totTruck.m);
+	DrawModel(truck->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 }
 
 void Fundamentals::drawSkybox(){
@@ -620,9 +639,8 @@ void Fundamentals::drawSkybox(){
 }
 
 void Fundamentals::drawLights(){
-
 	glUseProgram(lampProg);
-/*
+	/*
 	mat4 scale = S(5,5,5);
 	lamp->setPosition(v*3*sin(t));
 	mat4 lampTot = T(lamp->getPosition().x, lamp->getPosition().y, lamp->getPosition().z );
@@ -646,19 +664,6 @@ void Fundamentals::drawLights(){
 	dirrLight->setDirection( {-0.5f, -0.5f, -0.5});
 	vec3 dirrDirr = dirrLight->getDirection();
 	glUniform3fv(glGetUniformLocation(mainProg, "dirLight.direction"), 1, &dirrDirr.x);
-	//Box
-	mat4 modelPos = T(box->getPosition().x, box->getPosition().y, box->getPosition().z);
-	mat4 boxTot = Mult(camMatrix, Mult(scale, modelPos));
-	//TExture
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, grassTex);
-	glUniform1i(glGetUniformLocation(mainProg, "boxTex"), 0);
-	//To shader
-	glUniform3fv(glGetUniformLocation(mainProg, "viewPos"), 1, &viewPos.x);
-	glUniform3fv(glGetUniformLocation(mainProg, "spotLight.position"), 1, &lightPos.x);
-	glUniformMatrix4fv(glGetUniformLocation(mainProg, "mdlMatrix"), 1, GL_TRUE, boxTot.m);
-	glUniformMatrix4fv(glGetUniformLocation(mainProg, "model"), 1, GL_TRUE, modelPos.m);
-	DrawModel(box->getModel(), mainProg, "inPosition", "inNormal", "inTexCoord");
 
 }
 
@@ -704,7 +709,7 @@ void Fundamentals::initLights(){
 	spotLight1 = new LightSource(vec3(-20.0f, 8.9f, -15.0f), vec3(0.7f, 1.0f, 1.0f)); //Cottage
 	spotLight1 ->setDirection(vec3(0.0f, -1.0f, 0.0f));
 	spotLight1 -> setAmp(10);
-	spotLight2 = new LightSource(vec3(7.0f, 5.1f, -11.0f), vec3(0.7f, 1.0f, 1.0f));//Pile
+	spotLight2 = new LightSource(vec3(7.0f, 9.1f, -11.0f), vec3(0.7f, 1.0f, 1.0f));//Pile
 	spotLight2 ->setDirection(vec3(0.0f, -1.0f, 0.0f));
 	spotLight2 -> setAmp(10);
 
@@ -856,17 +861,15 @@ void Fundamentals::drawLightsScene1(GLuint shader){
 
 	glUseProgram(shader);
 	//pointLights
+	sunLight1 -> setPosition(vec3( sun -> getPosition().x, sun -> getPosition().y, sun -> getPosition().z + 0.1));
 	drawPointLight(0, sunLight1, shader);
 	int number_of_point_lights = 1;
 	glUniform1i(glGetUniformLocation(shader, "number_of_point_lights"), number_of_point_lights);
 
 	//SpotLight
-	//spotLight1 -> setPosition(vec3(spotLight1->getPosition().x - t/2, spotLight1->getPosition().y, spotLight1->getPosition().z));
-	spotLight1 -> setPosition(vec3(pile->getPosition().x - t/4, pile->getPosition().y + 9, pile->getPosition().z));
-	//spotLight1 -> setCutOff(12+t/2);
-	//std::cout << 0.00 + 0.0001*t << '\n';
-	drawSpotLight(0, spotLight1, shader);
-	//drawSpotLight(1, spotLight2, shader);
+	spotLight2 -> setPosition(vec3(pile->getPosition().x, pile->getPosition().y + 9, pile->getPosition().z));
+	drawSpotLight(0, spotLight2, shader);
+
 	int number_of_spot_lights = 1;
 	glUniform1i(glGetUniformLocation(shader, "number_of_spot_lights"), number_of_spot_lights);
 
@@ -898,7 +901,6 @@ void Fundamentals::drawLightsScene2(GLuint shader){
 	drawDirLight(0, dirLight1, shader);
 	int number_of_dir_lights = 1;
 	glUniform1i(glGetUniformLocation(shader, "number_of_dir_lights"), number_of_dir_lights);
-	box ->setPosition(streetPos);
 
 	}
 

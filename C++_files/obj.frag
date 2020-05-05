@@ -49,7 +49,7 @@ uniform SpotLight spotLightz[NUMBER_OF_SPOT_LIGHTS];
 
 in vec3 normal;
 in vec2 exTexCoord;
-in float height;
+in vec3 pos;
 in vec3 fragPos;
 
 uniform vec3 viewPos;
@@ -60,7 +60,7 @@ uniform int number_of_spot_lights;
 out vec4 out_Color;
 uniform sampler2D Tex;
 uniform float timer;
-uniform float opac;
+uniform vec4 opac;
 
 //Function declarations
 vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDirection);
@@ -156,9 +156,17 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDirectio
 void main(void)
 {
 vec4 textures;
-if(opac > height){
+float drawoverheight;
+if(pos.x > 0.0){
+  drawoverheight = opac.z * abs(pos.x  - 30.0)/30.0 + opac.w*pos.x/30.0;
+}
+else{
+  drawoverheight = opac.y * abs(pos.x + 30.0)/30.0 + opac.x * abs(pos.x)/30.0;
+  }
+
+if(drawoverheight > pos.y){
   textures = texture(Tex, exTexCoord);
-  textures.w = 0.0f;
+  textures.w = 0.0;
 }
 else {
   textures = texture(Tex, exTexCoord);

@@ -70,7 +70,7 @@ private:
   LightSource *lightSource, *dirrLight, *spotLight, *pointLight0, *spotLight0, *dirLight0, *sunLight1, *spotLight1, *spotLight2, *dirLight1, *streetLight1;
   LightSource *bookSpot1, *bookSpot2,*bookSpot3, *bookSpot4, *bookDir;
   LightHandler *pointLightVec;
-  mat4 projectionMatrix, camMatrix, camMat2;
+  mat4 projectionMatrix, camMatrix, camMat2, backgroundrot;
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour, pointLightPos0, pointLightColour0;
   vec3 spotLightColour0, spotLightPos0, dirLightPos0, dirLightColor0;
   vec3 viewPos, sunColour, sunPosition;
@@ -80,6 +80,7 @@ private:
   GLuint grass1Tex, grass2Tex, grass3Tex, grass4Tex, grass5Tex, grass6Tex, cottageTex, sandTex, sand1Tex, sand2Tex, lavaTex;
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
+  GLfloat dir = 0.01;
   GLfloat _rotangle;
   GLfloat _lane;
   GLfloat constant, linear, quadratic;
@@ -88,6 +89,7 @@ private:
   vec3 rotationAxis = {-14.565f, 0.0f, 0.0f};
   bool cameraCollisionFlag = false;
   GLfloat t;
+  GLfloat oldt = 0;
   Camera* camera;
   Object* car;
   Object* toppage;
@@ -104,7 +106,6 @@ private:
   Object* truck;
   Book* book;
   Object* lamp;
-  Object* box;
   GLfloat _myTime = 0.0f;
 
   //page 2
