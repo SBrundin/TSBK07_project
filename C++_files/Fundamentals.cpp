@@ -580,6 +580,7 @@ void Fundamentals::drawSecondScene(){
 		mat4 mdlLight = T(streetLight->getPosition().x, streetLight->getPosition().y, streetLight->getPosition().z+7*i);
 		mat4 totLight = Mult(camMatrix, mdlLight);
 		glUniformMatrix4fv(glGetUniformLocation(programObj, "mdlMatrix"), 1, GL_TRUE, totLight.m);
+		glUniformMatrix4fv(glGetUniformLocation(programObj, "model"), 1, GL_TRUE, mdlLight.m);
 		DrawModel(streetLight->getModel(), programObj, "inPosition", "inNormal", "inTexCoord");
 	}
 

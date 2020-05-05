@@ -191,7 +191,8 @@ void Object::draw(mat4 camMatrix, GLuint shader, float scale, mat4 rot)
  {
    vec4 opac = vec4(-100.0f,-100.0f,-100.0f,-100.0f);
    mat4 modelView = T(_position.x, _position.y, _position.z);
-   mat4 Tot = Mult(camMatrix, Mult(Mult(modelView, S(scale,scale,scale)), rot));
+   modelView = Mult(modelView, Mult(S(scale,scale,scale), rot));
+   mat4 Tot = Mult(camMatrix, modelView);
    glActiveTexture(GL_TEXTURE0);
    glBindTexture(GL_TEXTURE_2D, getTexture());
    glUniform1i(glGetUniformLocation(shader, "Tex"), 0); // Texture unit 0
@@ -204,13 +205,15 @@ void Object::draw(mat4 camMatrix, GLuint shader, float scale, mat4 rot)
  void Object::drawOver(mat4 camMatrix, GLuint shader, float scale, mat4 rot, vec4 opac)
   {
     mat4 modelView = T(_position.x, _position.y, _position.z);
-    mat4 Tot = Mult(camMatrix, Mult(Mult(modelView, S(scale,scale,scale)), rot));
+    modelView = Mult(modelView, Mult(S(scale,scale,scale), rot));
+    mat4 Tot = Mult(camMatrix, modelView);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, getTexture());
     glUniform1i(glGetUniformLocation(shader, "Tex"), 0); // Texture unit 0
     glUniform4fv(glGetUniformLocation(shader, "opac"), 1, &opac.x);
     glUniformMatrix4fv(glGetUniformLocation(shader, "myRotZ"), 1, GL_TRUE, rot.m);
     glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, Tot.m);
+    glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelView.m);
     DrawModel(getModel(), shader, "inPosition", "inNormal", "inTexCoord");
   }
 

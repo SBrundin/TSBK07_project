@@ -171,9 +171,7 @@ vec4 color0, color1, color2;
 vec4 color = vec4(1.0, 0.0, 0.0, 1.0);
 
 vec3 norm = normalize(normal);
-if (ID == 4 || ID == 2){
-  norm.y = -norm.y;
-}
+
 vec3 viewDirection = normalize(viewPos - fragPos);
 vec3 pointResult = vec3(0.0f,0.0f,0.0f);
 vec3 dirResult = vec3(0.0f,0.0f,0.0f);
