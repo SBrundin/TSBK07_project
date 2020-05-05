@@ -718,7 +718,7 @@ void Fundamentals::initLights(){
 
 	//Scene 2
 	streetLight1 = new LightSource(vec3(7.0f, 5.1f, -11.0f), vec3(0.7f, 1.0f, 1.0f));//Pile
-	streetLight1->setDirection(vec3(0.0f, 1.0f, 0.0f));
+	streetLight1->setDirection(vec3(0.0f, -1.0f, 0.0f));
 	streetLight1 -> setAmp(10);
 
 	//Scene zerooo
@@ -885,7 +885,7 @@ void Fundamentals::drawLightsScene2(GLuint shader){
 
 	//for (int i =0; i<6;i++){
 	//	mat4 mdlLight = T(streetLight->getPosition().x, streetLight->getPosition().y, streetLight->getPosition().z+7*i);
-	vec3 streetPos = vec3(-40.0f, 9.0f + 20*sin(t), -17.0f);
+	vec3 streetPos = vec3(pile->getPosition().x - t, pile->getPosition().y + 9, pile->getPosition().z);//vec3(-40.0f, 9.0f + 20*sin(t), -17.0f);
 
 	streetLight1 -> setPosition(streetPos);//vec3(spotLight1->getPosition().x - t/2, spotLight1->getPosition().y, spotLight1->getPosition().z));
 	streetLight1 -> setAmp(10);
@@ -904,20 +904,20 @@ void Fundamentals::drawLightsScene2(GLuint shader){
 
 
 
-	void Fundamentals::drawLightsScene0(GLuint shader){
-		glUseProgram(shader);
-		bookSpot1 -> setPosition(vec3(-15.0f, 18.1f + 2*sin(2*t) , 22.0f ));
-		bookSpot2 -> setPosition(vec3(15.0f, 18.1f + 2*cos(2*t) , 22.0f));
-		bookSpot3 -> setPosition(vec3(-15.0f, 18.1f +2*cos(2*t) , -22.0f));
-		bookSpot4 -> setPosition(vec3(15.0f, 18.1f + 2*sin(2*t) , -22.0f));
-		drawSpotLight(0, bookSpot1, shader);
-		drawSpotLight(1, bookSpot2, shader);
-		drawSpotLight(2, bookSpot3, shader);
-		drawSpotLight(3, bookSpot4, shader);
-		int number_of_spot_lights = 4;
-		glUniform1i(glGetUniformLocation(shader, "number_of_spot_lights"), number_of_spot_lights);
+void Fundamentals::drawLightsScene0(GLuint shader){
+	glUseProgram(shader);
+	bookSpot1 -> setPosition(vec3(-15.0f, 18.1f + 2*sin(2*t) , 22.0f ));
+	bookSpot2 -> setPosition(vec3(15.0f, 18.1f + 2*cos(2*t) , 22.0f));
+	bookSpot3 -> setPosition(vec3(-15.0f, 18.1f +2*cos(2*t) , -22.0f));
+	bookSpot4 -> setPosition(vec3(15.0f, 18.1f + 2*sin(2*t) , -22.0f));
+	drawSpotLight(0, bookSpot1, shader);
+	drawSpotLight(1, bookSpot2, shader);
+	drawSpotLight(2, bookSpot3, shader);
+	drawSpotLight(3, bookSpot4, shader);
+	int number_of_spot_lights = 4;
+	glUniform1i(glGetUniformLocation(shader, "number_of_spot_lights"), number_of_spot_lights);
 
-		drawDirLight(0, bookDir, shader);
-		int number_of_dir_lights = 1;
-		glUniform1i(glGetUniformLocation(shader, "number_of_dir_lights"), number_of_dir_lights);
-		}
+	drawDirLight(0, bookDir, shader);
+	int number_of_dir_lights = 1;
+	glUniform1i(glGetUniformLocation(shader, "number_of_dir_lights"), number_of_dir_lights);
+	}
