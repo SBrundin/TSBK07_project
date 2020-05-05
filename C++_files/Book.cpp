@@ -100,6 +100,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t, vec3 viewPos){
     mat4 modelViewTop = T(_top->getPosition().x, _top->getPosition().y ,_top->getPosition().z);
     mat4 totalTop = Mult(camMatrix, Mult(modelViewTop, Rz(M_PI)));
     glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
+    glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelViewTop.m);
     DrawModel(_top->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
     //First page
     glUniform1i(glGetUniformLocation(shader, "ID"), 1);
@@ -116,6 +117,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t, vec3 viewPos){
     mat4 modelViewfirst = T(_firstPage->getPosition().x, _firstPage->getPosition().y, _firstPage->getPosition().z );
     mat4 totalfirst = Mult(camMatrix, modelViewfirst);
     glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalfirst.m);
+    glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelViewfirst.m);
     DrawModel(_firstPage->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
     //Second pages
     glUniform1i(glGetUniformLocation(shader, "ID"), 0);
@@ -126,6 +128,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t, vec3 viewPos){
     mat4 modelViewSecond = T(_secondPage->getPosition().x, _secondPage->getPosition().y, _secondPage->getPosition().z );
     mat4 totalSecond = Mult(camMatrix, modelViewSecond);
     glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalSecond.m);
+    glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelViewSecond.m);
     DrawModel(_secondPage->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
   }
   else if (_currentPage == 3){
@@ -138,6 +141,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t, vec3 viewPos){
     mat4 modelViewTop = T(_top->getPosition().x, _top->getPosition().y ,_top->getPosition().z);
     mat4 totalTop = Mult(camMatrix, Mult(modelViewTop, Rz(M_PI)));
     glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
+    glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelViewTop.m);
     DrawModel(_top->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
     //First page
     glUniform1i(glGetUniformLocation(shader, "ID"), 4);
@@ -154,6 +158,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t, vec3 viewPos){
     mat4 modelViewfirst = T(_firstPage->getPosition().x, _firstPage->getPosition().y, _firstPage->getPosition().z );
     mat4 totalfirst = Mult(camMatrix, Mult(modelViewfirst, Rz(M_PI)));
     glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalfirst.m);
+    glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelViewfirst.m);
     DrawModel(_firstPage->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
     //Second pages
     glUniform1i(glGetUniformLocation(shader, "ID"), 3);
@@ -170,6 +175,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t, vec3 viewPos){
     mat4 modelViewSecond = T(_secondPage->getPosition().x, _secondPage->getPosition().y, _secondPage->getPosition().z );
     mat4 totalSecond = Mult(camMatrix, modelViewSecond);
     glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalSecond.m);
+    glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelViewSecond.m);
     DrawModel(_secondPage->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
   }
   else{
@@ -186,6 +192,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t, vec3 viewPos){
   mat4 modelViewPages = T(_pages->getPosition().x, _pages->getPosition().y ,_pages->getPosition().z);
   mat4 totalPages = Mult(camMatrix, modelViewPages);
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalPages.m);
+  glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelViewPages.m);
   DrawModel(_pages->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
 
   //FRAME OF THE BOOK
@@ -196,6 +203,7 @@ void Book::draw(mat4 camMatrix, GLuint shader, GLfloat t, vec3 viewPos){
   mat4 modelViewFrame = T(_frame->getPosition().x, _frame->getPosition().y, _frame->getPosition().z );
  	mat4 totalFrame = Mult(camMatrix, modelViewFrame);
 	glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalFrame.m);
+  glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelViewFrame.m);
 	DrawModel(_frame->getModel(), shader, "inPosition", "inNormal", "inTexCoord");
 }
 
@@ -245,6 +253,7 @@ void Book::browse(mat4 camMatrix, GLuint shader, GLfloat time, Object* top, Obje
   glActiveTexture(GL_TEXTURE2);
   glBindTexture(GL_TEXTURE_2D, _firstPage->getTextureSide());
   glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, totalTop.m);
+  glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelViewTop.m);
   glUniform1i(glGetUniformLocation(shader, "ID"), 0);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, _top->getTexture());

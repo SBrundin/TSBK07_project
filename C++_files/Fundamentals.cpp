@@ -107,7 +107,6 @@ void Fundamentals::update(){
 	//DRAWS THE BOOK
 
 	book->draw(camMatrix, pageShader, t, viewPos);
-	std::cout << toppage->getPosition().x << '\n';
 	//DRAWS THE SCENES
 
 	glUseProgram(programObj);
