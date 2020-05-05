@@ -26,8 +26,16 @@ public:
 
     vec3 getDirection();
     void setDirection(vec3 direction);
-    void setY(GLfloat y);
+    void setY(GLfloat y){
+      _position.y = y;
+    }
+    void setX(GLfloat x){
+      _position.x = x;
+    }
 
+    void setZ(GLfloat z){
+      _position.z = z;
+    }
     Model* getModel();
     void setModel(Model* model);
 
@@ -41,6 +49,7 @@ public:
     void setBoundingBox();
     void updateBoundingBox(mat4 rotation, GLfloat scale);
     vec3 getSize();
+    void rotate(mat4 rotation);
 
     void draw(mat4 camMatrix, GLuint shader, float scale, mat4 rot);
     void drawOver(mat4 camMatrix, GLuint shader, float scale, mat4 rot, vec4(opac));

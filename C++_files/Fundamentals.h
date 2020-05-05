@@ -29,6 +29,12 @@ public:
     void drawFirstScene();
     void drawSecondScene();
     void drawSkybox();
+    void drawLights();
+    void initLights();
+    void drawPointLight(int index, LightSource* light, GLuint shader);
+    void drawDirLight(int index, LightSource* light, GLuint shader);
+    void drawSpotLight(int index, LightSource* light, GLuint shader);
+    void drawLightsScene1(GLuint objShader);
 
     GLfloat getMyTimer(){
       return _myTime;
@@ -46,17 +52,24 @@ public:
       _myTime -= t;
     }
 
+    void updateRotangle(GLfloat t){
+      _rotangle += t;
+    }
+
 private:
   std::vector<Object*> listOfObj_1;
   std::vector<Object*> listOfObj_2;
   std::vector<Object*> listOfObj_3;
   Model *topModel, *frameModel, *pagesModel, *firstModel, *secondModel, *carModel, *coronaModel1, *truckModel, *coronaModel2, *lampModel, *boxModel;
-  Model *skybox[6], *bookMarkModel, *sunModel, *moonModel, *mountainModel, *cloudModel, *rainbowModel, *backgroundModel;
+  Model *skybox[6], *bookMarkModel, *sunModel, *moonModel, *mountainModel, *cloudModel, *rainbowModel, *backgroundModel, *stopModel, *trafficModel, *streetLightModel;
+  Model *manModel, *trashcanModel;
   Lamp* lampLight;
-  LightSource *lightSource, *dirrLight, *spotLight;
+  LightSource *lightSource, *dirrLight, *spotLight, *pointLight0, *spotLight0, *dirLight0, *sunLight1, *spotLight1, *spotLight2, *dirLight1;
   LightHandler *pointLightVec;
   mat4 projectionMatrix, camMatrix, camMat2, backgroundrot;
-  vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour;
+  vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour, pointLightPos0, pointLightColour0;
+  vec3 spotLightColour0, spotLightPos0, dirLightPos0, dirLightColor0;
+  vec3 viewPos, sunColour, sunPosition;
   GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
   GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, leather2Tex, bilTex, paperTex, truckTex, asphaltTex, backgroundTex, bricksTex, bricks2Tex;
   GLuint woodTex, wood2Tex, cloudTex, crackedmudTex, crackedmud2Tex, crackedmud3Tex, pathTex, greenTex, moonTex, sunTex, stoneTex, rainbowTex;
@@ -64,6 +77,9 @@ private:
   GLfloat viewX = 0.5;
   GLfloat viewY = 0.5;
   GLfloat dir = 0.01;
+  GLfloat _rotangle;
+  GLfloat _lane;
+  GLfloat constant, linear, quadratic;
   int pointLightIndex;
   vec3 v = {0.0, 1.0, 0.0};
   vec3 rotationAxis = {-14.565f, 0.0f, 0.0f};
@@ -86,7 +102,6 @@ private:
   Object* truck;
   Book* book;
   Object* lamp;
-  Object* box;
   GLfloat _myTime = 0.0f;
 
   //page 2
@@ -97,6 +112,7 @@ private:
   Object* elephant;
   Object* elephantbby;
   Object* tree;
+  Object* tree2;
   Object* rosebush1;
   Object* rosebush2;
   Object* rosebush3;
@@ -126,9 +142,14 @@ private:
   Object* stegos2;
   Object* stegos3;
   Object* trex;
+  Object* stopSign;
+  Object* streetLight;
+  Object* trafficLight;
+  Object* man;
+  Object* trashcan;
+  Object* fence;
 
-
-  Model *velociModel, *stegosModel, *trexModel;
+  Model *velociModel, *stegosModel, *trexModel, *fenceModel;
 };
 
 #endif

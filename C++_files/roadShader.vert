@@ -8,8 +8,7 @@ out vec3 ex_Normal;
 out vec3 in_Normal;
 out vec3 position;
 out vec2 ex_TexCoord;
-out vec3 fragPos;
-out vec3 normal;
+out float width;
 uniform mat4 myRotX;
 uniform mat4 myRotY;
 uniform mat4 myRotZ;
@@ -17,15 +16,13 @@ uniform mat4 myRotZ;
 // NY
 uniform mat4 projMatrix;
 uniform mat4 mdlMatrix;
-uniform mat4 model;
 
 void main(void)
 {
 	gl_Position = projMatrix * mdlMatrix * vec4(inPosition, 1.0);
-	ex_Normal = mat3(transpose(inverse(model)))  * inNormal;
-	normal = ex_Normal;
+	width = gl_Position.x;
+	ex_Normal = mat3(mdlMatrix) * inNormal;
 	in_Normal = inNormal;
 	ex_TexCoord = inTexCoord;
 	position = inPosition;
-	fragPos = vec3(model * vec4(inPosition, 1.0f));
 }

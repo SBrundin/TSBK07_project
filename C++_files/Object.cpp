@@ -170,7 +170,11 @@ void Object::updateBoundingBox(mat4 rotation, GLfloat scale)
   //std::cout << _size.x << ' ' << _size.y << ' ' << _size.z << '\n';
 }
 
+
+
+
 void Object::drawOn(mat4 camMatrix, GLuint shader, float scale, mat4 rot, Object* object){
+
   GLfloat xx = _position.x - object->getPosition().x;
   GLfloat zz = _position.z - object->getPosition().z;
   if(_position.x < -15.0){
@@ -193,6 +197,7 @@ void Object::draw(mat4 camMatrix, GLuint shader, float scale, mat4 rot)
    glUniform1i(glGetUniformLocation(shader, "Tex"), 0); // Texture unit 0
    glUniform4fv(glGetUniformLocation(shader, "opac"), 1, &opac.x);
    glUniformMatrix4fv(glGetUniformLocation(shader, "mdlMatrix"), 1, GL_TRUE, Tot.m);
+   glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, modelView.m);
    DrawModel(getModel(), shader, "inPosition", "inNormal", "inTexCoord");
  }
 
@@ -240,4 +245,16 @@ GLfloat Object::getRealHeight(GLfloat x, GLfloat z, Object* object, GLint flippe
               }
       }
       return height;
+    }
+
+void Object::rotate(mat4 rotation)
+    {
+
+      vec4 size4 = vec4(_position.x, _position.y, _position.z, 1);
+      vec4 temp =  MultVec4(rotation, size4);
+      _position.x=(abs(temp.x / temp.w));
+      _position.y=(abs(temp.y / temp.w));
+      _position.z=(abs(temp.z / temp.w));
+      //_size = ScalarMult(_size, scale);
+      //std::cout << _size.x << ' ' << _size.y << ' ' << _size.z << '\n';
     }
