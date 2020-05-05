@@ -19,7 +19,7 @@ LightHandler::LightHandler()
   return index;
 }
 
-/*getColourByIndex(int index, vec3 col)
+getColourByIndex(int index, vec3 col)
 {
   lightVec.at(index).setColour(col);
 }

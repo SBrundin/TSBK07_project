@@ -42,8 +42,15 @@ public:
     }
 
     GLuint getDirection(){
-      if (_buttonPressed == 'l') return 1;
-      if (_buttonPressed == 'r') return -1;
+      if (_buttonPressed == 'l'){
+        return 1;
+      }
+      else if (_buttonPressed == 'r'){
+        return -1;
+      }
+      else{
+        return 100;
+      }
     }
 
     GLfloat getTimer(){

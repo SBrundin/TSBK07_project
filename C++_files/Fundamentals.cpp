@@ -653,10 +653,8 @@ void Fundamentals::drawLights(){
 	//object
 	glUseProgram(mainProg);
 	glUniformMatrix4fv(glGetUniformLocation(mainProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
-	mat4 scale = S(6,6,6);
 	//pointLight
-	vec3 viewPos = {camera-> getPosition().x, camera-> getPosition().y, camera-> getPosition().z};
-	spotLight->setPosition(v*10*sin(t));
+spotLight->setPosition(v*10*sin(t));
 	//pointLightVec -> setPosition(pointLightIndex, v*10*sin(t));
 	//pointLightVec -> uploadPointLights(mainProg);
 	lightSource->setPosition(v*10*sin(t));
@@ -891,22 +889,25 @@ void Fundamentals::drawLightsScene1(GLuint shader){
 
 	glUseProgram(shader);
 	//pointLights
-	float temp = min((sun->getPosition().y-background->getPosition().y)/10.0f, 1.0f);
-	vec3 fade = vec3(1.0f, temp + 0.5, temp);
-	if (temp < - (sun->getSize().y)/20){
+	float temp = min(((sun->getSize().y/2) + sun->getPosition().y-background->getPosition().y)/20.0f, 1.0f);
+	vec3 fade = vec3(1.0f, 1.0, 1.0);
+	if (temp < 0.0f){
 		fade = vec3(0.0f, 0.0f, 0.0f);
 	}
-
-	float tempMoon = min((moon->getPosition().y-background->getPosition().y)/10.0f, 1.0f);
-	vec3 fadeMoon = vec3(tempMoon*0.73f, tempMoon*0.73f, tempMoon*0.73f);
-	if (tempMoon < - (moon->getSize().y)/20){
+	else if(temp < 1.0){
+		temp = max(temp, 0.0f);
+		fade = vec3(temp, pow(temp,2),  pow(temp,4));
+	}
+	float tempMoon = min(((moon->getSize().y/2) + moon->getPosition().y-background->getPosition().y)/20.0f, 0.73f);
+	vec3 fadeMoon = vec3(tempMoon, tempMoon, tempMoon);
+	if (tempMoon < 0.0f){
 		fadeMoon = vec3(0.0f, 0.0f, 0.0f);
 	}
 
 	sunLight1 -> setPosition(vec3( sun -> getPosition().x, sun -> getPosition().y, sun -> getPosition().z + 0.1));
 	sunLight1 ->setColour(fade);
-	moonLight -> setPosition(vec3( moon -> getPosition().x, moon -> getPosition().y, moon -> getPosition().z + 0.5));
-  moonLight ->setColour(fadeMoon);
+	moonLight -> setPosition(vec3( moon -> getPosition().x, moon -> getPosition().y, moon->getPosition().z + 0.5));
+	moonLight ->setColour(fadeMoon);
 	drawPointLight(0, sunLight1, shader);
 	drawPointLight(1, moonLight, shader);
 	int number_of_point_lights = 2;
