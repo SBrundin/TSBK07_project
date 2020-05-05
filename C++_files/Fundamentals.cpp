@@ -16,6 +16,7 @@
 #include "LightSource.h"
 #include "LightHandler.h"
 #include "Book.h"
+#include <cstdlib>
 #include <iostream>
 #include <list>
 using namespace std;
@@ -889,15 +890,15 @@ void Fundamentals::drawLightsScene2(GLuint shader){
 
 	int numStreetLights = 6;
 	streetLight1 ->setCutOff(4 + 2*sin(t));
-	streetLight1 -> setColour(vec3(1.0f, 0.95f, 0.74f));
-	int flicker = floor(t*5);
-	if (flicker % 5 == 0){
-		streetLight1 ->setColour(vec3(0.0f, 0.0f, 0.0f));
-	}
-
+	int flicker = round(t*5);
+	int randomnum = rand()%100;
 	for (int i =0; i<numStreetLights;i++){
 		vec3 streetPos = vec3(streetLight->getPosition().x + 2, streetLight->getPosition().y + 5, streetLight->getPosition().z+7*i);
 		streetLight1->setPosition(streetPos);
+		streetLight1 -> setColour(vec3(1.0f, 0.95f - 0.2 * abs(sin(t)), 0.74f - 0.2 * abs(sin(t))));
+		if (flicker % 3 == 0 && randomnum == i){
+			streetLight1 ->setColour(vec3(0.0f, 0.0f, 0.0f));
+		}
 		streetLight1 -> setAmp(2);
 		drawSpotLight(i, streetLight1, shader);
 	}
@@ -910,8 +911,6 @@ void Fundamentals::drawLightsScene2(GLuint shader){
 	glUniform1i(glGetUniformLocation(shader, "number_of_dir_lights"), number_of_dir_lights);
 
 	}
-
-
 
 void Fundamentals::drawLightsScene0(GLuint shader){
 	glUseProgram(shader);
