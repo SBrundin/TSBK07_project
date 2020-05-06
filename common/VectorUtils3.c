@@ -279,11 +279,11 @@ char transposed = 0;
 	{
 		mat4 m;
 		m = IdentityMatrix();
-		m.m[0] = abs((GLfloat)cos(a));
+		m.m[0] = sqrt(pow(((GLfloat)cos(a)),2));
 		if (transposed)
-			m.m[4] = abs((GLfloat)-sin(a));
+			m.m[4] = sqrt(pow(((GLfloat)-sin(a)),2));
 		else
-			m.m[4] = abs((GLfloat)sin(a));
+			m.m[4] = sqrt(pow(((GLfloat)sin(a)),2));
 		m.m[1] = -m.m[4]; //sin(a);
 		m.m[5] = m.m[0]; //cos(a);
 		return m;

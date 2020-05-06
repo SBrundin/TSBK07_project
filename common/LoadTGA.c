@@ -340,10 +340,9 @@ void SaveTGA(TextureData *tex, char const *filename)
 
 void SaveFramebufferToTGA(char const *filename, GLint x, GLint y, GLint w, GLint h)
 {
-	int err;
 	void *buffer = malloc(h*w*3);
 	glReadPixels(x, y, w, h, GL_RGB, GL_UNSIGNED_BYTE, buffer);
-	err = SaveDataToTGA(filename, w, h,
+	SaveDataToTGA(filename, w, h,
 			3*8,  (unsigned char *)buffer);
 //	free(buffer); already done
 //	printf("SaveDataToTGA returned %d\n", err);
