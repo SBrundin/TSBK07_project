@@ -12,8 +12,6 @@
 #include "LoadTGA.h"
 #include "Fundamentals.h"
 #include "Camera.h"
-#include "AndreasClass.h"
-#include "Lamp.h"
 #include "LightSource.h"
 
 

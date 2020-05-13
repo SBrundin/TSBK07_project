@@ -2,7 +2,6 @@
 #define LIGHTSOURCE_H
 #include <stdio.h>
 #include "VectorUtils3.h"
-#include "Lamp.h"
 
 class LightSource
 {

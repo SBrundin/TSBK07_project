@@ -12,7 +12,6 @@
 #include "Fundamentals.h"
 #include "Object.h"
 #include "Camera.h"
-#include "Lamp.h"
 #include "LightSource.h"
 #include "Book.h"
 #include <cstdlib>
