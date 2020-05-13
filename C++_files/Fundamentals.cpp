@@ -14,7 +14,6 @@
 #include "Camera.h"
 #include "Lamp.h"
 #include "LightSource.h"
-#include "LightHandler.h"
 #include "Book.h"
 #include <cstdlib>
 #include <iostream>
@@ -49,9 +48,7 @@ void Fundamentals::loadfiles(){
 	glUniformMatrix4fv(glGetUniformLocation(lampProg, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 	//glUniform3fv(glGetUniformLocation(lampProg, "lampColour"), 1, &lampColour.x);
 
-	///////////////////7Light////////////////////7
-	//lightHandler
-	pointLightVec = new LightHandler();
+
 
 	glUseProgram(program);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
@@ -198,7 +195,7 @@ void Fundamentals::initobjects(){
 	tree = new Object(vec3(-18.0f, 6.5f, 4.4f), treeModel, grassTex);
 
 	rosebush1 = new Object(vec3(7.0f, 4.8f, 4.4f), rosebushModel, bilTex);
-	rosebush2 = new Object(vec3(-20.0f, 4.6f, -16.0f), rosebushModel, bilTex);
+	rosebush2 = new Object(vec3(-25.0f, 4.6f, -16.0f), rosebushModel, bilTex);
 	rosebush3 = new Object(vec3(10.0f, 4.8f, -4.4f), rosebushModel, bilTex);
 	bird = new Object(vec3(10.0f, 15.0f, -4.4f), birdModel, waterTex);
 	bird2 = new Object(vec3(15.0f, 15.0f, -10.4f), birdModel, waterTex);
@@ -241,25 +238,25 @@ void Fundamentals::initobjects(){
 	listOfObj_2.push_back(cloud);
 
 	//OBJECTS FOR SCENE 2
-	velociraptor1 = new Object(vec3(10.0f, 3.8f, -8.0f), velociModel, leatherTex);
+	velociraptor1 = new Object(vec3(10.0f, 3.8f, -8.0f), velociModel, leather2Tex);
 	velociraptor2 = new Object(vec3(7.6f, 3.85f, -9.2f), velociModel, leatherTex);
-	velociraptor3 = new Object(vec3(7.3f, 3.8f, -5.3f), velociModel, leatherTex);
+	velociraptor3 = new Object(vec3(7.3f, 3.8f, -5.3f), velociModel, leather3Tex);
 	velociraptor4 = new Object(vec3(4.0f, 3.78f, -8.9f), velociModel, leatherTex);
 	velociraptor5 = new Object(vec3(5.0f, 3.8f, -6.0f), velociModel, leatherTex);
-	velociraptor6 = new Object(vec3(8.0f, 3.8f, -14.5f), velociModel, leatherTex);
-	velociraptor7 = new Object(vec3(12.0f, 3.8f, -12.0f), velociModel, leatherTex);
-	trex = new Object(vec3(11.0f, 5.3f, 12.0f), trexModel, leatherTex);
+	velociraptor6 = new Object(vec3(8.0f, 3.8f, -14.5f), velociModel, leather2Tex);
+	velociraptor7 = new Object(vec3(12.0f, 3.8f, -12.0f), velociModel, leather4Tex);
+	trex = new Object(vec3(11.0f, 5.3f, 12.0f), trexModel, leather3Tex);
 	stegos1 = new Object(vec3(-2.0f, 4.6f, -10.0f), stegosModel, leatherTex);
-	stegos2 = new Object(vec3(-5.0f, 4.6f, -16.0f), stegosModel, leatherTex);
-	stegos3 = new Object(vec3(-10.0f, 4.6f, -4.0f), stegosModel, leatherTex);
+	stegos2 = new Object(vec3(-5.0f, 4.6f, -16.0f), stegosModel, leather4Tex);
+	stegos3 = new Object(vec3(-10.0f, 4.6f, -4.0f), stegosModel, leather2Tex);
 	coronaSimple = new Object(vec3(-29.0f, 5.0f, -5.0f), coronaModel1, grassTex);
 	stopSign = new Object(vec3(-28.0f, 4.8f, 16.0f), stopModel, leatherTex);
 	trafficLight = new Object(vec3(-27.0f, 4.8f, 0.0f), trafficModel, waterTex);
 	streetLight = new Object(vec3(-40.0f, 6.0f, -17.0f), streetLightModel, leatherTex);
 	man = new Object(vec3(-29.0f, 4.0f, -5.0f), manModel, leatherTex);
 	trashcan = new Object(vec3(-28.0f, 4.0f, 6.0f), trashcanModel, grass1Tex);
-	fence = new Object(vec3(-15.0f, 4.8f, 0.0f), fenceModel, snowTex);
-	truck = new Object(vec3(-35.0f, 3.3f, 0.0f), truckModel, snowTex);
+	fence = new Object(vec3(-15.0f, 4.8f, 0.0f), fenceModel, cloudTex);
+	truck = new Object(vec3(-35.0f, 3.3f, 0.0f), truckModel, violetTex);
 	tree2 = new Object(vec3(-20.0f, 6.5f, 10.4f), treeModel, grassTex);
 
 
@@ -351,8 +348,11 @@ void Fundamentals::loadtextures(){
 	LoadTGATextureSimple("../textures/dried_grass4.tga", &grass5Tex);
 	LoadTGATextureSimple("../textures/dried_grass5.tga", &grass6Tex);
 	LoadTGATextureSimple("../textures/snow.tga", &snowTex);
+	LoadTGATextureSimple("../textures/Violet.tga", &violetTex);
 	loadskybox();
 	LoadTGATextureSimple("../textures/Leather2.tga", &leatherTex);
+	LoadTGATextureSimple("../textures/LeatherGreen.tga", &leather3Tex);
+	LoadTGATextureSimple("../textures/LeatherRed.tga", &leather4Tex);
 	LoadTGATextureSimple("../textures/LeatherBrown.tga", &leather2Tex);
 	LoadTGATextureSimple("../textures/bilskissred.tga", &bilTex);
 	LoadTGATextureSimple("../textures/water.tga", &waterTex);
@@ -473,7 +473,6 @@ void Fundamentals::drawFirstScene(){
 	house->drawOn(camMatrix, programObj, 2.0, Ry(0.0), toppage); // camMatrix, shader, scale, angle
 	cottage->drawOn(camMatrix, programObj, 1.0, Ry(M_PI), toppage);
 	cottage1->drawOn(camMatrix, programObj, 1.0, Ry(0.0), toppage);
-	rosebush2->drawOn(camMatrix, programObj, 1.5, Ry(0.0), toppage);
 	elephant->drawOn(camMatrix, programObj, 1.0, Ry(M_PI/4), toppage);
 	elephantbby->drawOn(camMatrix, programObj, 0.3, Ry(7.5*M_PI/4), toppage);
 	tree->drawOn(camMatrix, programObj, 2.0, Ry(0.0), toppage);

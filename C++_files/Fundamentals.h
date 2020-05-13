@@ -7,7 +7,6 @@
 #include "VectorUtils3.h"
 #include "Lamp.h"
 #include "LightSource.h"
-#include "LightHandler.h"
 #include <vector>
 #include <iostream>
 
@@ -69,13 +68,12 @@ private:
   Lamp* lampLight;
   LightSource *lightSource, *dirrLight, *spotLight, *pointLight0, *spotLight0, *dirLight0, *lava, *lava2, *sunLight1, *spotLight1, *spotLight2, *dirLight1, *streetLight1, *dirrLight2;
   LightSource *bookSpot1, *bookSpot2,*bookSpot3, *bookSpot4, *bookDir, *moonLight;
-  LightHandler *pointLightVec;
   mat4 projectionMatrix, camMatrix, camMat2, backgroundrot;
   vec3 p,l, c, cam, lookAtPoint, c2, lampColour, lightPos, lightColour, pointLightPos0, pointLightColour0;
   vec3 spotLightColour0, spotLightPos0, dirLightPos0, dirLightColor0;
   vec3 viewPos, sunColour, sunPosition;
   GLuint program, skyboxProg, pageShader, programObj, lampProg, mainProg, fadeShade;
-  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, leather2Tex, bilTex, paperTex, truckTex, asphaltTex, backgroundTex, bricksTex, bricks2Tex;
+  GLuint sphereTex, waterTex, snowTex, grassTex, tex2, bookTex, leatherTex, violetTex ,leather2Tex, leather3Tex, leather4Tex, bilTex, paperTex, truckTex, asphaltTex, backgroundTex, bricksTex, bricks2Tex;
   GLuint woodTex, wood2Tex, cloudTex, crackedmudTex, crackedmud2Tex, crackedmud3Tex, pathTex, greenTex, moonTex, sunTex, stoneTex, rainbowTex;
   GLuint grass1Tex, grass2Tex, grass3Tex, grass4Tex, grass5Tex, grass6Tex, cottageTex, sandTex, sand1Tex, sand2Tex, lavaTex;
   GLfloat viewX = 0.5;

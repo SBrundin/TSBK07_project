@@ -15,7 +15,7 @@
 #include "AndreasClass.h"
 #include "Lamp.h"
 #include "LightSource.h"
-#include "LightHandler.h"
+
 
 
 Fundamentals* loader;
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitContextVersion(3, 2);
-	glutInitWindowSize (600, 600);
+	glutInitWindowSize (1000, 1000);
 	glutCreateWindow ("GLUTen project");
 	init ();
 	glutDisplayFunc(display);
